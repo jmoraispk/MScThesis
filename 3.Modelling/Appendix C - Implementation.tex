@@ -1,0 +1,384 @@
+\section{SXR Radio Channel Generation}
+\label{sec:implementation}
+
+The Radio Channel Generation process uses Quadriga as a channel generator. 
+In a simplistic way, Quadriga computes the transformation between two antennas. Since that transformation depends on a several factors, we have to set those factors appropriately to match the situation we intend to simulate. Some of these factors include antenna placement, position and orientation variations, and the overall characteristics of the surroundings.
+
+
+For the surroundings, Quadriga distributes clusters in a way that the total received power from the LoS path and the paths with reflections on those clusters resembles the scenario (e.g. urban, rural, indoors, ...) we pretend to simulate. For this, it uses configuration files with typical channel characteristics (derived from several measurement campaigns) for certain scenarios are included in Quadriga. Given the proximity of all users to the BS, the configuration file with the random distribution parameters that has been selected as the best fit to the Social-XR meeting was the `3GPP\_38.901\_Indoor\_LOS'.
+
+With respect to the remaining factors we need to supply in order to obtain a channel that matches an XR meeting, this is where most of modelling takes place. We've distributed users around a circular table, with antennas in their head-mounted displays (HMD), and we've modelled their head movement. Then, this has to be put in a format that Quadriga comprehends. The XR-meeting modelling is only finished in the next section, where we present a model for the application traffic.
+
+It's programmed in Matlab and compiled to an executable. That executable is then run in different subprocesses/threads to parallelise the workload and reducing the computation time of this phase.
+
+
+In this section, firstly we list the parameters required to generate the channel traces and the input arguments used to execute the each instance. We include a short summary for each parameter and a more detailed description of the arguments.
+
+The arguments are particularly important since they it's through them that Python and Matlab interface. So, they will control the phases of the radio channel simulation.
+
+Subsequently, each section exposes the well-defined phases of the generation process, and we'll understand how these parameters come together.
+
+\subsection{Parameters and Arguments}
+
+With 3 arguments and 98 parameters (as of writing this)
+
+The three arguments are:
+
+\begin{itemize}
+    \item \textit{flow\_control} - controls the flow of the program. It's required to execute only certain parts of the code, which as a necessity given the practicality of having all functionality in same executable. 
+    \item \textit{instance\_info} - used for parallelisation management. It's a 2 element array. The first element is the parallelisation level with values from 0 to 3 representing, respectively, no parallelisation, parallelisation on the frequency level, on the \acl{BS} level or on the UE level. This influences the number of divisions each time division will be further partitioned and should be more clear after a look on how Quadriga works. The second element depends on the \textit{flow\_control} value. In the setup phase ($flow\_control \in \{1, 2\}$) it tells Matlab how many high-level instances the simulation should be prepared for, this will lead to the generation of those many builders. In the execution phase, it tells Matlab which instance should be executed. As expected, the value in the execution phase should not pass the value given in the setup phase as the maximum;
+    \item \textit{input\_filename} - the file or folder that has everything required to execute the steps determined by \textit{flow\_control}.
+\end{itemize}
+
+The table below summarises how the arguments change value with \textit{flow\_control}:
+
+\image{Implementation/RadCh/flow_control_table.jpg}{Awaiting SLS completion.}{fig:flow_control}{.26}
+
+
+
+
+
+
+\subsection{Setup}
+
+The setup procedure starts by creating a file where everything specific to that run is placed. The builders folder is placed there, the channel parts folder, the aggregate time response, and finally the frequency response, which are the complex numbers we call channel coefficients.
+
+Then performs the following actions, in order.
+\begin{enumerate}
+    \item User Placement - decide where each user seats. %include the descriptions here.
+    \item Head Model Setup
+    \item Antenna Setup - place the antennas in the appropriate locations, with the certain orientations, while using the specified antenna elements and array geometries. 
+\end{enumerate}
+
+The phases above are detailed ahead. The explanation on each individual parameter is omitted for the sake of conciseness. The code has more extensive descriptions of the phases, each function and each parameter. Finally, we enumerate the parameters that are specific of that section and not used anywhere else.
+
+
+\subsection*{User and Camera Placement}
+User placement is done through the following 2 lines of code. Intuitively, a circumference is divided in equal parts, and k-th user is place at an angle $\alpha_k$ and a distance $r$ from the centre. Note the angle reference is the reference on the trigonometric circle, i.e. the user at 0 degrees seats in seat index 4. Equations \ref{eq:userplace1} and \ref{eq:userplace2} depend on the room capacity (RCap) which is set to a fixed value of 16, and on the centre of the table $C = (C_x, C_y, C_z)$.
+
+\begin{align}
+    &\alpha_k = k  \frac{2 \pi}{\text{RCap}} - \frac{\pi}{2} \ , \ \forall k \in \left\{0, ..., \text{RCap} - 1\right\} \label{eq:userplace1}\\
+    &\text{Pos}_k = (C_x, C_y, C_z) + (r \cdot \cos(\alpha_k), r \cdot \sin(\alpha_k), 0) \label{eq:userplace2}
+\end{align}
+
+A table that seats comfortably 16 people, has a diameter of 4 meters, disregarding the currently safety distance required in present times. Figure \ref{fig:label_full_table} illustrates the layout on the left, and a top-view diagram with the user indices on the right.
+
+
+\imagesidebysidecomplete{Implementation/RadCh/table_full_matlab.png}{legend}{fig:table3}{.3}{Implementation/RadCh/table1_description4.png}{legend2}{fig:table2}{.30}{general caption}{fig:label_full_table}{.5}{.5}
+
+
+% \begin{table}[h]
+%     \centering
+%     \label{tab:tab_user_seats}
+%     \caption{Table with user seats and their indices}
+%     \begin{tabular}{|c|c|c|}
+%     \hline
+%     Number of Users    & Type of User & Seat Indices                  \\ \hline
+%     \multirow{2}{*}{1} & Physical     & \{0\}                         \\ \cline{2-3} 
+%                         & Virtual      & \{1\}                         \\ \hline
+%     \multirow{2}{*}{2} & Physical     & \{0, 8\}                      \\ \cline{2-3} 
+%                         & Virtual      & \{1,9\}                       \\ \hline
+%     \multirow{2}{*}{4} & Physical     & \{0, 4, 8, 12\}               \\ \cline{2-3} 
+%                         & Virtual      & \{1, 5, 9, 13\}               \\ \hline
+%     \multirow{2}{*}{8} & Physical     & \{0, 2, 4, 6, 8, 10, 12, 14\} \\ \cline{2-3} 
+%                         & Virtual      & \{1, 3, 5, 7, 9, 11, 13, 15\} \\ \hline
+%     \end{tabular}
+% \end{table}
+
+
+
+% CHANGE THIS TABLE! 
+% WITH 4PHY+4VIR, the combination is [0 4 8 12] + [2 6 10 14] (they are alternated and the combination matters!)
+
+\begin{table}[htp]
+    \centering
+    \caption{Table with user seats and their indices}
+    \label{tab:tab_user_seats}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Type of User              & Number of Users & Seat Indices                      \\ \hline
+        \multirow{4}{*}{Physical} & 1               & \{0\}                             \\ \cline{2-3} 
+                                  & 2               & \{0, 8\}                          \\ \cline{2-3} 
+                                  & 4               & \{0, 4, 8, 12\}                   \\ \cline{2-3} 
+                                  & 8               & \{0, 2, 4, 6, 8, 10, 12, 14, 16\} \\ \hline
+        \multirow{4}{*}{Virtual}  & 1               & \{1\}                             \\ \cline{2-3} 
+                                  & 2               & \{1, 9\}                          \\ \cline{2-3} 
+                                  & 4               & \{1, 5, 9, 13\}                   \\ \cline{2-3} 
+                                  & 8               & \{1, 3, 5, 7, 9, 11, 13, 15, 17\} \\ \hline
+    \end{tabular}
+\end{table}
+
+
+To fit all tastes, automatic user placement on a rectangular table is also implemented. For simplicity and increased symmetry, we'll stick with the round table throughout this dissertation.
+
+Regarding the placement of cameras, there's an unrealism in the figure. The figure shows the cameras, but they would need to be roughly at head height to capture face features the other users need to see and that would otherwise be covered from a lower perspective. Therefore, the cameras need to be placed as high as the users heads. We've place the cameras on the table to facilitate the user placement visualisation. Also, since what we care about is to include \acsp{UE} in the simulation, to compute the channels between those \acsp{UE} and the \acsp{BS}, we only setup the camera hub, the place where the multiple cameras recording a user do their stream aggregation. For practical matters this is done such that one stream doesn't get delayed relative to the other, which could incur in considerable delays, waste of resources. Aggregating the streams before the uplink transmission guarantees they reach the central processing node in the network at the same time, so they can be processed and distributed much more easily. Further application layer considerations are in section \ref{sec:at}
+
+\ul{Considerations}:
+To make the range of possible orientations resistant to changes on several parameters in the simulation - note that if the physical or virtual users in the room changed, the possible locations to look at would also change - we decided to keep the orientation as if the room was full, for all simulations. 
+
+
+\subsection*{Head Model Setup}
+
+\ul{Specific Parameters}: \hspace{-0.3cm} 
+\ii{mvmnt\_speeds}, \ii{rot\_intervals}, \ii{bank\_lim}, \ii{tilt\_lim}, \ii{fdang}, \ii{all\_users\_pos}, \ii{speaker\_list}, \ii{staring\_param}, \ii{speaking\_avg\_time}, \ii{head\_model\_rotation}
+
+
+Head movement is relevant for channel generation because the antennas are fixed to the headset, and their movement depends on the user's head movement. We've modelled user head position, which applies a translation to the antennas exactly equal to the change in position of the head, and user head rotation, that affects not only the orientation of the antennas but their positions as well. Why head rotation also affects position is because the antennas have an offset from the centre of the head: imagining we have glasses, when we turn our head the glasses change position. This illustrated in the next section concerning antenna placement, visually Figure \ref{fig:ant_offset}.
+
+
+To facilitate the quantisation of movement, the movement index is introduced. The speed at which a user moves its head, being position or orientation, change according to the Head Movement Equations, below. The speed in \ref{eq:head_mv1} tells us how quickly a user hops between positions. The rotation interval in \ref{eq:head_mv2} is the time the user takes to turn from one orientation to the other. Having the rotation interval constant means that the head rotation speed may change depending on the angle of rotation. We've find this to be more realistic than maintaining always the same speed since it was observed than 180 degree rotations were executed much faster than 30 degree rotations in a normal meeting.
+
+\begin{gather} 
+    \text{speed} [\text{m/s}] = \text{mvnt\_idx} \times 0.1 \label{eq:head_mv1} \\
+    \text{rot\_int} [\text{s}]= 1.5 - 0.2 \times \text{mvnt\_idx} \label{eq:head_mv2}
+\end{gather}
+
+Some values of the index of movement are present in table \ref{tab:head_speeds}.
+
+\begin{table}[htp]
+    \centering
+    \caption{Speeds and Rotations intervals for 0 to 7 movement indices.}
+    \label{tab:head_speeds}
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Movement Index & Speed {[}m/s{]} & Rotation Interval {[}s{]} \\ \hline
+    0              & 0               & -                         \\ \hline
+    1              & 0.1             & 1.3                       \\ \hline
+    2              & 0.2             & 1.1                       \\ \hline
+    3              & 0.3             & 0.9                       \\ \hline
+    4              & 0.4             & 0.7                       \\ \hline
+    5              & 0.5             & 0.5                       \\ \hline
+    6              & 0.6             & 0.3                       \\ \hline
+    7              & 0.7             & 0.1                       \\ \hline
+    \end{tabular}
+\end{table}
+
+
+A more visually descriptive way of showing how this movement index affects the position is Figure \ref{fig:speeds}. Further note that the standard deviation of the received power is positively correlated with the movement coefficient, and that the variation in orientation appears to play a more preponderant role than position change. This can be justified by the spatial consistency, i.e. similar propagation characteristics for similar spatial positions.
+
+
+\image{Implementation/RadCh/speeds.png}{Trajectory over 10s}{fig:speeds}{.35}
+% There's also another fig generated (speeds2).
+Note that the position changes happen in 3D. The position is generated by sampling three normal distributions, for each cartesian component, with average on the respective component of the actual position of the user (see the phase above), standard deviation of 0.2 metres, and no covariances. This way, more than 99\% of points will be inside the 0.2 metre radius sphere. However, since empirical evidence indicates that height changes less, the standard deviation on the z coordinate is halved, rendering the actual volume of possible positions to an ellipsoid, not a sphere.
+
+
+Through an empirical and highly subjective assessment, a movement index of 3 appears to be the most realistic value, and this value was considered for all users in the meeting. Cameras have a movement index of 0 because they are static.
+
+
+Having now a deeper look into the orientation change. The orientation changes according to two mechanisms: 
+\begin{itemize}
+    \item Wobbling while staring - while looking in a certain direction, there are deviations from the centre. Certain limits on the angle of deviation create a cone of focus, and the orientation of the antenna is inside that cone constantly, until the user's changes attention to other participant. The cone is created from randomly sampling uniform distributions. And, again, given the limits, it will resemble more and elliptical cone, instead of a cone with a circle in its base;
+    \item When changing the look between participants - at the beginning of the simulation we define a speaker list, with users and the instants they start talking. When a new user starts speaking, every other user turns its head to the speaker, and the speaker looks at one of the other users picked at random (optionally, it may look always at the last speaker). This orientation change can be more than 120 degrees, depending on the user disposition, and will certainly cause more accentuated channel variations than the previous orientation-changing mechanism.
+\end{itemize}
+
+It's noteworthy to mention the similarity between orientation and position variation mechanisms. Both a position and an orientation can be represented by three coordinates, one is a cartesian position and the other is set of rotations around the three axis, respectively. The speed tells us how quickly to move from a position to the other, and the rotation interval tells us how quickly to change from an orientation to the next. The highest the speed, the more positions a user's head will visit. The lowest the rotation interval, the more orientations inside the cone the user's look will point. Additionally, the head rotation interval plays a role in how fast a 'head turn' happens, when there's a change in the speaker. 
+
+\subsection*{Antenna Setup}
+
+\ul{Specific Parameters} \hspace{-0.3cm}:
+\ii{user\_ant}, \ii{cam\_ant}, \ii{tx\_ant}, \ii{same\_antena\_across\_users}, \ii{same\_antenna\_across\_cams}, \ii{same\_antenna\_across\_txs}, \\
+\ii{same\_antenna\_across\_frequencies}, \ii{same\_antenna\_cam\_user}
+
+
+Both \acsp{UE} and \acsp{BS} have antennas, and the setup process is different for each group. These antennas can be single-element or they can make up an antenna-array with multiple elements. If antenna arrays are selected with cross-polarised elements, it is further possible to differentiate between orthogonal polarisations such that a channel is computed separately for each polarisation.
+
+Considering first the elements and array structures available: 
+
+\begin{itemize}
+    \item Single-element antenna - omnidirectional, linear dipole, patch;
+    \item Multi-element antenna - linear or planar, using cross-polarised 3GPP-defined antenna elements \cite{3gpp.36837}.
+\end{itemize}
+
+With respect to antenna placement, we have to address separately \acsp{UE} and \acsp{BS}. Starting with the UE's antennas, we've placed antennas with 0.15 metres from the centre in direction the user is facing, and 0.05 metres in the z coordinate. This particular placement is illustrated in \ref{fig:ant_offset}, simulating antennas placed across the top of the \acs{HMD}.
+
+\threeimagessidebyside{Implementation/RadCh/ant_head_1.png}{Random View}{fig:table1}{.2}{Implementation/RadCh/ant_head_2.png}{Front view}{fig:table2}{.2}{Implementation/RadCh/ant_head_3.png}{Side View}{fig:table3}{.2}{For 3.5 GHz, 6 antennas}{fig:ant_offset}{0.35}{0.3}{0.3}
+
+
+Concerning \acsp{BS} antennas, Figure \ref{fig:multiple_bs} shows the 5 positions we've considered for placement of BSs in the room. Each antenna is pointed at a the centre of mass of the room - for this case, a 6 by 6 metre room with a ceiling at 3 metres tall has a centre of mass at $(3, 3, 1.5)$, basically half of every cartesian component. Further note that the plot was generated for 600 MHz, such that we could distinguish the individual elements of the antenna arrays while keeping the inter-element spacing at half-wavelength.
+
+\image{Implementation/RadCh/multiple_BS_side.png}{6 by 4 antennas}{fig:multiple_bs}{.2}
+
+
+
+\ul{Considerations} \hspace{-0.3cm}:
+All receivers need to have the same antenna, and all transmitters as well, or the channel coefficients matrix would be very difficult to handle. Therefore, the variables (and implementation) are in place for an extension, but they can't be changed since the alternative requires heavy modifications on matrix handling.
+
+
+
+
+\subsection{Channel Trace Generation} 
+\label{subsec:channel_gen}
+The actual channel generation if performed using Quadriga \cite{Quadriga}, a 3GPP compliant Quasi-Deterministic Radio Channel Generator.
+
+\subsubsection*{Channel Model Choice}
+This channel generator was chosen for several reasons, its complexity and being open-source are two of them. A complex generator gets us more realistic results, but with often complexity drives close-source efforts, which is something difficult to accept in research since one wants to be sure of what one is using. If knowledge from what's going on \ii{under-the-hood} is not motivation enough, flexibility is. Open-source is specially attractive because it enables the user to adapt the software to the scenario, as precisely as needed.
+
+Apart from the above two requirements, there are many other are important: i) The supported frequency range must include sub-6 GHz and mmWaves; ii) Large arrays support for proper Massive \acs{MIMO} tests; iii) 3D Spatial Consistency;
+
+Finally, considering the proximity of \acsp{UE} and \acsp{BS}, it's possible that far-field approximations incur in significant errors. 
+
+The Rayleigh or Fraunhofer distance corresponds to the distance of the interface between the Fresnel and Fraunhofer regions, respectively, the near-field and the far-field regions. It's defined by \label{fraun}:
+\begin{equation} \label{fraun}
+    d_\text{F} = \frac{2 D^2}{\lambda}
+\end{equation} 
+
+Above, $D$ is the largest dimension of the radiator or radiator array. This is an important parameter since we need to know if the transmitter and receiver are far enough away from each other that we can approximate spherical waves as plane waves. If the distance between them is less than the Fraunhofer distance, then spherical waves need to be considered and our simulator must account for that.
+
+Using Equation \ref{fraun}, with a smallest frequency (30 GHz) to get the largest wavelength (10 mm) in an attempt to get the smallest distance possible, and using the exaggerated small value of 10 cm for the antenna array $d_{\text{F}} = 2 $ metres. This is certainly the smallest value achieved in mmWaves, and is not possible to be achieved in a Social-XR meeting. Therefore, spherical waves support is necessary.
+
+Some authors proposed a more complex approach to make this decision \cite{4799060}, but the threshold is larger. As such, we can be sure that spherical waves are necessary.
+
+
+
+From extensive surveys , e.g. \cite{channel_survey}, the choice boiled down to Quadriga. Also, being freely available and widely accepted by the community is something not to overlook.
+
+
+More complete simulators were not chosen mainly because of the Channel Model access issues. Not every simulator is 100\% 3GPP compliant, and the channel model in these simulators often can't be easily accessed. Therefore, this would require dissecting the simulators before obtaining the channel coefficients. Apart from this strong reason, and missing one or more of the requirements state above, there are other reasons for rejecting these simulators:
+\begin{itemize}
+    \item CloudRT \cite{cloudRT} is web-based, poorly documented and depends on cloud services from a research laboratory;
+    \item 5G K-SIM from 5G Open Platform is written in C++;
+    \item 5G Toolbox in Matlab is too low level and offers an amount of precision we don't need in a system-level simulation;
+    \item NYUSIM \cite{nyusim} lacks indoor support ;
+    \item Vienna Simulator \cite{Vienna5GSLS} only supports downlink, and it's already a full fledge system level simulator, making it less easy to implement and modify algorithms that command radio resources, such as scheduling and beamforming algorithms;
+\end{itemize} 
+
+\subsubsection*{Channel Generation in the Simulation Flow}
+
+Now that we have chosen the Channel Model, back to the simulation flow.
+
+By the end of the simulation, the result is a channel in time domain, with a set of coefficients of the form of expression \eqref{eq:c_time}. In order, one reads below the \acs{UE} index, the \acs{BS} index, the frequency index, the number of \acp{AE} in that pair of \acs{UE}-\acs{BS}, for all paths in a given time instant, or like Quadriga calls them, snapshots.
+\begin{gather} \label{eq:c_time}
+    \text{C}(\text{UE}_m, \text{BS}_b, \text{F}_1) = [\text{N}_{\text{AE}_{\text{UE}_m}}, \text{N}_{\text{AE}_{\text{BS}_b}}, \text{N}_\text{paths}, \text{snap}] \ , \\ 
+    \forall m \in \left\{1, \dots, \text{N}_\text{UE}\right\}, b \in \left\{1, \dots, \text{N}_\text{BS}\right\} \nonumber
+\end{gather}
+
+Further note that there'll be a snapshot for each \acs{TTI}.
+Since we need information across the carrier frequency, we further convert the time domain channel to frequency domain. It's to the Frequency Response that we call Channel Coefficients. Below, \eqref{eq:c_freq} shows the dimensions of this matrix. 
+
+\begin{gather} \label{eq:c_freq}
+    \text{FR}(\text{UE}_m, \text{BS}_b, \text{F}_\text{f\_idx}) = [\text{N}_{\text{AE}_{\text{UE}_m}}, \text{N}_{\text{AE}_{\text{BS}_b}}, \text{N}_\text{PRB}, \text{snap}] \ , \\
+    \forall m \in \left\{1, \dots, \text{N}_\text{UE}\right\}, b \in \left\{1, \dots, \text{N}_\text{BS}\right\} \nonumber, \text{f\_idx} \in \left\{1, ..., \text{N}_\text{Freq} \right\}
+\end{gather}
+
+
+This is the end result. How to get to the end result, after the all the setup of the previous section, the next steps are preparing for a parallelisation, if that's the case.
+
+If the instance is running in parallel, this phase first splits the tracks, and then creates a builder for each segment of the track. Effectively, each track is a sequence of positions at certain instants. Hence splitting a track is making a separation in time.
+
+
+The channel is saved in time domain. This allows the conversion to multiple bandwidths later. Therefore, each simulation only requires the centre of the frequency band (i.e. 3.5 GHz, 26 GHz) and it's possible afterwards to convert to a 25 MHz carrier or to 400 MHz carrier. 
+
+Note that the resolution in the frequency domain (spaces \acsp{PRB}) is inverse to the resolution in the time domain (interval between samples). As a result, we need to simulate the time domain with the interval of the highest numerology we want to use.
+
+As means of simplifying implementation, the same time interval is used for every frequency band even if we want to simulate different numerologies in each band. The time interval used is correspondent to the highest numerology across bands.
+
+
+
+\subsection{Blocking Model}
+
+The blocking model applies changes to the channel in time domain such that the received signal is attenuated by a certain amount that should be realistic with the blocking case. 
+To effectuate changes, angular information is required, e.g. azimuth and elevation of departure and arrival. This angular information is used either for deterministic diffraction calculations with the \ac{UTD} \cite{UTD}, or for input for a stochastic way of computing the blocking degree and attenuation, respectively for deterministic and stochastic approaches of blocking.
+
+Further note the blocking modifications to the channel are done in Time Domain. As opposed to the frequency channel, where the paths and path delays have used to compute the frequency response and are no longer available, in time domain the per path information is still available, and this individual path information is required as it contains the angles of arrival and departure of each path.
+
+A contribution from a TNO's intern named Sandra. An overview of the model follows.
+
+\bb{Overview of the blocking model here.}
+
+
+\subsection{Parallelisation Engine}
+
+\subsubsection*{Motivation}
+Parallelisation is a must. Take the following example as motivation: a single channel coefficient is complex number that takes up 8 bytes, 4 bytes of single-precision (see \ref{optimisation_strats} for why on single-precision is enough) for the real part and 4 bytes for the imaginary part, and we have one of these coefficients for every antenna pair, for a given amount of \acsp{TTI} and \acsp{PRB}. The following equation estimates how many coefficients are needed for a given simulation. We may call \ref{eq:load_estimation} the Load Estimation Equation.
+
+\begin{equation} \label{eq:load_estimation}
+    \text{N}_\text{coeff} = \text{N}_{UE} \cdot \text{N}_\text{BS} \cdot \text{N}_{\text{AE}_\text{UE}} \cdot \text{N}_{\text{AE}_\text{BS}} \cdot \text{Sim\_Dur} [\text{s}] \cdot \left(1000 \times 2^\mu\right) [\text{TTIs per s}] \cdot \text{N}_{\text{PRB}} \cdot \text{M}_\text{pol}
+\end{equation}
+
+Furthermore, if we want to consider separate layers on the orthogonal polarisations by using the dual-polarised antenna elements, we need to multiply by 2 the number of elements in the arrays that use those kinds of elements, i.e. if we consider \acsp{UE} having only one omnidirectional antenna, then only the \ac{BS}'s number of \acsp{AE} need to be multiplied by 2. Let us call this multiplier the orthogonal polarisation multiplier, and denote it by $M_\text{pol}$.
+
+These typical values for a conservative simulation:
+\begin{multicols}{2}
+\begin{itemize}
+    \item $\text{N}_{UE} = 4$
+    \item $\text{N}_\text{BS} = 2$
+    \item $\text{N}_{\text{AE}_\text{UE}} = 8$
+    \item $\text{N}_{\text{AE}_\text{BS}} = 64$
+    \item $\text{Sim\_Dur} = 10 $ s
+    \item $\mu = 3 \Rightarrow 8000  $ TTIs/s
+    \item $\text{N}_{\text{PRB}} = 100$
+    \item $\text{M}_\text{pol} = 4$
+\end{itemize}
+\end{multicols}
+
+The simulation duration needs to be representative of a meeting, and contain all the ranges of head movement that a meeting has. If we give very little talk time to each participant, and consider a moderate simulation with few users, a simulation duration of 10 seconds is plausible.
+
+The values above result in roughly $128 \times 10^9$ coefficients. If we multiply this number by the 8 bytes of memory required per coefficient, we get almost 1 TB. Furthermore, it takes around 4 minutes to generate 1 GB worth of coefficients in a Intel Core i5-7300U @ 2.60 GHz. Thus, at least 2 days per Terabyte. Since we intend to perform several of these simulations, parallelisation is a must. 
+
+Not only regarding time, but memory wise, parallelisation also allows us to leverage multiple physically separated storages, without having to setup a transmission mechanism. Finally, still in the memory department, Matlab has a limit of efficient matrix size handling, which happens to be 75 GB in many systems. Therefore, some segmentation would be necessary to compute the complete channels.
+
+
+
+\subsubsection*{How the parallelisation shapes the workflow}
+
+The complete workload is divided in chunks, represented as blue squares in Figure \ref{fig:parallel_1}. These chunks are then grouped into jobs, depending on how we want to split the workload (see Figure \ref{fig:parallel_2}), which are no more than tasks that are attributed to workers, which run on subprocesses or threads, in a physical core. As such, there can be multiple workers per core, if hyperthreading is supported, and that number can be further multiplied by the \acs{CPU} count of the machine to reach the number of tasks that can be executed in parallel in a single machine. And this parallelisation engine supports easy deployment for multi-machine execution, as will be evident in a few paragraphs.
+
+\image{Implementation/RadCh/Parallelisation_part1.png}{DO THIS}{fig:parallel_1}{.365}
+
+\image{Implementation/RadCh/Parallelisation_part2.png}{DO THIS}{fig:parallel_2}{.365}
+
+%\image{Implementation/RadCh/Parallelisation_complete.png}{DO THIS}{fig:parallel_1}{.85}
+
+As an example, Figures \ref{fig:parallel_1} and \ref{fig:parallel_2} assume 2 frequencies, 3 \acsp{BS} and 4 \acsp{UE}.
+
+How much of the work is assigned to each worker determines how long that worker will take to complete the job. 
+The more each worker has to do, the less workers are required, but each worker takes longer to finish it's job. Bear in mind that there can only be so many workers working at the same time in one machine.
+
+A job can run on a logical core. Normally there's two logical cores per physical core since Hyper-Threading was first introduced by Intel \cite{wiki:hyperthreading}. The maximum number of workers may be even less than the number of logical cores, for example, due to a \acs{RAM} limitations.
+
+If the execution is on a single machine, the only reason to create more instances than the number of logical cores is to use as little \acs{RAM} as possible in each instance. If \acs{RAM} is the limiting factor, or if the trace generation happens in multiple machines simultaneously, then several time divisions help making smaller chunks that allow higher degrees of parallelisation.
+
+Two parameters are sufficient to determine the job size of each instance: i) how many chunks of the workload each instance has to process - the 4 options given in \ref{fig:parallel_2}; and ii) the number Time Divisions - basically, the height of each blue rectangle in Figure \ref{fig:parallel_1}. This determines the number of workers required.
+
+At this point, it's worth diving into some Quadriga specifics. This is particularly important if one wants to develop on top of what is built here. In terms of nomenclature each workload chunk is a Quadriga channel builder. A builder is specific to a \acs{BS}-\acs{UE} pair - \acs{TX}-\acs{RX} pair, if we use Quadriga's terms - in a certain frequency band, and for a specific period of time. The builder contains the necessary information to generate the channel coefficients for that well-parameterised case.
+
+To the most attentive reader, the term 'Time Division` in \ref{fig:parallel_1} regards a portion of the full simulation duration. Time Divisions get us smaller chunks of the total workload, allowing higher degrees of parallelisation. And, in the builders folder, there will be a builder set for each time division, each builder set containing all builders on that time interval.
+
+Builder sets contain several builders - a set with a single builder is only possible if there's only 1 \acs{BS}, 1 \acs{UE}, 1 frequency and the workload is made for one instance only, so completely useless for parallelisation purposes. Further, whenever a new instance is initialised it goes to one of these sets and pics a couple of builders from inside. How many builders it picks up is given exactly in \ref{fig:parallel_2}. Shown in \ref{fig:parallel_1} is what each builder corresponds to. Finally, each builder having an index makes possible to address a specific portion of the workload with ease, such as  when the channels need to be aggregated in time domain for the blocking procedure to happen.
+
+
+
+
+
+
+
+The only requirement for execution in a multi-machine setting is builder consistency. As long as the builders are transferred or generated again in the new machine with the same settings, it works.
+
+\subsection*{Drawback}
+The only purpose of this section is to illustrate the only drawback of this approach, the loss of repeatability with when doing time segmentation. More concretely, repeating a simulation with the same parameters gives always the same result, but a simulation where only the number of time divisions changes should have identical results as previously but a slight change happens.
+Figure \ref{fig:drawback} illustrates a zoomed-in vision of the differences. The left half is slightly lower, the top half is slightly higher, and there's an abrupt transition between the two.
+
+
+\image{Implementation/RadCh/drawback1.png}{DO THIS}{fig:drawback}{.4}
+
+
+In \ref{fig:drawback} each snapshot is a quarter of a millisecond long, so indeed the changes are minuscule and can be ignored. Their severity increases with the time division length, but in realistic simulations there is no noticeable difference between an uninterrupted channel and a channel segmented in time and then stitched. Figure \ref{fig:draw_back_proof} shows 2 seconds of a more realistic simulation. The stitching happens at 1 second mark, showing how imperceptible the transition is in the big picture. As said, all values drift a very small percentage to the ones generated without the parallelisation technique of time division, but we show the drawback only affects repeatability. 
+
+\image{Implementation/RadCh/drawback2.png}{DO THIS}{fig:draw_back_proof}{.33}
+
+
+Qualitatively speaking, choosing of different random generator seeds represents a channel considerably different, so much so that the difference it's easily identified visually. Hence, one can safely make the case that the stitched channel is well within the range of possible values for a channel response. And, to the best of our knowledge, this is a bug internal to Quadriga, and it has been reported.
+
+\subsection{Optimisation strategies} \label{optimisation_strats}
+
+Generating the channel coefficients for multiple users, multiple BSs, multiple frequencies bands with multiple bandwidths, requires one channel generation. This is possible because we are generate all the information at once and then either performing small computations to obtain the remaining or simply using parts of it. 
+
+More concretely, if \acsp{UE} and \acsp{BS} are in the same place we can simply take the coefficients that correspond to that \acs{UE} or \acs{BS}. Likewise for frequency and the bandwidths are generates as described in \ref{subsec:channel_gen}
+
+
+\subsubsection*{Floating-point Precision}
+Although all the computations are made using double-precision, for convenience since that's Matlab's default data type, the channel coefficients are stored as single-precision floating points.
+
+The choice of single- instead of double-precision results from the range of values supported by each. Matlab constructs the single-precision data type according to IEEE Standard 754 using 32 bits to store numbers roughly from $1.8 \times 10^{-38}$ to $3.4 \times 10^{38}$. As such, single-precision allows us to represent numbers in the logarithmic scale in the range $\left[-380, 380\right]$ dB for field intensities or symbol energies, and half that for powers, i.e. $\left[-190, 190\right]$, which is sufficient for our application. This covers the range, regarding how precise the representation is, since only 23 of those 32 bits are used for the mantissa (fractional part), we have $1 / 2^23$ of precision before the representable value changes. In other words, about 6 decimal places that we're sure of being correct. We do not require that much precision, therefore singles can be used without loss of useful information.
+
+Singles use 4 bytes per data point requiring half of the necessary memory of doubles. The gain is substantial when Terabytes of data are concerned. Additionally, besides saving and loading, subsequent operations on single-precision data are faster.

@@ -1,0 +1,6 @@
+THIS SHOULD GO INTO the 2.ApplicationTraffic, where we justify how the burstiness parameter
+causes the frames to be alongated.
+
+
+
+frame_sequence has all the frames in a GoP. If the packet rate is the rate at which we generate packets from the frame. Hence, if it is less than infinity, the bits of a frame at t_0 will spread. If packet rate = frame rate, then we get a constant bitrate - that is if all frames had the same size, because they have not, there would be superposition. Only if we turn off this superposition, and make all the packets come in sequence, we'll have the constant bitrate. Constant bitrate is as spread out as we consider packets to be (burstiness = 0). In other words, the packet rate never gets lower than the frame rate, and packets don't get out of their GoP (of duration GoP/FPS = 0.2s in our case). And all GoPs are the same throughout the simulation.

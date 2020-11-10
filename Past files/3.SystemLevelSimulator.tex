@@ -1,0 +1,319 @@
+\section{System Level Simulator}
+\label{sec:sls}
+
+
+
+% Insert Diagram here.
+
+% Fix Diagram to include the discussions we had on the grid of beams.
+
+On the following list, only the first step is done is MATLAB: the generation of the beams spanning an angular domain, and this depends on antenna geometry (number of elements... \bb{and orientation?}). The SLS in Python will pick-up/load the proper file. Each file is generated for the full angular domain, and contains: azimuth direction, elevation direction and precoder to beamform in that direction.
+
+
+\bb{Important:} X is the number of TTIs without precoder, MCS or SINR estimation updates - it depends on how frequently we want to sample CSI. This also means only updating the OLA after those X number of TTIs.
+
+\subsection*{Grid of Beams}
+\begin{enumerate}
+    \item Span the angular domain with precoders:
+        \begin{enumerate} [label=\roman*.]
+            \item Define angular interval, e.g. $\phi \in [-90, 90] \ \text{and} \  \theta \in [0, 90]$;
+            \item Define resolution in both angular domains;
+            \item Find exact directions to precode;
+            \item Find precoders for those directions;
+        \end{enumerate}
+        
+        \bb{Note1}: This grid of beams has the actual precoders that will be used to serve each user.
+        \bb{Note2}: The generation can also be constraint to hybrid precoding. This way, the resultant precoder is the product of the digital part and of the analog part.
+
+        See \href{https://www.mathworks.com/help/phased/examples/introduction-to-hybrid-beamforming.html}{\ul{Introduction to Hybrid Beamforming in Matlab}} to know how these matrices are formed.
+    
+    \item (purely for performance issues) Select a pool of precoders for each user. This can be done by finding the precoder best suited for the average channel over time, and picking a number of precoders around it. (8 around it, 15 around it, ... $N^2 - 1$ around it, where $N$ is the side of a square)
+    \item Each user will have a possible set of precoders and each X TTIs there's a sweep over the precoders to find the best match. 
+    
+    \bb{Note}: 
+        \begin{itemize}
+            \item sweeping this set should be equivalent to sweeping the full range of precoders. 
+            \item \bb{Are we only changing MCS when we change precoder, i.e. the X TTIs apply to MCS too?}
+        \end{itemize}
+    
+    
+    \item For each user, the beam/precoder with the highest RSRP is selected, interference doesn't matter here. We use this precoder to decide which users to co-schedule (next step);
+    
+    \item Note that we need to estimate the possible throughput in order to select user's priorities. This can be done using the derived precoders directly, accounting for the past experienced interference;
+
+    \item Given the beams selected for each user, choose which users to co-schedule, and this can be done in several ways, 2 of them are:
+    
+    \bb{Option 1}: yes, if their beams are not closer than Y beams away. E.g. Y=1 means they are not in the adjacent beams in the grid.
+
+    \bb{Option 2}: if the precoders don't cause so much interference.
+
+    \item Having decided which users, to co-schedule with those precoders, now the intra-cell interference can also be accounted for. \bb{Question: should it? Or should we just use the SINR previously computed?}
+    \item SINR is estimated with:
+        \begin{itemize}
+            \item The (average) interference computed in the past X TTIs block (it was reported in an CSI-RS-IM report, using a ZP-CSI-RS.). This estimated interference is used in all X TTIs and only changed after;
+            \item The Signal part of the SINR is the RSRP 
+            \item Thermal noise for number of PRBs we're scheduling at once: depends on schedulers granularity (min is 20 PRBs)
+        \end{itemize}
+        \bb{Therefore}, the estimated SINR is the same for X TTIs.
+    \item The difference between the estimated and the realised SINR is aggregated in the \ac{OLLA} parameter.
+    The \acs{OLLA} used in every TTI would be updated like this:
+    \begin{itemize}
+        \item if the \acs{TB} doesn't have errors: $\text{D} = \text{D} + \text{BLER\_TARGET} \times \text{step\_size}$
+        \item if the \acs{TB} has errors: $\text{D} = \text{D} - (1 - \text{BLER\_TARGET}) \times \text{step\_size}$
+    \end{itemize}
+    And D would be a probability parameter that adjusts the estimated BLER to match the reality better, and only after that is the MCS choice done.
+    
+    The same would be done if the MCS and precoders change much more sporadically, resulting in updating the  \acs{OLLA} more rarely also.
+    
+    
+
+    \item Given the SINR estimation, estimate throughput for each user ( this may have been done before already);
+    \item 
+    % \begin{enumerate} [label=\roman*)] % man, latex is amazing
+    %     \item 
+    % \end{enumerate}
+\end{enumerate}
+
+
+
+The actual precoder computation should be based on the feedback of every users. At the moment, we only use the beams they reported to be the best, but after, if we see these beams interference too much, we may ZF for the beam directions! However, this would mean using a beam that is different from the beam that was reported, and using the MCS reported in a different beam would make it even more possible that the channel is different enough to cause a change in the MCS.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection*{Interfacing with the Application Traffic Model}
+
+Important things to take into account:
+\begin{itemize}
+    \item if a \acs{TB} has an error, those packets are not removed from the Buffer, even if the next couple of packets' \acs{TB} has been successfully transmitted already. This makes the latency budget more difficult to achieve, but more realistic;
+    \item If there's an error in a \acs{TB}, technically it would require 1 or 2, some TTIs for the \acs{BS} to know that, and then to allow some retransmission. We consider that the next TTI the packets are readily available for transmission again, hence considering 1 TTI of pause only. This means we are not considering HARQ timings.
+\end{itemize}
+
+
+
+
+
+
+\subsection{Overview of SLS}
+This is the structure of functions of the SLS:
+\begin{enumerate}
+    % \setcounter{enumi}{-2}  % Sets start number to 0
+    \item \bb{Load Coefficients} - Every so many TTIs, a new batch of coefficients needs to be loaded. When there are no more coefficients to load, which happens when the scenario traces get to the end, but the SLSimulation continues, then the traces are reversed (such that they stitch well together) and are loaded again in reverse. This process is repeated as many times as necessary.
+    \item \bb{Identify slot type (UL, DL, F)} - only DL works, so the rest of the process will be described for DL.
+    
+    Also, it's considered that DL and UL slots are completely used for data transfer, and the Flexbile slot used for either DL or UL, depending on the link that needed more resources (e.g. due to buffer status). Furthermore, it's also here that mini-slot scheduling could take place. But that isn't implemented in present version.
+    \item \bb{Queue Update} - For all buffers (depends on UL or DL): Adds new packets, updates head of queue latency budget and drops the packets that won't make it in time. This threshold can be adjusted
+    \item \bb{Precoder Estimation} - Estimates a precoder to be used in the transmission, if the previous is too old. Two methods can be used:
+    Grid of Beams (CRI-based, i.e. the UE reports the best beam received and doesn't make codebook suggestions) or Implicit Beamforming (SRS-based, where the BS has full knowledge of the radio channel).
+        
+    \bb{Questions / remarks}
+        \begin{enumerate}
+            \item \bb{Precoder periodicity} - The precoder should change only when new CSI is derived. How do different TTI intervals impact QoS? Possible values: 1 or 2 slots (unrealistic and unsupported by 3GPP Standards), 5, 10, 20, 50, 100, 200, 400, 600. This means that we only compute new precoders every so many slots.
+            \item \bb{Precoder and CQI Bandwidth} - Both Precoder and CQI (defines MCS) should change with the same periodicity. 
+            \item \bb{Question!!! Scheduling Bands} - How does the precoder relates with the scheduler? 
+            \item \bb{Implicit Beamforming Method} - First we need to know which users to co-schedule before we can derive the ZF precoder. So, the precoder derived here is the MRT precoder;
+            \item \bb{Grid of Beams Method} - pick the beam that has the best power for that user (Future: what about the other 2 or 3 we can also report?)
+        \end{enumerate}
+
+    \item \bb{SINR Estimation} - Provided that we know the precoder: we can use the interference information obtained along with CSI (so, also only changes with CSI periodicity), thermal noise (that will depend on the scheduled bandwidth we are considering), and we may do one of the following to compute the strength of the received signal:
+    \begin{enumerate}[label=\roman*]
+        \item Grid of Beams Precoder: use the reported RSRP - note that the estimated SINR won't change for the CSI period;
+        \item Implicit Precoder: use the signal received from the MRT precoder. Note that the BS will use another precoder to transmit to that user, however, only after knowing which users to pick.
+    \end{enumerate}
+
+    \item \bb{MCS Estimation} - Depending on estimated SINR, match to the intervals of the fitted MCS curves (from Maria) and derive the correct MCS.
+
+    \item \bb{Instantaneous Bitrate estimation} -  Needs a CQI and a number of PRBs to compute the TBS and instantaneous bitrate.
+    
+    \bb{Questions / remarks}
+        \begin{enumerate}
+            \item \bb{How to estimate Inst. Bitrate} - Should the instantaneous bitrate be estimated per scheduled band and then summed, or aggregated over the bands with MIESM and then estimated? Prob. no1.
+        \end{enumerate}
+
+
+    \item \bb{Scheduling (User priority Computation)} - We have 3 schedules: PF, M-LWDF and EXP/PF. The last two consider latency as well as the proportinal fairness ratio of the first.
+    
+
+
+    \item \bb{Scheduling (What users to co-schedule)} - Given the priorities, what users to co-schedule? We can make this decision in many different ways:
+    \begin{enumerate}
+        \item \bb{Grid of Beams} - i) If the beams are more than X apart, co-schedule, with $ X \geq 1$; 
+        \item \bb{Implicit Precoding} - i) If the channels are uncorrelated enough - threshold?; ii) We compute the ZF precoders with all users added to the co-scheduling list (starts empty) and add the next user in the priority list if the interference doesn't degrade other's SINRs more than a certain threshold?
+    \end{enumerate}
+
+    \item 
+\end{enumerate}
+
+\begin{comment}
+        # 2- Precoder Estimation
+        
+        # 3- Instantaneous bitrate estimation
+        #   a) Use precoders in SINR formula
+        #       - in Grid of Beams, the estimated SINR is computed from 
+        #         interference levels measured and reported previously
+        #       - in Implicit/'SRS-based', the estimated SINR is computed
+        #         based on the channel coefficients.
+        
+        # sinrs estimated for different subcarriers or parts of the bandwidth
+        sinrs = [3, 3]  # who knows how many... for each scheduled band?  
+        
+        # TODO: there must be a rough estimate of the MCS of each PRB, or else
+        # one cannot average the SINRs.
+        
+        # SINR aggregation with MI-ESM, over all the prbs (prbs or...?)
+        estimated_SINRs[tti][buf_idx] = sls.avg_SINRs_MIESM(sinrs, 
+                                                            info_bits_table, 
+                                                            k=4)
+    
+        #   b) Pick MCS for each of the scheduled bandwidths?
+        mcs_idx = sls.pick_MCS(estimated_SINRs[tti][buf_idx])
+        
+        #   c) use bitrate on table to estimate the achievable bitrate
+        #      (scaled up by the correct numerology but then scaled down due to
+        #       shorted ttis, which results in having the same number of bits 
+        #       going across, just in a shorter tti(paying with more bandwidth)
+        #       Hence:
+        #       3 kbit/s is for 1 TTI of 1 ms, 1 PRB
+        #                             = 3 Mbits sent in 1 ms for each PRB
+        #       12 kbit/s is for 1 TTI of 0.25 ms, 1 PRB
+        #                             = 3 Mbits sent in 0.25 ms for each PRB
+        # So, bits sent per TTI are the same.
+        # The bitrate is no more than the estimated_bits / TTI_duration. 
+        
+        
+        # 3.5- Get the TBS from the #PRBs and MCS (nº layers, ...)
+        #     a) Estimate how many bits can be sent
+        #     b) From the bits (estimated to be) sent, calc estimated instantaneous throughput
+        
+        # TODO: TEST SCHEDULERSSSSSSSSSS!!!!
+        # 4- Scheduler (Compute Priorities)
+                
+    
+    # 5- Decide which users to co-schedule
+    #   a) don't schedule users that have nothing to send...
+    #   b)
+    
+    idxs_of_served_buffers = [0, 1]
+    # AFTER knowing which uses will be served, compute the transport blocks
+    
+    
+    tb_size = sls.get_TB_size(cqi=3, n_prbs=20)
+    
+    #    c) Calculate how many TBS are needed and allocate them
+    #       (currently, it is assumed that the complete ammount of information
+    #        transmitted to one user is sent using only one transport block)
+    #    Note: the transport blocks to be used need based on the bits that
+    #          are currently waiting in the buffer. Each Transport Block
+    #          is buffer dependent: it has pointers to the beginning and ending
+    #          of the packets inside that transport block.
+    
+    # The Application traffic takes into account the estimated # of bits,
+    # tb_size and the buffer state to generate pairs of 
+    # (size, start_packet_idx). Then the SLS will actually create these TBs.
+    
+    
+    
+    
+    
+    for buf_idx in idxs_of_served_buffers:
+        # list of (size, start_packet_idx) pairs, one for each TB
+        tb_sizes_and_idxs = at.gen_transport_blocks(buffers[buf_idx], 
+                                                    estimated_bits, tb_size)
+        
+        transport_blocks[buf_idx] = [sls.Transport_Block(tb_info[0], 
+                                                         tb_info[1])
+                                     for tb_info in tb_sizes_and_idxs]
+    
+        # 6- Compute the experienced SINR: 
+        #   a) per PRB
+        prbs_sinrs = [3, 4, 5]
+        
+        #   b) then aggregate over the scheduled subband (MIESM)    
+        # TODO: the k should match the MCS used for the transmission.
+        experienced_sinr = sls.avg_SINRs_MIESM(prbs_sinrs, 
+                                               info_bits_table, k=2)
+        
+        # 7- Get BLER from the MCS used and experienced SINR;
+        #    (note, different MCSs can be used in different subbands)
+        cqi = 5
+        bler = sls.MCS_fitted_curves(cqi, experienced_sinr)
+        
+
+        # 8- Flip a biased coin (based on BLER) to know which blocks got errors
+        # (use numpy because the seed will be set in the beginning)
+        
+        for tb in transport_blocks[buf_idx]:
+            if ut.success_coin_flip(prob_of_error=bler):
+                # If the transport block is well received, remove from buffer
+                realised_bits[tti][buf_idx] += tb.size
+                buffers[buf_idx].remove_bits(tb.size, tb.start_idx)
+                pass
+            else:
+                # Transport block has errors, don't remove it from the buffer
+                # instead, update some stats only                
+                blocks_with_errors[tti][buf_idx] += 1
+        
+        
+    
+    
+    
+    # 10- Update the buffers with the throughputs that the user experienced;
+    #   a) Adjust the TBS bitrates depending on the numerology
+    #   b) Update the average bitrate, weighting the previous average and the 
+    #      bitrate of the current tti appropriately
+        instantaneous_bitrate[buf_idx] = \
+            (realised_bits[tti][buf_idx] / 
+             (sim_param.TTI_duration.microseconds * 1e6))
+        
+        avg_throughputs[buf_idx] = \
+            sls.compute_avg_throughput(avg_throughputs[buf_idx], 
+                                       instantaneous_bitrate[buf_idx])
+    # 11- Update statistics (in order not to keep all info...)
+
+
+    # Things to add, maybe:  
+
+    #   - outter loop adaptation: parameter per user, updated on the previous
+    #     tti that encapsulates the quality of the channel. If it was good
+    #     then no MCS adaptation is needed. If it was sh*t, then the MCS 
+    #     picked in the next tti for that user should account for it.
+\end{comment}
+
+
+
+
+\begin{comment}
+STEPS AFTER KNOWING WHICH USERS TO CO-SCHEDULE AND THEIR PRECODERS.
+
+Find the TBS from the MCSs and #PRBs. At the moment, there’s only 1 TB, with the size of the total amount of bits that can go over the channel. But it’s possible to configure a certain TBS such that there are multiple TBs going over. Note that one flips a coin for each TB, therefore the impact of (bad) luck is attenuated since the experienced throughput will represent much more the experienced BLER.
+6- Generate the transport blocks (size, start packet, end packet idx) in an array associated with a certain buffer.
+7- Compute what happened in the actual transmission: a) compute the experienced SINR of all PRBs for all buffers; b) aggregate over all the PRBs into a effective SINR; c) compare with the estimated SINR and adjust the outer loop parameter; d) compute the experienced BLER; 
+8- Transport Block Computations: a) Flip a biased coin based on the BLER; b) Figure which TBs have errors; c) the TBs with errors are not removed from the buffer, the others are; d) Compute realised throughputs;
+9- Update the average throughputs with the realised throughputs;
+10- Update tti stats. Note that every time functions act on buffers, stats are updated, being dropped frames or sent TBs.
+
+\end{comment}
+
+
+\subsection{UL}
+
+The only practical difference between \acs{DL} and \acs{UL} is how the scheduling is done. In the DL, the scheduling is wideband. In the UL, it's according to \cite{4657149}: first we estimate the path loss (even in a GoB-like case we can do this from the RSRP), then using -70dBm and 0.7 as parameters in the formula, we compute the spectral power density. Then, dividing the maximum available UL transmit power by this spectral density, it will give us the maximum bandwidth the UE is capable of transmitting, which we can further divide by the bandwidth of our PRBs (in the numerology we are using) and obtain how many PRBs to request.
+
+Q: if all UEs can transmit in all band, can't we attribute that to them? we are still using receive side beamforming to receiver their signals, right?
+
+Q: in the DL we are doing Wideband precoding. Can we attribute less than a given amount of PRBs to each user? Say, less than the minimum (24)? Maybe if they don't have channel quality for the minimum, they should not be scheduled at this time.
+
+
+
+
+
+
+

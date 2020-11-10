@@ -1,0 +1,122 @@
+\section{System-level Simulator}
+\label{sec:sls}
+
+In this section, we detail the functions executed and information collected during a system-level simulation.
+
+The system-level simulation consists of three main steps: first, the generation of application traffic in accordance with the application layer parameters (defined in Section \ref{sec:at}); second, the initialisation of all variables that are required for the simulation or that will be stored during the simulation - such variables may at any time be expanded to include a less  apparent metrics; and third, the simulation itself, where each \ac{TTI} is separately processed
+
+
+The main steps conducted during system-level simulation of TTIs are:
+
+\begin{enumerate}
+    \item Update \ac{CSI}
+    \item Update Scheduling 
+    \item Process Transmissions
+\end{enumerate}
+
+
+\subsection{Update CSI}
+We access the TTI regarding the CSI update triggering property consists of a checking if the modulo with the CSI periodicity parameter is null. Only in case the previous \ac{TTI} is a \ac{CSI}-collection \ac{TTI} the steps below take place.
+
+\begin{enumerate}
+    \item Update best beam-pairs for each polarisation of each UE, for each BS - given a UE and BS pair, firstly, the best beam-pairs between them are computed. The best beam-pairs are are defined based on the gain achieved from using a given TX precoder and a RX precoder (combiner) over a channel that connects the TX and RX polarisations. The precoder on the BS side is always a beam steering precoder from the GoB, that may be tapered (i.e. weights with different amplitudes across antenna elements) or not. And the UE-side precoder is always the Maximum Ratio derivation that fits the use of BS precoder and the channel. More generally, the BS precoder of choice is given by Equation \eqref{eq:GoB_choice}, and the UE precoder is given by the MRT/MRC (respectively, in UL/DL) correspondent computation, in Equation \ref{eq:GoB_choice_ue}.
+    
+    \begin{equation} \label{eq:GoB_choice}
+        p_{BS} = \argmax_{p \ \in \ \mathcal{P}} \left(c_{b m} \cdot \frac{p}{|p|} \right)
+    \end{equation}
+    
+    \begin{equation} \label{eq:GoB_choice_ue}
+        p_{UE}
+    \end{equation}
+
+    Note that $\mathcal{P}_b$ was defined in Section \ref{sec:GoB_and_csi} as the set of precoders in BS $b$ \ac{GoB}, and $c_{bm}$ is the
+    \todo{continue}
+    The beam-pair computed will be used for UL and DL transmissions.
+    The best beam-pair determines the polarisations
+    \item Update the interference measurements for each polarisation of each UE or BS, respectively, in case of DL or UL - to use the non-zero experienced interference from $\text{TTI}_\text{delay}$ TTIs ago. If the interference of said TTI is null, then the next most recent non-zero interference measurement is used instead.
+\end{enumerate}
+
+Regarding the precoders' update step, note that using the same beam-pair in UL and DL is not optimal in some situations. Assume DL transmission and that one polarisation in the BS is best received by one UE in both polarisations. In this case, the optimal situation would be to transmit both layers with that polarisation in the BS and receive each layer in each of the UE polarisations. Yet, this cannot happen if the same beam-pair is subsequently used for the UL because the reception of different layers with the same polarisation in the BS would lead to very intense interference. Therefore, if the beam-pairs are direction-specific, we are able to cover also such edge cases. Also here we see work for the future.
+
+
+With regards to the interference update step, a major disadvantage of estimating the interference in this manner comes from the fact that the experienced interference is extremely dependent on which UEs are scheduled, and what the beams used, in that given TTI. If the scheduled UEs or precoders in use change, then there a major change in the experienced interference takes place. We foresee precise interference estimation algorithms, perhaps driven by learning mechanisms, to be a future direction of work. For future work related discussions, see Section \ref{sec:future-work}.
+
+Despite the drawbacks of the last two paragraphs, the \ac{CSI} modelling is coherent and realistic. \todo{citation?}
+
+\subsection{Update Scheduling}
+Analogous to the 'Update CSI' procedure, the 'Update Scheduling` phase is only executed in the respective TTIs, depending on the scheduling periodicity. The refresh of which UEs to schedule with 
+
+\begin{enumerate}
+    \item List UEs to consider for scheduling - the ones with non-empty buffers are examined to make part of the list of scheduled UEs. It wouldn't make sense to schedule a UE with nothing to send/receive (respectively, when updating the UL or DL schedule);
+    \item Select BS per polarisation one the UE - the BS with the best beam-pair for a given polarisation in the UE is considered as the serving BS for that polarisation;
+    \item Select SU-MIMO setting on the number of layers - either a single layer or a dual-layer setting is selected. The setting that gives highest aggregated bitrate is chosen. If only one layer is transmitted, it can be transmitted with double the power used per layer in a dual-layer transmission, since it uses the power assigned to the unused layer as well. The selected polarisation for a single-layer transmission is the one that has the highest SINR and the receiving polarisation that pairs best is selected. In the dual-layer transmission there will be a bitrate per data stream. The reception is done with the respective polarisations that maximise each layer's SINR, provided the polarisations are different.
+    
+    To estimate the bitrate, the procedure is the following:
+    \begin{enumerate}
+        \item Use the SINR to estimate the MCS from the \ac{MCS} curves - pick the first \ac{CQI} that achieves a lower percentage of block errors than the \ac{BLER} target (set to 10 \%).
+        \item (Optional) Adjusts the \ac{MCS} choice with the \ac{OLLA} parameter. It can be UE specific or global.
+        \todo{detail the OLLA parameter}
+        \item From the selected MCS and the assigned resources, estimate the achievable bitrate.
+    \end{enumerate}
+    \item Compute priorities based on the estimated instantaneous bitrate. Depending on the scheduler, it may consider the latencies as well.
+    \item Select MU-MIMO setting: list the users that will be co-scheduled. The co-scheduling rule is to add the layer or layers of a UE to the list, by order of \ac{UE} priority, if the best beams used for those layers are compatible with the previously added \ac{UE} layers. We define as incompatible layers with beam-pairs from the \ac{GoB} that are at less than $k$ beams apart. If $k$ is 0, then the all layers are accepted. If $k = 1$, then the beams must be different - adjacent beams have a distance of 1. Beams located diagonally adjacent of the \ac{GoB} are considered to have a distance of 2, hence they may be co-schedule with $k=1$ and $k=2$. Beam distance is defined by the sum of differences of the beam indices in the grid. \todo{add example based on previous GoB formulation} Also, incompatibility is only checked with layers from different users as the SU-MIMO choice before should have decided one the same user layers.
+    \item Distribute the maximum total transmit power amongst the scheduled UEs.
+    \item Re-estimate the \acsp{SINR}, per \ac{UE}, per layer, based on:
+    \begin{enumerate}
+        \item the number of layers each user will actually have, if it has changed from the last estimation
+        \item the newly assigned power
+    \end{enumerate}
+    \item Choose the final MCS, per UE, per layer, based on the last SINR estimate
+\end{enumerate}
+
+
+
+
+There are three noteworthy remarks about the above:
+\begin{itemize}
+    \item It can be performed on a narrowband level: we may do the above for portions of the band. The only thing that needs to change across the schedulable bands is the aggregated-across-time throughput metric in the scheduler, or else the resources would be attributed equality anyway. Therefore, instead of the actual aggregated-across-time throughput, we should use and estimated aggregated-across-time throughput, and update that estimation with the expected bitrate each user would get from the schedulable narrowband. For the first portion of band, the estimation and the actual values would be the same. Note that if the scheduler takes into account latencies as well, then the head-of-queue delay value provided to the scheduler must change across narrowbands, it should assume the bits are correctly sent and compute the latency of 'the next packet on the queue'. Or something even smarter, perhaps like considering a few more packets ahead of time, since it will take a while until the scheduling changes.
+    
+    
+    \item It can be performed for UL as well, with small changes:
+    \begin{itemize}
+        \item The \acsp{PRB} attributed should depend on the channel quality of the UE, and a Power Density should be computed to achieve a certain SINR per \acs{PRB}. \todo{cite paper and input common values}
+        \item The interference needs to be computed differently for the uplink. Same principle, but different variables since other UEs are causing the interference. Furthermore, the wideband interference estimates can be adjusted to equate the total interference in the UL band;
+        \item The noise needs to be computed differently since we won't know how big the bandwidth will be ahead of time. For the first estimation, it is enough to consider the same bandwidth for all users, or to estimate based on the quality of the beam-pair (channel gain measured when CSI measure was obtained). Then, when the actual priorities are defined, a new and more precise value can be used for the noise. Moreover, since interference is expected to me far more relevant than noise, the wideband noise can be considered for both cases, giving a marginally different estimate, even though it is a worst case scenario estimate noise-wise.
+        \item The transmit power in the UL is always the same, it may be more or less distributed across frequency. Unless the in SINR is limited by too much interference and using the less power results in similar SINRs, which is rarely the case, the transmit power can be always maximum.
+    \end{itemize}
+    
+    
+    \item It can be performed for Implicit beamforming, with small changes:
+    \begin{itemize}
+        \item The first SINR estimation is performed with \ac{MRT} precoders;
+        \item The second SINR estimation is performed with \ac{ZF} precoders - that computation requires the MU-MIMO setting;
+        \item Anything else?! 
+    \end{itemize}
+
+    \item When more BSs are used, and when more beams besides the best are reported, something more intelligent can be made in the BS selection. Nonetheless, it is assumed that all BSs communicate at a very fine time scale between them, to choose how to best serve the UEs.
+\end{itemize}
+
+
+
+
+
+Steps on Simulating the TTI:
+\begin{enumerate}
+    \item Get the \ac{TB} size from the \ac{MCS} used and the allocated number of \acsp{PRB}. There's a \acs{TB} per bandwidth part.
+    \item Compute the realised SINR, for each scheduled \acs{UE}:
+    \begin{enumerate}
+        \item Compute Intra-cell interference
+        \item Use default value of Inter-cell interference.
+        \item Compute Noise.
+        \item Compute RSS.
+    \end{enumerate}
+    \item Compute \ac{BLER}.
+    \item Flip a \acs{BLER}-biased coin to determine if the block was well received or had errors
+    \item (In case \ac{OLLA} is used) Update the \acs{OLLA} parameter based on success or not from the block transmission.
+    \item Update the time-aggregated throughput per UE
+\end{enumerate}
+
+
+
+
+

@@ -1,0 +1,35 @@
+1- Fixed author names dashes out if repeated. Now they can be repeated and won't be
+dashed out.
+2- Included [longest acronym] in the acronym list.
+3- Figures path so that is possible to do:
+\image{Intro/fig1.png}{descrip.}{label}{1}
+Instead of:
+\image{Figures/Intro/fig1.png}{descrip.}{label}{1}
+4- replaced 'LE,RO' in page setup for 'C' for centred page numbers
+5- Added '2 declaration.txt' to 'Inicio' folder and to tese.tex. 
+6- Removed the inclusion of subfigure package. Outdated and conflicts with subcaption which is needed
+to properly put figures side by side. (commented the packages.tex and in pagesetup.tex)
+7- Added a myIEEEtran.bst to the file, such that this becomes agnostic to local files: 
+it's a file that defines how the bibliography should look like. I fucking hate when the titles get all
+modified in the bibliography, and a few other things. You may take the 'my' part out and check if you like
+how your bibliography looks like. 
+
+
+Extras:
+1- Quite a few new macros, with support for more than 9 argument Macros.
+2- \usepackage{enumitem} for different enumerates and 
+	hyperlinked labels to each items.
+
+
+
+
+
+
+
+TODO:
+
+1- There are multiple gramatical errors in several comments. Read all comments and 
+correct them. Take notes here what files were changed.
+
+Cover: (this one is fucking important...)
+	- Examinatiom -> Examination

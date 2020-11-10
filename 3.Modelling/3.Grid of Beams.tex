@@ -1,0 +1,42 @@
+\section{Grid of Beams}
+\label{sec:GoB}
+
+% GoB Creation
+
+To create a GoBs, the directions to which to steer the beam need to be known. The beam-steering directions are all possible combinations of values in the azimuthal and elevation angular domains. And to create one of such domains, one simple way is to use the resolution and the values of the extremes. Defining in Equation \eqref{eq:inter_func} an interpolation function to perform the operation of creating a set of values from $a$ to $b$, given $b$ strictly greater than $a$, with intervals of resolution $r$.
+
+\begin{equation} \label{eq:inter_func}
+    F_I(a, b, r) = \left\{a + i \times r, \forall \ i \in \mathbb{N}_0: i \times r \leq \frac{b-a}{n} \right\}
+\end{equation}
+
+This way, one defines the azimuthal angular domain as $\mathcal{A}_\varphi = F_I(a_\varphi, b_\varphi, r_\varphi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. If the antenna is positioned in the centre of the room, a symmetric approach is the most logical. The GoB should cover all possible positions of the UEs, hence given the position and movement of the users in relation to the size of the room (see Section \ref{sec:sxr_meeting_modelling}), we've set the lower limits to $a_\varphi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\varphi = b_\theta = 60\text{\textdegree}$. 
+
+The resolutions should depend on the array size. To create a pseudo-non-interfering GoB, where the maximum of the main lobe of one beam points at the a minimum of an adjacent beam, the resolution should be roughly half the \ac{FNBW}. It was called `pseudo-non-interfering' because the \ac{FNBW} varies with the direction at which the beam is steered, therefore this method is a simplistic yet effective approach to minimising the interference between beams. 
+
+To conclude, the possible directions can be defined as a cartesian product between the azimuthal and elevation domains, as shown in Equation \eqref{eq:dir}
+
+\begin{equation} \label{eq:dir}
+    \mathcal{D} = \mathcal{A}_\varphi \times \mathcal{A}_\theta = \left\{(\varphi, \theta) : \ \varphi \in \mathcal{A}_\varphi , \ \theta \in \mathcal{A}_\theta\right\}
+\end{equation}
+
+P are the beam-steering vectors, or precoders.
+
+$p_{a,e}$ is a beam-steering vectors computed to maximise the power in direction $a$, $e$, e.g. $p_{30, 45}$
+
+
+
+
+% 1- enable the show of the grid of beams.
+% 2- separate the grid of beams and the CSI
+% 3- do a chapter on the motivation for mmWave, perhaps putting the antenna design stuff there too with many references to 'it will work' and others;
+% finish the fucking symbol list
+
+
+% place some todos on images
+% write the SLS part which is the most important because the transport block part is quite shaky
+
+
+% plan the structure of the thesis - I need the feedback on the SLS part as soon as possible, because if I'm doing something wrong it needs to be corrected quickly
+
+
+
