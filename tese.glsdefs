@@ -1,0 +1,60 @@
+\ifglsentryexists{Delta}{}%
+{%
+\gls@defglossaryentry{Delta}%
+{%
+name={$\Delta $},%
+sort={3D},%
+type={symbols},%
+first={$\Delta $},%
+firstplural={$\Delta $s},%
+text={$\Delta $},%
+plural={$\Delta $s},%
+description={Difference between the mean barrier height and the barrier height of the inhomogeneity/low barrier region (V)},%
+descriptionplural={Difference between the mean barrier height and the barrier height of the inhomogeneity/low barrier region (V)},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{d}{}%
+{%
+\gls@defglossaryentry{d}%
+{%
+name={$d$},%
+sort={2A},%
+type={symbols},%
+first={$d$},%
+firstplural={$d$s},%
+text={$d$},%
+plural={$d$s},%
+description={for testing the sorting},%
+descriptionplural={for testing the sorting},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%

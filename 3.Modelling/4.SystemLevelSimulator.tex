@@ -1,25 +1,21 @@
 \section{System-level Simulator}
 \label{sec:sls}
 
-In this section, we detail the functions executed and information collected during a system-level simulation.
+In this section, we detail the functions executed and information collected during a system-level simulation. The \ac{SLS} receives the radio channel coefficients across time from the channel generator and the application requirements in a form of packets to arrive in certain \acp{TTI}. The simulator has to handle important tasks such as the update of the Channel State Information and the numerous procedures related with individually processing of each \ac{TTI}, in order to imitate the progress of a XR Conference. 
 
-The system-level simulation consists of three main steps: first, the generation of application traffic in accordance with the application layer parameters (defined in Section \ref{sec:at}); second, the initialisation of all variables that are required for the simulation or that will be stored during the simulation - such variables may at any time be expanded to include a less  apparent metrics; and third, the simulation itself, where each \ac{TTI} is separately processed
+See Figure %\ref{}
+for a flowchart with all the steps that take place in the SLS.
 
 
-The main steps conducted during system-level simulation of TTIs are:
+Firstly, at the very start of the TTI, it is identified as a DL or UL TTI. This implies a hard TDD split, in the sense that there aren't flexible slots where either UL or DL transmission is allowed. What is a good TDD split and what is a good frame size? The TDD split should match the throughput requirements, i.e. if the aggregated information to send in the downlink totals twice the information to send in the uplink, then a 2:1 TDD split should offer the best results, from this \textit{à priori} analysis. Regarding the frame size, mind the structure defined by 3GPP, where first all DL slots are . On one hand, the frame size can't be too extensive, or some UEs may starve of throughput and expire the packet latency budgets, leading to excessive packet drops. On the other hand, the frame size must be big enough to support the TDD split defined above. Given the application specifics defined the \ref{sec:at} referring to how the total UL load is proportional to the number of physically present users and DL load changes proportionally to the number of participants, including remote participants too, the TDD splits should be chosen per scenario. 
 
-\begin{enumerate}
-    \item Update \ac{CSI}
-    \item Update Scheduling 
-    \item Process Transmissions
-\end{enumerate}
-
+Before processing the actual TTI, it is verified if the CSI should be updated, given the CSI periodicity. Then, it is also checked if the current scheduling information for that TTI
 
 \subsection{Update CSI}
-We access the TTI regarding the CSI update triggering property consists of a checking if the modulo with the CSI periodicity parameter is null. Only in case the previous \ac{TTI} is a \ac{CSI}-collection \ac{TTI} the steps below take place.
+Only in case the previous \ac{TTI} is a \ac{CSI}-collection \ac{TTI} there is an update on the best beam pairs between the UE and the BS(s), determining the best directions for transmission, and refreshing the interference measurements. The process for CSI update is the following:
 
 \begin{enumerate}
-    \item Update best beam-pairs for each polarisation of each UE, for each BS - given a UE and BS pair, firstly, the best beam-pairs between them are computed. The best beam-pairs are are defined based on the gain achieved from using a given TX precoder and a RX precoder (combiner) over a channel that connects the TX and RX polarisations. The precoder on the BS side is always a beam steering precoder from the GoB, that may be tapered (i.e. weights with different amplitudes across antenna elements) or not. And the UE-side precoder is always the Maximum Ratio derivation that fits the use of BS precoder and the channel. More generally, the BS precoder of choice is given by Equation \eqref{eq:GoB_choice}, and the UE precoder is given by the MRT/MRC (respectively, in UL/DL) correspondent computation, in Equation \ref{eq:GoB_choice_ue}.
+    \item Update best beam-pairs per UE for each BS, per BS polarisation - given a UE and BS pair, firstly, the best beam-pairs between them are computed. The best beam-pairs are defined based on the gain achieved from using a given TX precoder and a RX precoder (combiner) over a channel that connects the TX and RX polarisations. The precoder on the BS side is always a beam steering precoder from the GoB, that may be tapered (i.e. weights with different amplitudes across antenna elements) or not. And the UE-side precoder is always the Maximum Ratio derivation that fits the use of BS precoder and the channel. More generally, the BS precoder of choice is given by Equation \eqref{eq:GoB_choice}, and the UE precoder is given by the MRT/MRC (respectively, in UL/DL) correspondent computation, in Equation \ref{eq:GoB_choice_ue}.
     
     \begin{equation} \label{eq:GoB_choice}
         p_{BS} = \argmax_{p \ \in \ \mathcal{P}} \left(c_{b m} \cdot \frac{p}{|p|} \right)
@@ -44,7 +40,7 @@ With regards to the interference update step, a major disadvantage of estimating
 Despite the drawbacks of the last two paragraphs, the \ac{CSI} modelling is coherent and realistic. \todo{citation?}
 
 \subsection{Update Scheduling}
-Analogous to the 'Update CSI' procedure, the 'Update Scheduling` phase is only executed in the respective TTIs, depending on the scheduling periodicity. The refresh of which UEs to schedule with 
+Analogous to the 'Update CSI' procedure, the 'Update Scheduling` phase is only executed in the respective TTIs, depending on the scheduling periodicity. The update of which UEs to schedule with 
 
 \begin{enumerate}
     \item List UEs to consider for scheduling - the ones with non-empty buffers are examined to make part of the list of scheduled UEs. It wouldn't make sense to schedule a UE with nothing to send/receive (respectively, when updating the UL or DL schedule);

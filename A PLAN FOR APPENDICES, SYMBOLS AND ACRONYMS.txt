@@ -1,3 +1,11 @@
+Use this template instead:
+https://www.overleaf.com/latex/templates/ist-ul-msc-thesis/wrhbmbvzpttw
+
+With the figures and nomenclature from this one:
+https://fenix.tecnico.ulisboa.pt/homepage/ist31052/documentos-para-elaboracao-da-tese
+
+
+
 APPENDICES:
 - put everything on parallelisation in an appendix
 - put every complex deduction in an appendix:
@@ -19,3 +27,8 @@ v -> \gls{v}
 TTI -> \ac{TTI}
 TTIs -> \acs{TTI}
 ...
+
+
+
+
+- Add pdfbookmarks to all chapters

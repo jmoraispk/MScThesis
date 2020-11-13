@@ -1,4 +1,4 @@
-\section{Antenna Design}
+\section{Antenna Design and Beamforming Strategy}
 \label{sec:antennas}
 
 \todo{check these 2 papers: https://ieeexplore.ieee.org/document/7803878 and https://ieeexplore.ieee.org/document/8250021}
@@ -63,3 +63,11 @@ Research on other innovative ways of further reducing the costs in hardware has 
 % BUUUUUT all this argument falls flat since this is just beamforming! 
 % full digital chains would still be required or else only one beam would be possible
 % per antenna array since all phases would be the same.
+
+
+
+
+
+
+
+% phases only also facilitates the power control algorithms because all antennas transmit with the same power always, which in beam forming schemes where the amplitudes of the weights change, when transmitting to multiples users it is necessary to make sure there is on power (amplifier) saturation in any antenna due to the accumulation of weights with high amplitude in that element.

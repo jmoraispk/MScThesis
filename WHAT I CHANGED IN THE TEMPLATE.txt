@@ -13,7 +13,7 @@ to properly put figures side by side. (commented the packages.tex and in pageset
 it's a file that defines how the bibliography should look like. I fucking hate when the titles get all
 modified in the bibliography, and a few other things. You may take the 'my' part out and check if you like
 how your bibliography looks like. 
-
+8- Got a new way of doing lists of symbols. The 00.symlist was just didn't work.
 
 Extras:
 1- Quite a few new macros, with support for more than 9 argument Macros.

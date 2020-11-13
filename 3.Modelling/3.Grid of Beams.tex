@@ -6,37 +6,54 @@
 To create a GoBs, the directions to which to steer the beam need to be known. The beam-steering directions are all possible combinations of values in the azimuthal and elevation angular domains. And to create one of such domains, one simple way is to use the resolution and the values of the extremes. Defining in Equation \eqref{eq:inter_func} an interpolation function to perform the operation of creating a set of values from $a$ to $b$, given $b$ strictly greater than $a$, with intervals of resolution $r$.
 
 \begin{equation} \label{eq:inter_func}
-    F_I(a, b, r) = \left\{a + i \times r, \forall \ i \in \mathbb{N}_0: i \times r \leq \frac{b-a}{n} \right\}
+    F_I(a, b, r) = \left\{a + i \times r \  \forall \ i \in \mathbb{N}_0: i \times r \leq \frac{b-a}{n} \right\}
 \end{equation}
 
-This way, one defines the azimuthal angular domain as $\mathcal{A}_\varphi = F_I(a_\varphi, b_\varphi, r_\varphi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. If the antenna is positioned in the centre of the room, a symmetric approach is the most logical. The GoB should cover all possible positions of the UEs, hence given the position and movement of the users in relation to the size of the room (see Section \ref{sec:sxr_meeting_modelling}), we've set the lower limits to $a_\varphi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\varphi = b_\theta = 60\text{\textdegree}$. 
+This way, we define the azimuthal angular domain as $\mathcal{A}_\phi = F_I(a_\phi, b_\phi, r_\phi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. If the antenna is positioned in the centre of the room, a symmetric approach is the most logical. The GoB should cover all possible positions of the UEs, hence given the position and movement of the users in relation to the size of the room (see Section \ref{sec:sxr_meeting_modelling}), we've set the lower limits to $a_\phi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\phi = b_\theta = 60\text{\textdegree}$. 
 
 The resolutions should depend on the array size. To create a pseudo-non-interfering GoB, where the maximum of the main lobe of one beam points at the a minimum of an adjacent beam, the resolution should be roughly half the \ac{FNBW}. It was called `pseudo-non-interfering' because the \ac{FNBW} varies with the direction at which the beam is steered, therefore this method is a simplistic yet effective approach to minimising the interference between beams. 
 
-To conclude, the possible directions can be defined as a cartesian product between the azimuthal and elevation domains, as shown in Equation \eqref{eq:dir}
+Thus, the possible directions are defined as a cartesian product between the azimuthal and elevation domains, shown in Equation \eqref{eq:dir}.
 
 \begin{equation} \label{eq:dir}
-    \mathcal{D} = \mathcal{A}_\varphi \times \mathcal{A}_\theta = \left\{(\varphi, \theta) : \ \varphi \in \mathcal{A}_\varphi , \ \theta \in \mathcal{A}_\theta\right\}
+    \mathcal{D} = \mathcal{A}_\phi \times \mathcal{A}_\theta = \left\{(\phi, \theta) : \ \phi \in \mathcal{A}_\phi , \ \theta \in \mathcal{A}_\theta\right\}
 \end{equation}
 
-P are the beam-steering vectors, or precoders.
-
-$p_{a,e}$ is a beam-steering vectors computed to maximise the power in direction $a$, $e$, e.g. $p_{30, 45}$
 
 
 
 
-% 1- enable the show of the grid of beams.
-% 2- separate the grid of beams and the CSI
-% 3- do a chapter on the motivation for mmWave, perhaps putting the antenna design stuff there too with many references to 'it will work' and others;
-% finish the fucking symbol list
 
 
-% place some todos on images
-% write the SLS part which is the most important because the transport block part is quite shaky
+
+Having the directions, we need the precoder that will construct a beam pointing in that direction. In Equation \eqref{eq:prec_func} we define the $M$ by $N$ matrix $P_{\phi, \theta}$ that contains the weights to be multiplied to each antenna element, obtaining as a result a beam directed to $\phi$ degrees on the horizontal plane and $\theta$ degrees on the vertical plane. Note that such planes depend on the orientation of the array and the angles $\phi$ and $\theta$ are null in the interception of both planes, corresponding to the direction orthogonal to the array plane (see Appendix \ref{sec:beam_steering} for a complete derivation).
 
 
-% plan the structure of the thesis - I need the feedback on the SLS part as soon as possible, because if I'm doing something wrong it needs to be corrected quickly
+\todo{formulate this properly from the appendix}
+\begin{align} \label{eq:prec_func}
+    P_{\phi, \theta}= 
+    \begin{bmatrix}
+        1 & u_y & \dots & u_y^{(N-1)}\\
+        u_x & u_x u_y & \dots & u_x u_y^{(N-1)}\\
+        \vdots & \vdots & \ddots & \vdots\\
+        u_x^{(M-1)} & u_x^{(M-1)} u_y & \dots & u_x^{(M-1)} u_y^{(N-1)}
+    \end{bmatrix}, \ \text{with} \
+    \begin{cases}
+        u_x = e^{j \pi \cos(\phi)\sin(\theta)} \\
+        u_y = e^{j \pi \sin(\phi)\sin(\theta)}   
+    \end{cases}
+\end{align}
+
+
+Subsequently, to obtain every precoder in the GoB we need to build a precoding matrix for each direction in $\mathcal{D}$. Let us define in Equation \eqref{eq:P} the set $\mathcal{P}$ containing all precoders $p_{\phi, \theta}$ in the GoB, formed for an $M$ by  $N$ \ac{URA}, pointed $\phi$ degrees azimuth and $\theta$ degrees elevation. 
+
+\begin{equation} \label{eq:P}
+    \mathcal{P} = \left\{ P_{\phi, \theta} : (\phi, \theta) \in \mathcal{D}\right\}
+\end{equation}
+
+Figure \ref{fig:GoB} illustrates the result of a cut at zero degrees elevation on beams of two grids. The two grids are built for square antenna arrays, with 16 and 1024 elements, respectively, left and right sides of the figure, hence the noticeably different directivity. Furthermore, since the resolutions were purposely set to match half of the \ac{FNBW}, the grid on the left spans 120 \textdegree of angular domain, from -60\textdegree to 60\textdegree, with steps of 30 \textdegree, while the grid on the right does so with a resolution of 4\textdegree. In total, this equates to 25 distinct beams on the small array, used for sub-6 GHz and 961 beams in the larger array (not physically!) used for mmWaves.
+
+\image{GoB/gob_paper_final_cut.png}{GoB elevation cuts for 4 by 4 (left) and a 32 by 32 (right) antenna element array.}{fig:GoB}{.55}
 
 
 
