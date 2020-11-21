@@ -112,8 +112,8 @@
 % The two packages are not compatible, and you should use one of the two. Notice however that the
 % IEEE BiBTeX stylesheet is imcompatible with the natbib package. If using the IEEE format, use the 
 % cite package instead
-\usepackage[square,numbers,sort&compress]{natbib}
-%\usepackage{cite}
+%\usepackage[square,numbers,sort&compress]{natbib}
+\usepackage{cite}
 
 % PACKAGE acronyum
 % -----------------
@@ -179,6 +179,14 @@
 % Enable TODO notes in order not to forget certain things...
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 
+% for ceil and floor symbols that scale properly
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 
+% In order to include tables from tablesgenerator.com
+%\usepackage[table,xcdraw]{xcolor}
 
+
+\usepackage{tabto}

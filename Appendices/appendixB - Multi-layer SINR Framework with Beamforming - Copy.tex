@@ -1,0 +1,105 @@
+\fancychapter{Multi-layer SINR Framework with Beamforming}
+\label{ap:b}
+
+\section{Beamforming}
+% What is Beamforming?
+Beamforming is the effect of creating beams, directing the radiation of an antenna array in a given direction. This is done by causing constructive interference from the antenna elements in the direction we want to maximise the power. Note also that beamforming can be seen from the perspective of the transmitter and from the perspective of the receiver. The transmitter may maximise the power it wants to transmit in a given direction, just as the receiver wants to maximise the power collected in a given direction. And both want to minimise the effects in other directions, such that less 
+
+To the transmit beamforming is called 'precoding', because the signal is coded by a vector of weights for each antenna element, each weight scaling in amplitude and phase the signal to be transmitted by each AE. Likewise, receive beamforming is called 'combining'. It will be common to refer to the vectors of weights as precoders and combiners, depending on the direction they are used, on simply as beamformers when the direction is not relevant, happens when the same beamformer would be used for both directions.
+
+% MR beamforming
+
+The Maximum Ratio beamformer \cite{795811} needs to be normalised, because the weight's amplitudes would lead to power scaling, and that is not what a beamformer does. The beamformer should not modify the transmitted/received power per antenna element. It should serve to organise the elements contribution such that the signals stack up to a higher power.
+
+
+MRC and MRT consist in the computation of the Hermitian (Conjugate Transpose) of the signal transformation. Note that to scale and align the signals in a way they add-up coherently, corresponds mathematically as: What should I multiply to my vector of complex numbers such that their sum is maximised? The best way is to multiply the conjugate of each complex number! That's exactly what MR beamforming does, shown in Equation \eqref{eq:mrc}.
+
+\begin{equation} \label{eq:mrc}
+    w^\text{MRT} = \frac{h^\text{H}}{|h|}
+\end{equation}
+
+
+% ZF beamforming
+
+
+
+
+
+\section{Received power from a precoded transmission and combined reception}
+Consider the link between an $N_t$ antenna transmitter and an $N_r$ antenna receiver. The transmitter uses $P_0$ total power to get the signal across a channel $\bm{H}$, a $N_t$ by $N_r$ matrix. Furthermore, the transmitter uses a $N_t$ by 1 precoder $\bm{w}_t$ to magnify the power towards the receiver and the receiver uses a $N_r$ by $1$ combiner $\bm{w}_r$ to better collect the power from the transmitter. Finally, consider $\bm{h}_{i,*}$ as the $1$ by $N_r$ vector of coefficients that describes the channel transformation from the transmitter's $i$-th antenna to the receiver's.
+
+
+% The received power is: 
+\begin{align} \label{eq:rx_pow}
+    P_r = P_0 \left|\bm{w}_t^\text{T} \ \bm{H} \ \bm{w}_r \right|^2 
+\end{align}
+
+
+\begin{comment}
+This is wrong!
+
+    \begin{align}
+        
+    &= P_0 \sum_{i=1}^{N_t} \left|  \bm{w}_{t_i} \bm{h}_{i,*} \ \bm{w}_r \right|^2 = \\
+    &= P_0 \mathlarger{\sum}_{i=1}^{N_t} \left| \bm{w}_{t_i} \right|^2 \sum_{j=1}^{N_r} \left| \bm{h}_{i,j} \ \bm{w}_{r_j} \right|^2 = \\
+    &= d
+    \end{align}
+\end{comment}
+
+Notice that if MRC is applied in the receiving \eqref{eq:rx_pow} simplifies to \eqref{eq:rx_pow2}:
+
+\begin{equation}
+    P_r = P_0 N^2 - obviously not right.
+\end{equation}
+
+\todo[inline]{Figure out what is the actual normalisation for a precoder when receiving! And modify all this accordingly!}
+
+Notably, observe how normalisations for transmission and reception beamformers differ. For the transmission, we need to normalise the weight vector to have unitary norm because all the power contributions come from the total transmit power, which we fully decouple from the precoding step. Mathematically, the following should not alter the value of the precoder: $\bm{w}_t = \frac{\bm{w}_t}{\left|\bm{w}_t\right|}$. For the reception however, the weights' normalisation should be such that no power scaling per antenna element takes place. If $|w_i| = 1$ then the amplitude of the signal coming from that antenna will not be scaled, and hence the power also will not be scaled. Depending on the combining strategy, some scaling is desirable in order to prioritise better paths. Thus, instead of imposing no scaling per antenna, we impose a limit on the contribution of all elements $\sum_{i=1}^{N_r} |w_i|^2 = N_r$.
+
+
+Note that Equation \eqref{eq:rx_pow} applies to any number of transmitter and receiver antennas.
+
+
+
+
+
+\section{DL SINR}
+
+
+
+
+\section{UL SINR}
+
+The differences in UL SINR are the following:
+\begin{enumerate}
+    \item Although in the DL the BS transmits with one layer at the time, when receiving it may use antennas from both layers to collect the power. In practice, this results in a received power of...
+    \item dfffffda
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{SINR Formula}
+
+\todo[inline]{Separate Signal power, inter-cell interference, intra-cell interference, and noise (or make the formula fit in some other way.)}
+
+
+\begin{align}
+    \text{SINR}_{bmv} = \frac{\bm{b}_{bmv} \left( \bm{H}_{bm} \bm{w}_{bmv} \right) P^{tx}_{bmv}}{\mathlarger{\sum}_{\ m' \in \hspace{.05cm} \mathcal{M}_b} \sum_{v' = 1}^{V_{bm'}} \left| \bm{C}_{bmm'}(v,v')\right|^2 P^{tx}_{bm'v'} \hspace{.05cm} + \hspace{.05cm}  \mathlarger{\mathlarger{\sum}}_{\substack{b' \in \hspace{.05cm} \mathcal{B} \\ b' \neq b}} \mathlarger{\sum}_{\ \hspace{.05cm} m' \in \hspace{.05cm} \mathcal{M}_{b'}} \sum_{v' = 1}^{V_{b'm'}} \left| \bm{D}_{bmb'm'}(v,v') \right|^2 P^{tx}_{b'm'v'} \hspace{.05cm} + \hspace{.05cm} N \left| \bm{b}_{bmv} \right|^2 }
+\end{align}
+
+And vectorised:
+
+% if the summation sign is small, the limits can go inline. use \limits to prevent that
+\begin{equation}
+    \text{SINR}_{bm} = \frac{\bm{B}_{bm} \left( \bm{H}_{bm} \bm{W}_{bm} \right) \bm{p}^{tx}_{bm}}{\mathlarger{\sum}_{\ m' \in \hspace{.05cm} \mathcal{M}_b} \left| \bm{C}_{bmm'}\right|_{\text{e.w}}^{\odot2} \bm{p}^{tx}_{bm'} \hspace{.05cm} + \hspace{.05cm}  \mathlarger{\sum}_{\substack{b' \in \hspace{.05cm} \mathcal{B} \\ b' \neq b}} \sum\limits_{\ \hspace{.05cm} m' \in \hspace{.05cm} \mathcal{M}_{b'}} \left| \bm{D}_{bmb'm'} \right|_{\text{e.w}}^{\odot2} \bm{p}^{tx}_{b'm'} \hspace{.05cm} + \hspace{.05cm} N \left| \bm{B}_{bm} \right|_{=}^2 }
+\end{equation}

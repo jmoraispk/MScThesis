@@ -10,13 +10,23 @@ As mentioned in section X, such and such can be improved. One way is... Another 
 
 SU-MIMO SETTING:
 
-Additionally, note the asymmetry between UL and DL that a single-layer transmission yields as the reception can be separate in polarisations and the received SINRs summed together.
-
-
-% In case there are physical power limitations! Research is needed to see
-% if this is the case of if we can distribute power more freely!
 Power control: i) distribute the available power uniformly per layer, respecting the maximum available power per antenna element, and how many layers that antenna element is going to transmit; ii) scale down precoders with non-uniform amplitudes on the weights and that are causing power overflows in certain antennas; 
 
 
 % use simulator to compare channel models too. 
 % perhaps a ray tracing simulator is more realistic, since quadriga has difficulties simulating reflections from mmwaves
+
+
+
+% Performance impact of gobs vs Implicit beamforming has not been assessed in mmWaves (the spectrum where most indoor demanding applications will work on) \cite{tddVSfdd_massiveMIMO} - since we have a simulator and need answers there, we should do it.
+
+
+To make several aspects of the simulator more realistic and derive conclusions about the difference in results and if the extra implementation effort is worth. Examples of things that could be more realistic:
+\begin{itemize}
+    \item The transport block size;
+    \item Proper computation of the achievable bitrate instead of using the maximum possible;
+    \item Properly quantify what REs are used for data and what REs are used for something else, and scale performance based on how CSI is acquired: sending CSI-RS and SRS has different overheads;
+    \item Properly model delay?
+\end{itemize}
+
+% per antenna power constraints? see: MIMO Capacity under Power Amplifiers Consumed Power and Per-Antenna Radiated Power Constraints

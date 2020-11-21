@@ -21,6 +21,9 @@ To only way of changing the amplitudes of the weights without requiring one RF c
 
 One popular concern, despite not justified by research, is that analogue phase-shifters are not fast enough switching phases. However, the use of phase-shifters for beam-scanning has been widely used in \ac{RADAR} applications with switching times on the order of nanoseconds \cite{volakis}. Addressing now concerns supported by science, high insertion loss \cite{beam_steering_techniques}, i.e. insertion loss is ..., constitutes the main impairment. The loss grows with frequency, having values of X dBs at Y GHz. This is not a problem because %find a paper that shows this is converging or that the loss is small enough for the frequencies we are considering
 
+% The insertion loss is accounted in the noise figure.
+
+
 
 Conventional beam-steering is one of the most simple techniques for beamforming. Since the beam is steered to one direction only, it is expected to perform less optimally due to focusing . Other more sophisticated techniques could be used \cite{beam_steering_techniques}, yet Ayach \cite{6292865} proves that this conventional simple technique achieves more than 90\% of the maximum rate with optimal beamforming even in unrealistically unfavourable multipath-rich environments. The actual loss in gain is about 4\% with a realistic number of paths for indoor environments \cite{8891356}. This performance gap is justified by a significant reduction in hardware costs \cite{7010533}. Furthermore, the use of analogue phase-shifters and conventional beam-steering has been used in other cases, e.g. Wang's 60 GHz beamforming protocol adopted by IEEE 802.15.3c \cite{5262295}, and is accepted by the research community.
 
@@ -67,7 +70,7 @@ Research on other innovative ways of further reducing the costs in hardware has 
 
 
 
-
+% 
 
 
 % phases only also facilitates the power control algorithms because all antennas transmit with the same power always, which in beam forming schemes where the amplitudes of the weights change, when transmitting to multiples users it is necessary to make sure there is on power (amplifier) saturation in any antenna due to the accumulation of weights with high amplitude in that element.

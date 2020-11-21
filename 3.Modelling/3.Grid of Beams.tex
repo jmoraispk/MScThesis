@@ -29,18 +29,17 @@ Thus, the possible directions are defined as a cartesian product between the azi
 Having the directions, we need the precoder that will construct a beam pointing in that direction. In Equation \eqref{eq:prec_func} we define the $M$ by $N$ matrix $P_{\phi, \theta}$ that contains the weights to be multiplied to each antenna element, obtaining as a result a beam directed to $\phi$ degrees on the horizontal plane and $\theta$ degrees on the vertical plane. Note that such planes depend on the orientation of the array and the angles $\phi$ and $\theta$ are null in the interception of both planes, corresponding to the direction orthogonal to the array plane (see Appendix \ref{sec:beam_steering} for a complete derivation).
 
 
-\todo{formulate this properly from the appendix}
 \begin{align} \label{eq:prec_func}
     P_{\phi, \theta}= 
     \begin{bmatrix}
-        1 & u_y & \dots & u_y^{(N-1)}\\
-        u_x & u_x u_y & \dots & u_x u_y^{(N-1)}\\
+        1 & u_2 & \dots & u_2^{(N-1)}\\
+        u_1 & u_1 u_1 & \dots & u_1 u_2^{(N-1)}\\
         \vdots & \vdots & \ddots & \vdots\\
-        u_x^{(M-1)} & u_x^{(M-1)} u_y & \dots & u_x^{(M-1)} u_y^{(N-1)}
+        u_1^{(M-1)} & u_1^{(M-1)} u_2 & \dots & u_1^{(M-1)} u_2^{(N-1)}
     \end{bmatrix}, \ \text{with} \
     \begin{cases}
-        u_x = e^{j \pi \cos(\phi)\sin(\theta)} \\
-        u_y = e^{j \pi \sin(\phi)\sin(\theta)}   
+        u_1 = e^{j \pi \cos(\phi_r) \cos(\theta_r)} \\
+        u_2 = e^{-j \pi \sin(\phi_r) \cos(\theta_r)}
     \end{cases}
 \end{align}
 

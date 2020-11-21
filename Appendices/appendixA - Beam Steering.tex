@@ -1,7 +1,7 @@
 \fancychapter{Deriving a Beam Steering Vector}
 \label{sec:beam_steering}
 
-This appendix shows how to obtain the steering vector, i.e. the vector of weights to multiply to each antenna element such that the beam has the desired direction. The derivation starts from less elemental grounds, for a complete introduction to beam-steering, consult \cite{balanis_antennas}. Additionally, we adapt the formulas with conventional references on the angles to better angular references that considerably facilitate computations with planar arrays.
+This appendix shows how to obtain a convention beam steering vector, i.e. the vector of complex weights with unitary amplitudes and varying phases to multiply to each antenna element such that the beam has the desired direction. The derivation starts assuming the reader is familiar with antenna theory, and is knowledgeable about the principles behind beam steering. For a complete introduction antenna theory and beam-steering, consult \cite{balanis_antennas}. Additionally, we adapt the formulas with conventional references on the angles to better angular references that considerably facilitate computations with planar arrays.
 
 Let us start by recalling that the radiation/antenna pattern of an antenna array is equal to its directivity scaled by the total radiation power. To facilitate comparisons, we will handle always the normalised version of the antenna pattern, i.e. its directivity. 
 
@@ -13,9 +13,6 @@ The directivity of the array $D_{array}$ for an uniform antenna array (same ante
 
 Furthermore, recall that conventional beam steering is nothing more than changing the array factor such that the resultant antenna pattern has a maximum along the intended direction. The array factor $AF$ with uniform element excitation and a setting illustrated in Figure \ref{fig:af_img} is given in Equation \eqref{eq:af}. Note that for the directivity we need the current-normalised version given by $AF_n = AF / I_0$.
 
-%"A normalised form and simplified formula follows in Equation \eqref{eq:af2}, where the geometric series formula was applied. "
-% AUTHOR: we want the partially normalised formula where we divide by the current only!
-
 \image{Appendix A/array figure.png}{Planar array geometry. From \cite{balanis_antennas}.}{fig:af_img}{.5}
 
 
@@ -24,72 +21,75 @@ Furthermore, recall that conventional beam steering is nothing more than changin
 \end{align}
 
 
-To maximise the power in a given direction we just have to change the phases differences $\beta_x$ and $\beta_y$ such that the exponentials equate 1, for any element/index of the sum. One does so by having the exponent be 0, by making the progressive phase shifts $\beta_x$ and $\beta_y$ be the symmetric of the other term in the same brackets. Consequently, creating a beam to $(\phi_0, \theta_0)$ implies having the progressive phase shifts like the left side of Equations \eqref{eq:new_phases1} and \eqref{eq:new_phases2}.
+To maximise the power in a given direction we just have to change the phases differences $\beta_x$ and $\beta_y$ such that the exponentials equate 1, for any element/index of the sum. One does so by having the exponent be 0, by making the progressive phase shifts $\beta_x$ and $\beta_y$ be the symmetric of the other term in the same brackets. Consequently, creating a beam to $(\phi_0, \theta_0)$ implies having the progressive phase shifts like the left side of Equations \eqref{eq:phases1} and \eqref{eq:phases2}.
 
 \begin{subequations}
     \begin{align}
-        \beta_x &= -k d_x \cos(\phi_0) \sin(\theta_0) \label{eq:new_phases1} \\
-        \beta_y &= -k d_y \sin(\phi_0) \sin(\theta_0) \label{eq:new_phases2}
+        \beta_x &= -k d_x \cos(\phi_0) \sin(\theta_0) \label{eq:phases1} \\
+        \beta_y &= -k d_y \sin(\phi_0) \sin(\theta_0) \label{eq:phases2}
     \end{align}
 \end{subequations}
 
 
-\begin{comment}
-When beam steering in a planar array, having the correct angular references facilitates the computations down the line tremendously. As such, our new angular reference is the array axis, i.e. the axis orthogonal to the plane where the array belongs (in Figure \ref{fig:af_img} the z-axis is orthogonal to the xOy plane). Then we define relative azimuth $\phi_r$ and relative elevation $\theta_r$ as the angles required to rotate the array clockwise around the x-axis and y-axis, respectively, in order to have the array axis in the direction of the supposed maximum. This results in changes both in the $AF$ and in the progressive phase shifts $\beta_x$ and $\beta_y$, but to compute the steering vector we require only the latter. Therefore, the right side of Equations \eqref{eq:new_phases1} and \eqref{eq:new_phases2} contains the phases with adapted references. 
+\subsection*{Angular Reference Adaptation}
+When beam steering in a planar array, having choosing angular references appropriately can facilitate the computations down the line tremendously. As such, we define our new angular references in the array axis, i.e. the axis orthogonal to the plane where the array belongs. Assuming placing and antenna in the YoZ plane, the x axis would be the array axis. This is illustrated in Figure \ref{fig:newAngRef}.
+
+\todo[inline]{Go to https://www.math10.com/en/geometry/geogebra/geogebra.html and draw how the planes are like and where the angles are. NOTE: THE REFERENCES ARE THE X AXIS (ARRAY AXIS) for the elevations and azimuth}
+
+\image{Appendix A/newAngRef.jpg}{newAngRef}{fig:newAngRef}{.5}
+
+
+Then we define relative azimuth $\phi_r$ and relative elevation $\theta_r$, also represented in figure \ref{fig:newAngRef}. Mathematically, $\phi_r = \phi$, but $\theta_r = 90 - \theta$. Therefore, in previous expressions, we transform $\sin(\theta) \rightarrow \cos(\theta_r)$. Note that this is the only change that $\beta_y$ goes through. Additionally, from the principles described in \cite{balanis_antennas}, we must now use $\beta_y$ and $\beta_z$ since there are phase increments along the y-axis and along the z-axis now.
+
+In essence, this reference adaptation results in changes both in the $AF$ and in using different the progressive phase shifts $\beta_y$ and $\beta_z$. Since we require only the latter two to compute the steering vector the new progressive phase shifts are given in Equations \eqref{eq:new_phases1} and \eqref{eq:new_phases2}. 
 
 \begin{subequations}
     \begin{align}
-        \beta_x = -k d_x \cos(\phi_0) \sin(\theta_0) & = -k d_x \sin({\phi_r}_0) \cos({\theta_r}_0) \label{eq:new_phases1} \\
-        \beta_y = -k d_y \sin(\phi_0) \sin(\theta_0) & = k d_y\cos({\phi_r}_0) \cos({\theta_r}_0)\label{eq:new_phases2}
+        \beta_y = -k d_x \sin({\phi_r}_0) \cos({\theta_r}_0) \label{eq:new_phases1} \\
+        \beta_z = k d_y\cos({\phi_r}_0) \cos({\theta_r}_0)\label{eq:new_phases2}
     \end{align}
 \end{subequations}
 
-% VERY IMPORTANT NOT: I'm not sure if the adaptation is correct. 
-% worst case scenario, take the adaptation out and use the first values only
+Note that this adaptation is beneficial not only to facilitate the mathematics for ourselves, but to better integrate our work with the formulations of the community since we could not find a formulation with the elevation and azimuth references along boresight. Such formulation should always be used in cases where the antenna physical orientation matters as it provides a solid base for computing gains based in relative directions. Additionally, this angular reference is widely used in software that performs this sort of computations, yet seldom explained.
 
+For conciseness, the azimuth and elevation referred in the rest of the document are always the relative variants, but this will be reminded in the appropriate sections to avoid confusion.
 
-Note that this adaptation is beneficial not only to facilitate the mathematics for ourselves, but to better integrate our work with the formulations of the community since we could not find a formulation with the elevation and azimuth references along boresight. Such formulation should always be used in cases where the antenna physical orientation matters as it provides a base for computing a gain based in a relative direction.
-\end{comment}
-
-
-
-Finally, to obtain the steering vector we follow a standard procedure, well explained in \cite{7925023}. We define incremental phase steps, along the x-axis denoted by $u_x$ and along the y-axis, denoted by $u_y$, and apply them to the antenna elements in given positions to coherently sum their contribution, see in Equation \eqref{eq:pmn}.
-For the common inter-element spacing of half-wavelength in both orientations ($d_x = d_y = \lambda/2$), one may simplify the $\beta_x$ and $\beta_y$ as in Equations \eqref{eq:ux} and \eqref{eq:uy}.
+Finally, to obtain the steering vector we follow a standard procedure, well explained in \cite{7925023}. We define incremental phase steps, along the y-axis denoted by $u_y$ and along the z-axis, denoted by $u_z$, and apply them to the antenna elements in given positions to coherently sum their contribution, see in Equation \eqref{eq:pmn}.
+For the common inter-element spacing of half-wavelength in both orientations ($d_y = d_z = \lambda/2$), one may simplify the $\beta_y$ and $\beta_z$ as in Equations \eqref{eq:ux} and \eqref{eq:uy}.
 
 \begin{align}
-    p_{m,n} = u_x^{m-1} u_y^{n-1}, \ m &= 1, \dots, M, \label{eq:pmn} \\
+    p_{m,n} = u_z^{m-1} u_y^{n-1}, \ m &= 1, \dots, M, \label{eq:pmn} \\
     n &= 1, \dots, N \nonumber
 \end{align}
 \vspace{-1cm}
+
+
+\begin{comment}
+% WITHOUT RELATIVE AZIMUTH AND ELEVATION
 \begin{align}
     u_x = e^{j \beta_x} &= e^{-j \pi \sin(\phi_0) \sin(\theta_0)} \label{eq:ux} \\
     u_y = e^{j \beta_y} &= e^{-j \pi \cos(\phi_0) \sin(\theta_0)} \label{eq:uy}
 \end{align}
-
-
-
-% IF WE DECIDE TO USE THE RELATIVE AZIMUTH AND ELEVATION
-\begin{comment}
-\begin{align}
-    u_x = e^{j \beta_x} &= e^{-j \pi \sin(\phi_r) \cos(\theta_r)} \label{eq:ux} \\
-    u_y = e^{j \beta_y} &= e^{j \pi \cos(\phi_r) \cos(\theta_r)} \label{eq:uy}
-\end{align}
 \end{comment}
 
+\begin{align}
+    u_y = e^{j \beta_y} &= e^{-j \pi \sin(\phi_r) \cos(\theta_r)} \label{eq:ux} \\
+    u_z = e^{j \beta_z} &= e^{j \pi \cos(\phi_r) \cos(\theta_r)} \label{eq:uy}
+\end{align}
 
 
-
-Resulting in the precoding matrix in Equation \eqref{eq:prec_mat}.
+And using \eqref{eq:pmn}, we obtain the precoding matrix in \eqref{eq:prec_mat}.
 
 \begin{align} \label{eq:prec_mat}
     P = \begin{bmatrix}
         1 & \dots & u_y^{(N-1)}\\
         \vdots & \ddots & \vdots\\
-        u_x^{(M-1)} &  & u_x^{(M-1)}u_y^{(N-1)}
+        u_z^{(M-1)} &  & u_z^{(M-1)}u_y^{(N-1)}
         \end{bmatrix}
 \end{align}
 
-
+% Try to derive angles for antenna in the yOz plane, the same way they are derived for the xOy plane. use the 2 papers in this appendix
+% Hopefully the result is what we say here to be.
 
 
 

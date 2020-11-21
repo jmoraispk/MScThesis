@@ -2,6 +2,24 @@
 % List of symbols
 \pdfbookmark[1]{List of Symbols}{los}
 
+
+
+% IF there's time:
+% MIGRATE THIS LIST OF SYMBOLS TO \newsym based! When the thesis is written, so we know where the first
+% instance of the symbol is.
+
+% \newsym{<description>}{<symbol>}
+% from: https://personal.utdallas.edu/~kxh060100/symlist.pdf
+
+% ONLY DO THIS if the 'dots between description and page number
+% can be removed.
+
+% It would also be nice to have different headings.
+
+
+
+
+% RULE 1:
 % NOTE ON THE MATHEMATICAL SYMBOLS TO USE
 % As epsilon, use the first variant!
 
@@ -14,10 +32,74 @@
 
 % Start of the list of Symbols
 % have 3 lists: Sets, greek letters, normal letters
-% We have to sort them properly, and we do this with the sort key: 1.a goes first than 1.b and both go first than 2.a. Thus, use this method to sort, based on a number per letter type (sets, greek letters,...) and a letter for where that symbol should be
+
+
+% RULE 2:
+% All symbols are italic (subscripts and superscripts don't need to be)
+% except matrices 
+
+% \tab is given in the tabto package
+\newcommand\mytab{\tab \hspace{-5cm}}
+
+% If the box is not visually overfull, ignore the warning
+% it has to do with the huge tab.
+
+
 
 \chapter*{List of Symbols}
-$\Delta$ \hspace{2cm} dresciption
+$\Delta_{OLLA}$ \mytab outer loop link adaptation step
+
+% N for number of something
+$N_r$ \mytab number of receiving antennas
+
+$N_t$ \mytab number of transmitting antennas
+
+$N_\text{CSI Beams}$ \mytab number of beams with CSI-RS, per polarisation
+
+$N_\text{BS}$ \mytab number of \acp{BS}
+
+$N_\text{UE}$ \mytab number of \acp{UE}
+
+$M$ \mytab modulation order \\
+$N_\text{symb}^\text{PRB}$ \mytab number of symbols per PRB \\
+$N_\text{bits}^\text{symb}$ \mytab       number of bits per symbol \\
+$N_\text{info bits}^\text{symb}$ \mytab  number of information bits per symbol \\
+$N_\text{bits}^\text{slot}$ \mytab       number of bits per slot
+
+$R_\text{B}$ \mytab bit rate %pick bitrate or bit rate
+
+$BLER_\text{0}$ \mytab target \ac{BLER}
+
+$\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update
+
+$\bm{w}$ \mytab beamforming vector of weights
+
+$\bm{H}_{bmp}$ \mytab channel matrix between BS $b$ and UE $m$ in BSs polarisation $p$
+
+$p_{\phi, \theta}$ \mytab beamformer part of a GoB with direction $(\phi, \theta)$ \\
+$p_{i,j}$ \mytab beamformer part of a GoB with grid indices $(i,j)$\\
+
+
+% TAU is used for delays
+$\tau_\text{tti}$   \mytab TTI delay 
+
+
+% T for periods
+$T_\text{sch}$  \mytab period for updating scheduling information
+
+$T_\text{csi}$  \mytab period for updating \ac{CSI}
+
+
+% Operations
+
+$|\cdot|$ \mytab euclidean norm of vector
+
+$\bm{A}^\text{H}$ \mytab hermitian of $\bm{A}$, also know as the transpose conjugate of $\bm{A}$
+
+% $\ceil{a}{b}$ \mytab Ceil $a$ to $b$ decimal places, i.e. round $a$ to the next $10^-b$. 
+$\ceil{a}$ \mytab ceil $a$, i.e. round $a$ to the next integer
+
+$\floor{\cdot}$ \mytab floor $a$, i.e. round $a$ to the current integer (discards decimal part)
 
 
 \clearpage

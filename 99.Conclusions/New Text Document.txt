@@ -1,0 +1,4 @@
+- vs 3GPP: use of gains
+
+- vs NYU: non-finite 
+	  real gains
