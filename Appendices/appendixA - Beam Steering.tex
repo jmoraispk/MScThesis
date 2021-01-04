@@ -1,9 +1,9 @@
 \fancychapter{Deriving a Beam Steering Vector}
 \label{sec:beam_steering}
 
-This appendix shows how to obtain a convention beam steering vector, i.e. the vector of complex weights with unitary amplitudes and varying phases to multiply to each antenna element such that the beam has the desired direction. The derivation starts assuming the reader is familiar with antenna theory, and is knowledgeable about the principles behind beam steering. For a complete introduction antenna theory and beam-steering, consult \cite{balanis_antennas}. Additionally, we adapt the formulas with conventional references on the angles to better angular references that considerably facilitate computations with planar arrays.
+This appendix shows how to obtain a conventional beam steering vector, i.e. the vector of complex weights with unitary amplitudes and varying phases to apply to each antenna element such that the beam has the desired direction. The derivation starts assuming the reader is familiar with antenna theory, and is knowledgeable about the principles behind beam steering. For a complete introduction antenna theory and beam-steering, consult \cite{balanis_antennas}. Additionally, we adapt the formulas with conventional references on the angles to better angular references that considerably facilitate computations with planar arrays.
 
-Let us start by recalling that the radiation/antenna pattern of an antenna array is equal to its directivity scaled by the total radiation power. To facilitate comparisons, we will handle always the normalised version of the antenna pattern, i.e. its directivity. 
+Let us start by recalling that the radiation/antenna pattern of an antenna array is equal to its directivity scaled by the total radiation power. To facilitate comparisons, we will handle always the normalised version of the antenna pattern, i.e. its directivity. Although one is more used to hear about gains, remember that the gain is nothing more than the directivity multiplied to the antenna radiation efficiency. And they are equal if we consider a perfect radiator. Thus, let us consider the directivity to avoid assuming values that will not be used anywhere else, but note that thinking about gain or directivity makes no difference in the conclusions of this section.
 
 The directivity of the array $D_{array}$ for an uniform antenna array (same antenna elements, uniformly spaced) comes from the product of its current-normalised Array Factor $AF_n$ with the directivity of each antenna element $D_{ae}$. Equation \eqref{eq:d_arr} summarises this fact.
 
@@ -30,13 +30,13 @@ To maximise the power in a given direction we just have to change the phases dif
     \end{align}
 \end{subequations}
 
-
+\begin{comment}
 \subsection*{Angular Reference Adaptation}
-When beam steering in a planar array, having choosing angular references appropriately can facilitate the computations down the line tremendously. As such, we define our new angular references in the array axis, i.e. the axis orthogonal to the plane where the array belongs. Assuming placing and antenna in the YoZ plane, the x axis would be the array axis. This is illustrated in Figure \ref{fig:newAngRef}.
+When beam steering in a planar array, choosing angular references appropriately can facilitate the computations down the line tremendously. As such, we define our new angular references in the array axis, i.e. the axis orthogonal to the plane where the array belongs. Assuming placing the antenna in the YoZ plane, the x axis would be the array axis. This is illustrated in Figure \ref{fig:newAngRef}.
 
 \todo[inline]{Go to https://www.math10.com/en/geometry/geogebra/geogebra.html and draw how the planes are like and where the angles are. NOTE: THE REFERENCES ARE THE X AXIS (ARRAY AXIS) for the elevations and azimuth}
 
-\image{Appendix A/newAngRef.jpg}{newAngRef}{fig:newAngRef}{.5}
+\image{Appendix A/array axis.png}{something I had around. Do proper figure afterwards}{fig:newAngRef}{.45}
 
 
 Then we define relative azimuth $\phi_r$ and relative elevation $\theta_r$, also represented in figure \ref{fig:newAngRef}. Mathematically, $\phi_r = \phi$, but $\theta_r = 90 - \theta$. Therefore, in previous expressions, we transform $\sin(\theta) \rightarrow \cos(\theta_r)$. Note that this is the only change that $\beta_y$ goes through. Additionally, from the principles described in \cite{balanis_antennas}, we must now use $\beta_y$ and $\beta_z$ since there are phase increments along the y-axis and along the z-axis now.
@@ -52,39 +52,45 @@ In essence, this reference adaptation results in changes both in the $AF$ and in
 
 Note that this adaptation is beneficial not only to facilitate the mathematics for ourselves, but to better integrate our work with the formulations of the community since we could not find a formulation with the elevation and azimuth references along boresight. Such formulation should always be used in cases where the antenna physical orientation matters as it provides a solid base for computing gains based in relative directions. Additionally, this angular reference is widely used in software that performs this sort of computations, yet seldom explained.
 
-For conciseness, the azimuth and elevation referred in the rest of the document are always the relative variants, but this will be reminded in the appropriate sections to avoid confusion.
+For conciseness, the azimuth and elevation referred in the rest of the document are always the relative variants, but this will be repeated in the appropriate sections to avoid confusion.
+\end{comment}
 
-Finally, to obtain the steering vector we follow a standard procedure, well explained in \cite{7925023}. We define incremental phase steps, along the y-axis denoted by $u_y$ and along the z-axis, denoted by $u_z$, and apply them to the antenna elements in given positions to coherently sum their contribution, see in Equation \eqref{eq:pmn}.
-For the common inter-element spacing of half-wavelength in both orientations ($d_y = d_z = \lambda/2$), one may simplify the $\beta_y$ and $\beta_z$ as in Equations \eqref{eq:ux} and \eqref{eq:uy}.
+Finally, to obtain the steering vector we follow a standard procedure, well explained in \cite{7925023}. We define incremental phase steps, along the x-axis denoted by $u_x$ and along the y-axis, denoted by $u_y$, and apply them to the antenna elements in given positions to coherently sum their contribution, thus having a weight per element $w_{n_x,n_y}$ as shown in Equation \eqref{eq:pmn}, where $n_x$ and $n_y$ are the indices of the antenna element in the array.
+
+% reasons for half-wavelength
+Regarding inter-element spacing, half-wavelength is the most common distance between elements. Two of the main reasons are: i) half-wavelength is minimum antenna spacing for obtaining a fully formed the main lobe, and the maximum for not obtaining multiple copies of the said main lobe, called grating lobes; and ii) with distances that are even multiples of half-wavelength, the probability that there's a null at both antennas is much lower, enhancing diversity gain.
+
+For the an inter-element spacing of half-wavelength in both orientations ($d_x = d_y = \lambda/2$), one may simplify the $\beta_x$ and $\beta_y$ as in Equations \eqref{eq:ux} and \eqref{eq:uy}.
 
 \begin{align}
-    p_{m,n} = u_z^{m-1} u_y^{n-1}, \ m &= 1, \dots, M, \label{eq:pmn} \\
-    n &= 1, \dots, N \nonumber
+    w_{m,n} = u_x^{n_x-1} u_y^{n_y-1}, \ n_x &= 1, \dots, N_x, \label{eq:pmn} \\
+    n_y &= 1, \dots, N_y \nonumber
 \end{align}
-\vspace{-1cm}
+\vspace{-2cm}
 
 
-\begin{comment}
 % WITHOUT RELATIVE AZIMUTH AND ELEVATION
 \begin{align}
     u_x = e^{j \beta_x} &= e^{-j \pi \sin(\phi_0) \sin(\theta_0)} \label{eq:ux} \\
     u_y = e^{j \beta_y} &= e^{-j \pi \cos(\phi_0) \sin(\theta_0)} \label{eq:uy}
 \end{align}
-\end{comment}
 
+
+\begin{comment}
 \begin{align}
-    u_y = e^{j \beta_y} &= e^{-j \pi \sin(\phi_r) \cos(\theta_r)} \label{eq:ux} \\
-    u_z = e^{j \beta_z} &= e^{j \pi \cos(\phi_r) \cos(\theta_r)} \label{eq:uy}
+    u_y = e^{j \beta_y} &= e^{-j \pi \sin({\phi_r}_0) \cos({\theta_r}_0)} \label{eq:ux} \\
+    u_z = e^{j \beta_z} &= e^{j \pi \cos({\phi_r}_0) \cos({\theta_r}_0)} \label{eq:uy}
 \end{align}
 
+\end{comment}
 
-And using \eqref{eq:pmn}, we obtain the precoding matrix in \eqref{eq:prec_mat}.
+And using \eqref{eq:pmn}, we obtain the beamforming matrix $\bm{W}$ in \eqref{eq:prec_mat}, that maximises the signal transmission/reception in $({\phi_r}_0, {\theta_r}_0)$ direction.
 
 \begin{align} \label{eq:prec_mat}
-    P = \begin{bmatrix}
-        1 & \dots & u_y^{(N-1)}\\
+    \bm{W} = \begin{bmatrix}
+        1 & \dots & u_y^{(N_y-1)}\\
         \vdots & \ddots & \vdots\\
-        u_z^{(M-1)} &  & u_z^{(M-1)}u_y^{(N-1)}
+        u_x^{(N_x-1)} &  & u_x^{(N_x-1)}u_y^{(N_y-1)}
         \end{bmatrix}
 \end{align}
 

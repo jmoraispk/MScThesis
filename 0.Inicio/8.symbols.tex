@@ -46,60 +46,204 @@
 
 
 
-\chapter*{List of Symbols}
-$\Delta_{OLLA}$ \mytab outer loop link adaptation step
+\chapter*{List of Symbols} \todo{should this be called nomenclature instead?}
+(not perfectly alphabetically ordered \ii{yet})
 
-% N for number of something
-$N_r$ \mytab number of receiving antennas
+\subsubsection*{Latin alphabet}
 
-$N_t$ \mytab number of transmitting antennas
+% A
 
-$N_\text{CSI Beams}$ \mytab number of beams with CSI-RS, per polarisation
+% B
+$B$ \mytab bandwidth \\
+$BLER_0$ \mytab target \acs{BLER} \\
 
-$N_\text{BS}$ \mytab number of \acp{BS}
 
-$N_\text{UE}$ \mytab number of \acp{UE}
 
-$M$ \mytab modulation order \\
+% C
+
+% D
+
+% E
+$E_b$ \mytab energy per bit \\
+
+% F
+
+% G
+
+% H
+$\bm{H}_{bmp}$ \mytab channel matrix between BS $b$ and UE $m$ in BSs polarisation $p$\\
+
+% I
+% J
+$j$ \mytab imaginary unit $\left(j = \sqrt{-1}\right)$\\
+
+
+% K
+$k_B$ \mytab Boltzmann constant\\
+
+% L for lengths, and latencies -> this will change
+$L_{max}$ \mytab maximum latency for the radio link \\
+$L_\text{sch}$  \mytab length of scheduling information update period \\
+$L_\text{csi}$  \mytab length of \acs{CSI} update period \\
+$L_\text{slot}$ \mytab length of slot period \\
+$L_\text{TB}$ \mytab length of a transport block, in bits \\
+
+% M
+
+% N (for numbers of something, mainly)
+$N_0$ \mytab noise power spectral density \\
+$N_r$ \mytab number of receive antennas \\
+$N_t$ \mytab number of transmit antennas \\
+$N_{phy}$ \mytab number of physical users \\
+$N_{vir}$ \mytab number of virtual users \\
+$N_\text{CSI Beams}$ \mytab number of beams with CSI-RS, per polarisation \\
+$N_\text{BS}$ \mytab number of \acsp{BS} \\
+$N_\text{UE}$ \mytab number of \acsp{UE} \\
 $N_\text{symb}^\text{PRB}$ \mytab number of symbols per PRB \\
-$N_\text{bits}^\text{symb}$ \mytab       number of bits per symbol \\
-$N_\text{info bits}^\text{symb}$ \mytab  number of information bits per symbol \\
-$N_\text{bits}^\text{slot}$ \mytab       number of bits per slot
+$N_\text{bits}^\text{symb}$ \mytab number of bits per symbol \\
+$N_\text{info bits}^\text{symb}$ \mytab number of information bits per symbol \\
+$N_\text{bits}^\text{slot}$ \mytab number of bits per slot \\
+$N_\text{req PRB}$ \mytab number of requested PRBs by a UE for an UL transmission \\
+$N_\text{TB}^\text{slot}$ \mytab number of transport blocks per slot \\
+$N_{bml}^\text{PRB}$ \mytab number of PRBs scheduled for a transmission \\
+${ }$ \mytab between BS $b$ and UE $m$ in layer $l$ \\
+$NF_r$ \mytab noise figure at the receiver \\
+$N_x$ \mytab number of antennas along the x-dimension\\
+$N_y$ \mytab number of antennas along the y-dimension\\
+$NF_\text{BS}$ \mytab BS noise figure \\
+$NF_\text{UE}$ \mytab UE noise figure\\
 
-$R_\text{B}$ \mytab bit rate %pick bitrate or bit rate
+% O
 
-$BLER_\text{0}$ \mytab target \ac{BLER}
+% P (used for powers)
+$P_n$ \mytab noise power \\
+$P_r$ \mytab received power \\
+$P_s$ \mytab received signal power \\
+$P_t$ \mytab transmit power \\
+$P_t^\text{UE}$ \mytab maximum transmit power per UE\\
+$P_t^\text{BS}$ \mytab maximum transmit power per BS \\
+$P_{bml}^\text{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $m$ in layer $l$ \\
+$P_{bml}^\text{UE}$ \mytab transmit power at the UE for a link between BS $b$ and  UE $m$ in layer $l$ \\
+$P_\text{IntraCI}$ \mytab interference power from intra-cell interference sources \\
+$P_\text{InterCI}$ \mytab interference power from inter-cell interference sources \\
+$P_\text{ILI}$ \mytab interference power from inter-layer interference \\
+${ }$ \mytab (applicable when there is a multi-layer transmission) \\
+$P_\text{PRB}$ \mytab transmit power per PRB \\
 
-$\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update
+% Q
+$Q_m$ \mytab modulation order \\
+$Q_{P-I}$ \mytab P-frame to I-frame ratio \\
 
-$\bm{w}$ \mytab beamforming vector of weights
+% R
+$R_b$ \mytab bit rate \\
+$\hat{R}_b$ \mytab estimated bit rate \\
+$R_c$ \mytab code rate \\
+$\overline{R}_{DL}$ \mytab average application information rate in the \ac{DL}\\
 
-$\bm{H}_{bmp}$ \mytab channel matrix between BS $b$ and UE $m$ in BSs polarisation $p$
+% S
+$s_\text{TDD}$ \mytab TDD split \\
+$SINR_\text{eff}$ \mytab effective SINR, i.e. aggregated over all scheduled PRBs \\
+$SINR_i$ \mytab SINR of the i-th PRB \\
+$S_t$ \mytab power spectral density at transmission\\
+$S_I$ \mytab size of I frame\\
+$S_P$ \mytab size of P frame\\
 
-$p_{\phi, \theta}$ \mytab beamformer part of a GoB with direction $(\phi, \theta)$ \\
-$p_{i,j}$ \mytab beamformer part of a GoB with grid indices $(i,j)$\\
+% T for periods [s] and Temperatures
+$T_\text{slot}$  \mytab slot duration \\
+$T$ \mytab noise temperature\\
+
+% U
+
+% V
+
+% X
+
+% Y
+
+% W
+$\bm{w}$ \mytab vector of beamforming weights \\
+$\bm{w}_{\phi, \theta}$ \mytab vector of beamforming weights from a GoB with direction $(\phi, \theta)$ \\
+$\bm{w}_{i,j}$ \mytab vector of beamforming weights from a GoB with grid indices $(i,j)$\\
+
+% Z
+
+%\vspace{1cm}
+
+\subsubsection*{Greek alphabet}
+
+% Alpha (Α α)
+$\alpha_P$ \mytab power compensation factor for UL power control\\
+
+% Beta (Β β)
+
+% Gamma (Γ γ)
+$\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update\\
+
+% Delta (Δ δ)
+$\Delta_{OLLA}$ \mytab outer loop link adaptation step\\
+
+% Ε ε
+% Ζ ζ
+% Η η
+% Θ θ
+% Ι ι
+% Κ κ
+% Λ λ
+% Μ μ
+% Ν ν
+% Ξ ξ
+% Ο ο
+% Π π
+% Ρ ρ
+$\rho$ \mytab number of bits per symbol, used in SINR mapping algorithm (MIESM)\\
+
+% Σ σ/ς
+% Tau (Τ τ)  - used for delays
+$\tau_\text{CSI}$   \mytab \acsp{CSI} delay in number of \acsp{TTI} \\
+% Υ υ
+% Φ φ
+% Χ χ
+% Ψ ψ
+% Ω ω
 
 
-% TAU is used for delays
-$\tau_\text{tti}$   \mytab TTI delay 
 
 
-% T for periods
-$T_\text{sch}$  \mytab period for updating scheduling information
-
-$T_\text{csi}$  \mytab period for updating \ac{CSI}
 
 
-% Operations
 
-$|\cdot|$ \mytab euclidean norm of vector
+\subsubsection*{Sets:}
 
-$\bm{A}^\text{H}$ \mytab hermitian of $\bm{A}$, also know as the transpose conjugate of $\bm{A}$
+$\mathbb{N}$ \mytab set of natural numbers \\
+$\mathbb{N}_0$ \mytab set of natural numbers including zero\\
+
+
+
+
+
+\subsubsection*{Other nomenclature}
+
+
+$\bm{A}$ \mytab matrix\\
+
+$\bm{a}$ \mytab column vector\\
+
+$|\bm{a}|$ \mytab euclidean norm of vector $\bm{a}$\\
+
+$\bm{A}^\text{T}$ \mytab transpose of $\bm{A}$\\
+$\bm{A}^\text{H}$ \mytab Hermitian of $\bm{A}$, also know as the transpose conjugate of $\bm{A}$\\
 
 % $\ceil{a}{b}$ \mytab Ceil $a$ to $b$ decimal places, i.e. round $a$ to the next $10^-b$. 
-$\ceil{a}$ \mytab ceil $a$, i.e. round $a$ to the next integer
+$\ceil{a}$ \mytab ceil $a$, i.e. round up $a$ to the nearest integer\\
 
-$\floor{\cdot}$ \mytab floor $a$, i.e. round $a$ to the current integer (discards decimal part)
+$\floor{\cdot}$ \mytab floor $a$, i.e. round down $a$ to the nearest integer \\
+
+
+% $A_\text{[dB]}$ \mytab the quantity A is expressed in dB.\\
+
+
+
+
 
 
 \clearpage

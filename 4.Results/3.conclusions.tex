@@ -1,0 +1,13 @@
+\section{Conclusions}
+
+In this chapter we started by defining the scenario as clearly as possible, as well as any simplifications that took place while simulating such scenario. We provided values to all variables we had previously defined in the Modelling Chapter.
+
+Then, we assessed two reasons for rapid bit rate oscillations. One reason is when the number of packets arriving each TTI oscillates and the achieved bit rate is capped by the number of packets in the buffer. This is the situations in the Section \ref{sec:single-user}, characteristic of a very good channel. And we have naturally concluded that we can only measure accurately what bit rate the link can achieve when the incoming packet bit rate surpasses the achievable bit rate.
+
+The other possibility is when the channel is not optimal, to the point of causing some blocks to have errors, resulting in oscillations in the achieved bit rate. A mix case of phases with bit errors and phases with stable conditions is also possible, and often the case, which makes the situation harder to dissect and demands resorting to other metrics as well. Section \ref{sec:multi-user} was dedicated to exposing some of the metrics we can extract from simulations in order to assess these more complex situations. Also, the most important relations between metrics were put forth.
+
+Moreover, we have identified places that require further attention. There can be implementation bugs, or perhaps some adjustments to the modelling are required. Nonetheless, we have shown working simulations with predominantly coherent results. 
+
+Finally, we presented where we stand in terms of current results, how they can be useful to understand the system, and why that is a considerable step towards more advanced impact analysis. Above all, we can only manage what we can measure, and we need to make sure the measurements are correct.
+
+

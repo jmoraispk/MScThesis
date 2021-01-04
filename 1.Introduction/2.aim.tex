@@ -1,0 +1,13 @@
+\section{Aim of this work}
+\label{sec:aim}
+
+We aim to study what are the best radio access configurations to optimally provide a service to the user. Here `configurations' consist of all parameters that control how radio resources are shared, ranging from algorithms to simple constants. Of course, such configurations are very scenario-specific, and the best match to one application, channel state and network state seldom is the best match to another.
+
+To achieve that we need to derive the impact each configuration on the \ac{QoS} for a given application. Logically, if how each configuration impacts performance is precisely known, it becomes trivial to choose the configurations that lead to the best performance. This is useful not only to optimise the physical deployment by saving costs, but also the management of that service, since ultimately the more efficient the provision of a service is, the less resources it requires to provide that service.
+
+A solid way of obtaining insights about how such configurations impact performance is to model and simulate the application, the network equipment, the radio resource sharing mechanisms and the radio channel and then to measure the impact those configurations have in performance. This work aims to complete the first part. The second part should be completed outside of this thesis.
+
+Thus, this work aims to be a solid base for future research on wireless communications. Not only by providing the simulator to be used for countless simulations, but also by filling modelling gaps required for such simulations. Additionally, through a scalable and maintainable implementation this project can more easily live and be built upon in research, both as a whole or as some of its many self-contained parts. Furthermore, by setting up a simulation framework that connects many mechanisms we allow for different organisations of those mechanisms, and for many new mechanisms (e.g. algorithms) to be included and tested, possibly AI-based.
+
+Finally, although we are considering one specific application with a well-defined use-case, which we will clearly define and model the necessary components further ahead, we expect many of the conclusions to also apply to other applications. Furthermore, the methodologies here presented can be replicated to derive application-specific conclusions for different applications.
+

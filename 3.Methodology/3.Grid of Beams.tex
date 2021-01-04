@@ -1,0 +1,54 @@
+\section{Grid of Beams}
+\label{sec:GoB}
+
+% GoB Creation
+
+To create a GoB, the directions to which to steer the beam need to be known. The beam-steering directions are all possible combinations of values in the azimuthal and elevation angular domains. And to create one of such domains, one simple way is to use the resolution and the values of the extremes. Defining in Equation \eqref{eq:inter_func} an interpolation function to perform the operation of creating a set of values from $a$ to $b$, given $b$ strictly greater than $a$, with intervals of resolution $r$.
+
+\begin{equation} \label{eq:inter_func}
+    F_I(a, b, r) = \left\{a + i \times r \  \forall \ i \in \mathbb{N}_0: i \times r \leq \frac{b-a}{n} \right\}
+\end{equation}
+
+This way, we define the azimuthal angular domain as $\mathcal{A}_\phi = F_I(a_\phi, b_\phi, r_\phi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. If the antenna is positioned in the centre of the room, on the ceiling, pointing downwards, then the most logical approach is a symmetric approach because in that position the coverage of the room would be uniform since we consider our room with equal length and width(for room and user behaviour modelling, see Section \ref{sec:sxr_meeting_modelling}). More concretely, the GoB should cover all positions the UEs are expected to be. Thus, given the position and movement of the users in relation to the size of the room, we have set the lower limits to $a_\phi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\phi = b_\theta = 60\text{\textdegree}$. 
+
+The resolutions should depend on the array size. To create a pseudo-non-interfering GoB, where the maximum of the main lobe of one beam points at the a minimum of an adjacent beam, the resolution should be roughly half the \ac{FNBW}. It is `pseudo-non-interfering' because the \ac{FNBW} varies with the direction at which the beam is steered, which causes the maximums not to perfectly align with the nulls. Although it is effective between adjacent beams, it has little effect non-adjacent beams in the GoB. So, this method is a simplistic yet effective approach to minimise the interference between beams, but it does not annul this interference. 
+
+Thus, the possible directions are defined as a cartesian product between the azimuthal and elevation domains, shown in Equation \eqref{eq:dir}.
+
+\begin{equation} \label{eq:dir}
+    \mathcal{D} = \mathcal{A}_\phi \times \mathcal{A}_\theta = \left\{(\phi, \theta) : \ \phi \in \mathcal{A}_\phi , \ \theta \in \mathcal{A}_\theta\right\}
+\end{equation}
+
+
+Having the directions, we need the precoder that will construct a beam pointing in that direction. In Equation \eqref{eq:prec_func} we define the $M$ by $N$ matrix $\bm{W}_{\phi, \theta}$ that contains the relative amplitudes and phases that are applied to the signal of each antenna element of an $M$ by $N$ planar array, obtaining as a result a beam directed to $\phi$ degrees on the horizontal plane and $\theta$ degrees on the vertical plane. Note that such planes depend on the orientation of the array and the angles $\phi$ and $\theta$ are null in the interception of both planes, corresponding to the direction orthogonal to the array plane (see Appendix \ref{sec:beam_steering} for a complete derivation).
+
+
+\begin{align} \label{eq:prec_func}
+    \bm{W}_{\phi, \theta}= 
+    \begin{bmatrix}
+        1 & u_2 & \dots & u_2^{(N-1)}\\
+        u_1 & u_1 u_1 & \dots & u_1 u_2^{(N-1)}\\
+        \vdots & \vdots & \ddots & \vdots\\
+        u_1^{(M-1)} & u_1^{(M-1)} u_2 & \dots & u_1^{(M-1)} u_2^{(N-1)}
+    \end{bmatrix}, \ \text{with} \
+    \begin{cases}
+        u_1 = e^{-j \pi \sin(\phi) \sin(\theta)} \\
+        u_2 = e^{-j \pi \cos(\phi) \sin(\theta)}
+    \end{cases}
+\end{align}
+
+
+Subsequently, to obtain every precoder in the GoB we need to build a precoding matrix for each direction in $\mathcal{D}$. Let us define in Equation \eqref{eq:W} the set $\mathcal{W}$ containing all precoders $\bm{w}_{\phi, \theta}$ in the GoB, formed for an $M$ by $N$ \ac{URA}.
+
+\begin{equation} \label{eq:W}
+    \mathcal{W}^\text{GoB} = \left\{ \bm{W}_{\phi, \theta} : (\phi, \theta) \in \mathcal{D}\right\}
+\end{equation}
+
+Figure \ref{fig:GoB} illustrates the result of a cut at zero degrees elevation on beams of two grids. The two grids are built for square antenna arrays, with 16 and 1024 elements, respectively, left and right sides of the figure, hence the noticeably different directivity - using the 3GPP-defined elements in \cite{3gpp-antennas}, the maximum directivity are 32.1 dBi and 68.2 dBi, respectively, for the 16-element array and for the 1024-element array. Furthermore, since the resolutions were purposely set to match half of the \ac{FNBW}, the grid on the left spans 120\textdegree \ of angular domain, from -60\textdegree \ to 60\textdegree, with steps of 30\textdegree, while the grid on the right does so with a resolution of 4\textdegree. In total, this equates to 25 distinct beams on the small array, used for sub-6 GHz and 961 beams in the larger array (not physically!) used for mmWaves.
+
+\image{GoB/gob_paper_final_cut.png}{GoB elevation cuts for 4 by 4 (left) and a 32 by 32 (right) antenna element array.}{fig:GoB}{.55}
+
+%\image{GoB/fig2.png}{GoB elevation cuts for 4 by 4 (left) and a 32 by 32 (right) antenna element array.}{fig:GoB}{.47}
+
+
+% Check the gains and put in the proper plot (or de same...)

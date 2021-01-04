@@ -28,7 +28,6 @@ TTI -> \ac{TTI}
 TTIs -> \acs{TTI}
 ...
 
-
-
-
 - Add pdfbookmarks to all chapters
+- Be sure the references are ordered! When citing, be sure they do: [1][24] and not [24][1] 
+	- \cite{24ref, 1ref} works well for when you don't know which is which, it orders automatically!

@@ -1,86 +1,36 @@
 \section{Motivation}
-\label{sec:int_motivation}
+\label{sec:intro}
 
-Information and Communication Technologies (ICT) have seen considerable advances in the last decades, and they've empowered many discoveries. Today, with the emergence of a new generation of mobile communications, everything seems to be at the edge of change as ICT sets up the base for another Industrial Revolution.
+Information and Communication Technologies (ICT) have seen considerable advances in the last decades, and they have empowered many new applications. Today, with the emergence of the new \ac{5G} of mobile communications, everything seems to be at the edge of change.
 
-In the past, we've seen vital discoveries that catapulted the efficiency of the industry. In the first industrial revolution, the prominent figure was the steam engine. The second began with a new process to mass-produce steel inexpensively and ended with electricity and production lines. Electronic advances and Programmable Logic Controllers (PLCs) allowed the third industrial revolution. A summary of Industrial Revolutions' stages is presented in Figure \ref{fig:industry}. 
+The number of devices connected to \ac{IP} networks will be more than three times the global population by 2023 \cite{cisco}. Cellular speeds will triple in the same period. The growth in connectivity is paramount and gives no indication of slowing down.
 
-\image{Intro/001-industry.jpg}{Stages of Industrial Revolution. Source \cite{img1}}{fig:industry}{.26}
+The objective of \ac{5G} is to meet traffic demands across several economic sectors, e.g. Automotive, Media \& Entertainment, Health and Industry and Energy. To achieve such feat, three main generic services are defined: \ac{eMBB} concerns with supplying extreme data-rates, \ac{mMTC} aims to connect the highest number of devices, usually with low data-rates, allowing wide coverage areas, and \ac{URLLC} guarantees essential \ac{QoS}, like millisecond latencies and 99.999\% reliabilities, for mission-critical applications. Figure \ref{fig:piramid} illustrates how some applications relate to these generic services.
 
-Now, we seem to be close to the fourth stage, where it is customary to deploy a machine with complete connectivity, that communicates and functions in harmony in its environment and is fully controllable at a distance. Robots can interact, and objects can be connected to the system as well. The list of possibilities is far from short, and the future reserves more surprises that one can imagine.
-
-The enabler of this new leap in industrial automation is a versatile network capable of supporting numerous devices and fulfilling demanding requirements. This network is the \ac{5G} of mobile communications.
-
-However, \ac{5G} promises to enhance more areas besides industry. One of \ac{5G} major objectives is to meet traffic demands across several economic sectors, e.g. Health, Media \& Entertainment and Energy. To achieve such feat, 3 main generic services of 5G are defined: \ac{eMBB}, \ac{mMTC} and \ac{URLLC}. Figure \ref{fig:piramid} illustrates these generic services. Short descriptions for each generic service:
-\begin{itemize}
- \item \ac{eMBB} generic service accounts for extreme coverage, extreme data-rates and low latencies;
- \item \ac{mMTC} aims to provide connectivity to the highest number of devices, usually with low data-rates, allowing wide coverage areas, having efficiency in mind to save battery on each device;
- \item \ac{URLLC} priority is to guarantee essential \ac{QoS} for mission-critical applications. Key requirements include latencies of 1 ms and the availability and reliability of 99.999\%
-\end{itemize}.
-
-
-
+%REFFFFF
 \image{Intro/003-piramid.png}{Usage Scenarios of \acs{5G}. Source \cite{img3}}{fig:piramid}{.4}
 
+The service specific characteristics can place it closer to \ac{eMBB} (e.g. Virtual/Augmented Reality (VR/AR) entertainment), closer to \ac{mMTC} (e.g. the many sensors and actuators distributed in a Smart City) or closer to \ac{URLLC} (e.g. remote VR-based surgery). 
+
+% citations:  \cite{5gbook1} and \cite{5gbook2} provide an excellent selection of thought-provoking examples of use cases.
+
+To support said services, \ac{5G} must meet rather demanding requirements. The requirements of vertical markets are what has been driving 5G development. Figure \ref{fig:spider} shows a comparison between the requirements of last generation of mobile communications and 5G's requirement.
+
+\image{Intro/002-IMT-advanced-spider-chart.png}{Spider diagram comparing \acs{4G} and \acs{5G} requirements. Source \cite{img2}}{fig:spider}{.3}
+
+The network has to be extremely well-planned and organised to meet these challenging requirements. Particularly, the role played by the \ac{RAN} is crucial in achieving this feat. As such, the efficient management of radio resources has been the main challenge a network operator had to face. Such radio resource management comprises a suite of mechanisms, including admission control, scheduling, beamforming and adaptive modulation and coding. Said mechanisms operate on different timescales and need to be suitably configured to fit spatio-temporal changes in traffic, user mobility, propagation environment and service mix.
+
+This task is of utmost complexity. In fact, the software complexity of \ac{RAN} in a \ac{BS} exceeds that of Boeing 787 aircraft \cite{5facts_ericsson}. Naturally, with evergrowing demands traditional mechanisms start to lack the required performance. Especially given the recent wide range of applicability, Machine Learning techniques promise to be capable of management strategies that achieve optimal resource adaptation to a given context. Yet another perspective that supports the choice of \ac{AI} and \ac{ML} methodologies is the correlation of performance and available data. As opposed to traditional methodologies that struggle with increased amounts of data, \ac{ML} tools like neural networks perform better with more data.
 
 
-Intuitively from the above figure, the service characteristics may place it closer to eMBB (e.g. Virtual/Augmented Reality (VR/AR) entertainment), closer to mMTC (e.g. the many sensors and actuators distributed in a Smart City) or closer to URLLC (e.g. remote VR-based surgery). 
+How to have one physical network that can balance and cleverly allocate its resources to adapt to multiple types of applications with fundamentally different requirements? The answer is Network Slicing. \ac{5G}'s network architecture enables the multiplexing of virtualised and independent logical networks on the same physical network infrastructure. Essentially, this means there can be application-specific programs (called slices) that automatically tune parameters and configurations across the network in order to best service the user.
 
-To give the reader a broader sense of how useful \ac{5G} may become, \cite{5gbook1} and \cite{5gbook2} provide an excellent selection of thought-provoking examples of use cases. For clarity, it follows a separation in vertical markets:%, i.e. market in which vendors offer goods and services specific to an industry, trade, profession, or other groups of customers with specialised needs.
+But, how should these programs look like? Which parameters should they change? And how should they change them? Needless to say, we do not have the answers to these questions. But we do know a good way of attacking the problem. First, to create solutions that are specific to an application, that will constitute our slice. Then to develop rules for slice management when there are conflicts of interests, which should happen frequently given the limited nature of resources. This way is possible to use the network to optimally provide a service, or close to optimally when there are conflicts, given a current scenario and available resources.
 
-\begin{itemize}
- \item Automotive/Smart Mobility - greater automation in-vehicle driving, \ac{V2V} communication (e.g. for coordination/platooning), \ac{V2I} for information ranging road warnings like congestion or accidents to media delivery. Autonomous driving, High-definition maps, remote maintenance, and railway, public transport and transport of goods are areas that can benefit from improvements from vehicle connectivity.
- 
- \item Media \& Entertainment - Video is the key driver of high bitrate requirement and high bandwidths consumptions. \ac{5G} is expected to enable 4K resolutions and provide a rich user experience with immersive Virtual/Augmented Reality, sometimes used in online multiplayer games. Besides, due to principles like Edge Computing, \ac{5G} should be capable of delivering the content to areas with a very high population density, like a concert or a stadium.
+We focus on an emerging and incredibly demanding application that would not only benefit from but certainly require such optimisations to have its requirements fulfilled. The application in question is social \ac{XR} conferences. It consists of virtual or augmented reality meetings where people can see and interact with each other virtually. It requires the reliable transmission of the body of each participant to all other participants hence necessitating very high throughput. It also needs very low latency to enable seamless human interaction and realistic sense of togetherness.
 
- \item e-Health - Exercise monitoring, continuous health monitoring with medical alerts, remote health service delivery and patient monitoring, ambulance connectivity and remote interventions, possibly in emergencies.
- 
- \item Smart Industry - in Agriculture sensors allow monitoring of soil quality, temperature, wind, crops growth, livestock movement,... And actuators achieve significant work automation, either ranging from luminosity and irrigation control to automated harvesting. More generally, regarding Manufacturing, various tasks such as process control can be made more efficient with massive quantities of RFID tags. Low-power wireless devices can be used for asset management; motion control may become widely used and easily deployable, machine (e.g. robots) monitoring and remote control, AR/VR assisted design, among others.
- 
- \item Smart City - Smart buildings and roads, Energy and Public Safety are some more specific areas where 5G could have a considerable impact. Buildings constructed with sensors, actuators, integrated antennas and monitoring devices for energy efficiency and security. Roads equipped with coordination devices as to allow efficient traffic flow.
- 
- Regarding energy, a Smart Grid that increases the efficiency of electricity use is a crucial factor in the value chain. Fitting the production/generation to the consumption patterns can influence considerably the value generated by an economy. Is possible to connect wind-farms, dams and power plants to control this power and have multiple monitoring sensors to perform load control and achieve fault tolerance. Additionally, in future systems where consumers are also producers of energy, a Smart Grid is fundamental to prevent waste of power. 
- 
- Finally, Public Safety is strengthened with video surveillance, threat detection, facial recognition, communications between police, fire department and ambulances. In case of natural disaster, emerging 5G technologies like Software Defined Networks (SDN) and Network Functions Virtualisation (NFV) are capable of enabling additional coverage in the affected areas, support rescue missions with location services and guaranteeing on the ground connectivity between responders.
- Finally, another two key applications are traffic steering and environment/pollution monitoring.
-\end{itemize}
-
-To support said services, \ac{5G} must meet rather demanding requirements. The requirements of the so-called ``verticals'' are what has been driving 5G development. To illustrate the difference in requirements from the previous generation to \ac{5G}, mind Figure \ref{fig:spider}.
-
-\image{Intro/002-IMT-advanced-spider-chart.png}{Spider diagram for \acs{5G} and \acs{4G} requirements. Source \cite{img2}}{fig:spider}{.3}
-
-The network has to be extremely well planned to meet these challenging requirements. As such, the efficient management of radio resources has been the main challenge a network operator had to face. Such radio resource management comprises a suite of mechanisms, including admission control, scheduling, beamforming and adaptive modulation and coding. Said mechanisms operate on different timescales and need to be suitably configured to fit spatio-temporal changes in traffic, user mobility, propagation environment and service mix.
-
-This task is of the utmost complexity, and traditional mechanisms lack the required performance. Especially with the recent developments, Machine Learning techniques may be capable of management strategies that achieve optimal resource adaptation to a given context. Yet another perspective that supports the choice of \ac{AI} and \ac{ML} methodologies is the correlation of performance and amount of available data. As opposed to traditional methodologies, that struggle with increased amounts of data, \ac{ML} tools like Neural Networks performs better with more data.
-
-
-This work proposes the study of AI/ML methodologies in radio resource management and the comparison of those methodologies with the traditional ones. A system-level simulator is to be projected and built to perform this comparison most fairly and neutrally. Hopefully, this simulator should be suitably generalised to fit further testing of many different resource management strategies. Finally, to derive conclusions regarding the merit of applying the considered AI/ML methodologies in the context of the considered resource management problem.
-
-
-%this one is good
-In the next section, state of the art regarding Machine Learning applied to \ac{4G} and \ac{5G} is reviewed. Also, 5G standards released by \ac{3GPP} and the aspects of relevance they contain are review in the following section.
+Optimising a cutting-edge application with tremendously high requirements at such a large scale promises not to be an easy task. Nonetheless, is the work that operators need to confidently and convincingly guarantee ableness to provide a service with quality.
 
 
 
 
-
-
-
-
-\begin{comment}
- \ac{acro} 
- % The first time you use this, the acronym will be written in full with the acronym in parentheses: supernova (SN). At later times it will just print the acronym: SN.
- 
- \acf{acro}
- % written out form with acronym in parentheses, irrespective of previous use
- 
- \acs{acro}
- % acronym form, irrespective of previous use
- 
- \acl{acro}
- % written out form without following acronym
- 
- \acp{acro}
- % plural form of acronym by adding an s. \acfp. \acsp, \aclp work as well.
-\end{comment}
- 

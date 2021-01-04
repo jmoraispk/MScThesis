@@ -1,4 +1,4 @@
-\section{Future Work}
+\section*{Future Work}
 \label{sec:future-work}
 
 Future work stuff here.
@@ -6,11 +6,6 @@ Future work stuff here.
 
 As mentioned in section X, such and such can be improved. One way is... Another way is... 
 
-
-
-SU-MIMO SETTING:
-
-Power control: i) distribute the available power uniformly per layer, respecting the maximum available power per antenna element, and how many layers that antenna element is going to transmit; ii) scale down precoders with non-uniform amplitudes on the weights and that are causing power overflows in certain antennas; 
 
 
 % use simulator to compare channel models too. 
@@ -24,9 +19,21 @@ Power control: i) distribute the available power uniformly per layer, respecting
 To make several aspects of the simulator more realistic and derive conclusions about the difference in results and if the extra implementation effort is worth. Examples of things that could be more realistic:
 \begin{itemize}
     \item The transport block size;
+    % See: https://www.resurchify.com/5G-tutorial/5G-NR-Throughput-Calculator.php
+    % See: https://www.sharetechnote.com/html/5G/5G_MCS_TBS_CodeRate.html 
     \item Proper computation of the achievable bitrate instead of using the maximum possible;
     \item Properly quantify what REs are used for data and what REs are used for something else, and scale performance based on how CSI is acquired: sending CSI-RS and SRS has different overheads;
     \item Properly model delay?
 \end{itemize}
 
 % per antenna power constraints? see: MIMO Capacity under Power Amplifiers Consumed Power and Per-Antenna Radiated Power Constraints
+
+
+Enhancements:
+\begin{itemize}
+    \item Use Flexible slots and mini-slots: this should give more granularity in the time domain, and it should make the resources fit better the latency requirements, provided the scheduler does a good job;
+\end{itemize}
+
+
+% VERY IMPORTANT slice interaction and management:
+% perhaps quantifying how much each slice needs something and what is that slice priority, in order to decide conflicts of interests between slices..

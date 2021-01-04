@@ -1,5 +1,35 @@
 \section{Scenarios}
 \label{sec:scenarios}
 
+This section defines the scenario concretely in light of the parameters defined in the Methodology Section where (Section ???) all modelling considerations are presented. 
+% \ref SECTION MODELLING
 
-% Scenarios to consider
+Firstly, we analyse the case for a simulation with only one user. In this case, there is no interference thus the \ac{SINR} is very high. Still with one user, we obtain the maximum achievable bitrate, which requires us to change the average DL bitrate to a much higher value. In the next section we analyse in detail all graphs identify that packet shortage limits the measurements of experienced bitrate.
+
+Posteriorly, we simulate for four physically present users. By doing so, we have an insight on how received signal strength varies across time non-identically for different users, how the link adaptation parameter \ac{OLLA} changes depending on block errors, and correlate different metrics with one another, proving the consistency with the model.
+
+Next we set the exact values of each parameter at each point of the chapter.
+
+\section*{Parameters}
+
+With the exception of the number of physical users present in the meeting room $N_{phy}$, and the average downlink application bit rate $\overline{R}_{DL}$. , there are no changes in the parameters throughout the chapter. See all the values of all parameters in the Tables ...
+
+The parameter $N_{phy}$ changes from the first section to the second, respectively, from $N_{phy} = 1$ to $N_{phy} = 4$. The parameter $\overline{R}_{DL}$ is always 80 Mbps with the exception of one plot where it is put to 500 Mbps. The change lasts a single plot only and is carefully marked.
+
+% Use only symbols.
+\todo[inline]{Huge table with parameters for application layer}
+
+
+\todo[inline]{Huge table for network aspects...}
+%Table for deployment? or include in the one above?
+
+Some final remarks in preparation for the rest of the chapter:
+
+\begin{itemize}
+    \item we handle bitrates, not throughputs. Throughputs are the part of the bitrate effectively used for transmitting the data in packets, thus the radio link overhead should be accounted for. Moreover, as means of simplifying, there are no UL slots. As such, the average bitrate should be somewhat inflated;
+    \item the plots will have an horizontal scale from zero to 4000 TTIs representing time. Considering numerology two, 4000 TTIs correspond to one second;
+    \item the results consider single-layer (per UE) transmission since multi-layer operation requires higher degrees of coordination. Note that the layer operation mode does not determine whether one or multiple users are served simultaneously.
+\end{itemize}
+
+
+ 
