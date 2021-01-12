@@ -1,62 +1,172 @@
-\section{5G Physical layer}
+\section{5G New Radio Physical Layer}
 \label{sec:5gphy}
 
 
+5G \ac{NR} is a new \ac{RAT} developed by \ac{3GPP} for the fifth generation mobile communications network. In this section we present all the relevant radio access physical layer aspects in order to align our modelling decisions compatibly with the industry standards.
+
+According to Qualcomm \cite{qualcomm_innovative_five}, the five wireless inventions that define the global 5G standard are:
+
+\begin{enumerate}
+    \item Scalable \acs{OFDM} numerology with variable subcarrier spacing;
+    \item Flexible slot-based framework;
+    \item Advanced \ac{LDPC} channel coding;
+    \item Massive MIMO;
+    \item Mobile mmWave;
+\end{enumerate}
+
+All inventions play a crucial role in the radio access process. Therefore, let us organise this section according to the list above. 
 
 
+\subsection*{Scalable OFDM}
+
+\ac{OFDM} is a digital multi-carrier modulation scheme. Rather than transmit a high-rate stream of data with a single subcarrier, \ac{OFDM} makes use of a large number of closely spaced orthogonal subcarriers that are transmitted in parallel. Each subcarrier is modulated with a conventional digital modulation scheme, such as \ac{PSK} or \ac{QAM}. 
+
+Figure \ref{fig:ofdm} shows an example of OFDM waveforms. Note how the subcarrier nulls line with the peaks. If each subcarrier is sampled at its peak, they are seen orthogonal in frequency hence having zero inter-carrier interference.
+
+\imagecapcontrol{Literature Review/ofdm.png}{Example of \ac{OFDM}-based system represented in time and frequency \cite{keysight_concepts_ofdm}}{fig:ofdm}{.45}{-0mm}
 
 
-The length of the RB in time is called the Transmission Time Interval
-(TTI). It is also considered to be the minimum division to perform operations. 
+In the new air interface, \ac{OFDM} is used for multiple access separating users in different time-frequency resources. To achieve this feat, resources are divided in blocks called \acp{PRB}.  The symbol duration is equal to the inverse of the subcarrier spacing plus roughly 7\% of this value for guard time. The duration of the PRB is equivalent to the duration of a slot and this quantity is often called the \ac{TTI} because it is the minimum division in time to perform operations. 
 
-5G uses \ac{OFDMA} to multiplex access to different UEs simultaneously. OFDMA works by\dots 12 subcarriers, 14 symbols. The symbol duration is inversely \ii{equal} to the subcarrier spacing. But some guard time is used too, so that is not completely the case. In table REF are the different numerologies, or subcarrier spacings/bandwidths, and respective symbol and slot durations in 5G. A slot always has 14 symbols and we call a \ac{PRB} to 12 subcarriers used for a slot's duration.
+The values for subcarrier spacing/width and slot duration in 4G are 15 kHz and 1 ms, respectively. In 5G however the subcarrier spacing value is variable. As such, it is possible to use larger subcarriers to achieve quicker transmissions. The indices for given subcarrier spacing values are called numerologies and Table \ref{tab:num} shows the different  numerologies and the respective subcarrier spacings and slot durations. 
 
-\todo[inline]{put table with numerologies, symbol and slot time}
-% Modulating 
-1/B = 
-symbol time = 
-slot time = 
+% if possible, include this formula somewhere. $ \Delta f = 2^\mu \times 15 $ kHz
 
-% Therefore, if transport block is lost, it will take the BS a couple of TTIs before re transmitting the information on that packet, making it more likely that the packet is dropped.
+\begin{table}[h]
+    \centering
+    \caption{Numerology influence on subcarrier spacing and slot duration.}
+    \label{tab:num}
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Numerology & Subcarrier Spacing {[}kHz{]} & Slot duration {[}$\mu s${]} \\ \hline
+    0          & 15                           & 1000                        \\ \hline
+    1          & 30                           & 500                         \\ \hline
+    2          & 60                           & 250                         \\ \hline
+    3          & 120                          & 125                         \\ \hline
+    4          & 240                          & 62.5                        \\ \hline
+    \end{tabular}
+\end{table}
 
-What spectrum bands? What are frequency ranges, and the numerologies allowed in them...
+
+\subsection*{Slot-based Framework}
+
+The coordination of \ac{UL} and \ac{DL} transmissions is dependent on the slot structure. However, differently from 4G, this structure can change at the end of each transmission period, and the duration of this transmission period can also change \cite{3gpp_slot_periodicity}. Figure \ref{fig:slot_struct} shows how the slot structure is defined in terms of DL slots, the composition of the transition slot in DL, guard and UL transition symbols and UL slots at the end.
+
+\imagecapcontrol{Literature Review/slot_structure.png}{Slot structure}{fig:slot_struct}{.45}{-0mm}
+
+Moreover, each slot can have numerous different formats where each symbol is either used for UL, DL or in a \ac{F} on-the-fly manner. \ac{DL}/\ac{UL} slots are used for carrying \ac{DL}/\ac{UL} or \ac{F} symbols. Figure \ref{fig:slot_format} represents two of the least creative but most used options, however practically any combination of DL, UL and F symbols is available in the standards \cite{3gpp_slot_periodicity}. 
+
+\imagecapcontrol{Literature Review/slot_format2.png}{Slot format}{fig:slot_format}{.45}{-0mm}
+
+On the bottom of Figure \ref{fig:slot_format} we see a format that can be used for self-contained slots, where the F symbol is used as a guard interval. Self-contained slots are specially meant for a quick ACK/NACK feedback in low-latency communications. They can also be used for massive MIMO UL pilots \cite{qualcomm_innovative_five}. The number of necessary guard symbols between UL and DL is due to synchronisation and can be smaller for shorter distances. Namely for indoor applications, it is sufficient a single guard symbol \cite{rel15_self_contained_slot_qualcomm}.
+
+In essence, the standards allow DL and UL assignment to change on a symbol level, thus making transmissions more efficient since resource needs can be met more precisely, with less resource waste by excess \cite{air_interface_system_principles}.
 
 
+\subsection*{Modulation and Coding}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We have so far surveyed how transmissions are organised in time and frequency. Now we review the different ways of coding and modulating the data streams into transmissions. The \ac{MCS} influences the speed at which one can convey information.
+
+Streams of data are organised in groups of bits to be encoded into symbols. More bits are sent per symbol in higher modulation orders. Figure \ref{fig:constellation} shows the \ac{IQ} plane constellation diagrams for \ac{BPSK}, \ac{QPSK}, and 16-\ac{QAM}. 5G additionally supports 64-QAM and 256-QAM. Each symbol encodes $\log_2(M)$ bits - respectively, 1, 2 and 4 for the modulations in the figure -, where $M$ is the modulation order.
+
+\threeimagessidebyside{Literature Review/BPSK.png}{BPSK}{fig:bpsk}{.15}{Literature Review/QPSK.png}{QPSK}{fig:qpsk}{.15}{Literature Review/16QAM.png}{16-QAM}{fig:16qam}{.15}{Constellation diagrams for common digital modulations. Source \cite{splash_constellations}}{fig:constellation}{0.3}{0.3}{0.3}
+
+More concretely, different symbols have different phases (e.g. \ref{fig:qpsk}) or a combination of different amplitudes and phases (e.g. \ref{fig:16qam}) where the distance to the origin marks que amplitude and the complex argument holds the phase. Moreover, the receiver will perceive a different symbol than it was transmitted (e.g. due to noise), the received symbol ends up in a slightly different place of the \ac{IQ} plane. Thus, the closer symbols in the \ac{IQ} plane supposedly are, the most likely they are to be mistaken by other symbols, and we see that symbols get closer with higher modulation orders.
+
+Several combinations of modulations and coding schemes are available. However, it is required to choose the appropriate scheme that best fits the quality of the channel. Table \ref{tab:mcs} holds each possible \ac{MCS} and the respective \ac{CQI} that is reported when the channel state is measured to select each \ac{MCS} to be used. Moreover, the table contains the transmitted information bits (i.e. excluding coding) per symbol under the `Efficiency' column.
+
+\begin{table}[h]
+    \centering
+    \caption{\ac{CQI} Table 5.2.2.1-3 from \cite{3gpp-codebooks}}
+    \label{tab:mcs}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    {\textbf{CQI index}} & {\textbf{Modulation}} & { \textbf{Code rate x 1024}} & {\textbf{Efficiency}} \\ \hline
+    0                                      & \multicolumn{3}{c|}{out of range}                                                                         \\ \hline
+    1  & QPSK   & 78  & 1523  \\ \hline
+    2  & QPSK   & 193 & 377   \\ \hline
+    3  & QPSK   & 449 & 877   \\ \hline
+    4  & 16QAM  & 378 & 14766 \\ \hline
+    5  & 16QAM  & 490 & 19141 \\ \hline
+    6  & 16QAM  & 616 & 24063 \\ \hline
+    7  & 64QAM  & 466 & 27305 \\ \hline
+    8  & 64QAM  & 567 & 33223 \\ \hline
+    9  & 64QAM  & 666 & 39023 \\ \hline
+    10 & 64QAM  & 772 & 45234 \\ \hline
+    11 & 64QAM  & 873 & 51152 \\ \hline
+    12 & 256QAM & 711 & 55547 \\ \hline
+    13 & 256QAM & 797 & 62266 \\ \hline
+    14 & 256QAM & 885 & 69141 \\ \hline
+    15 & 256QAM & 948 & 74063 \\ \hline
+    \end{tabular}
+\end{table}
+
+
+We have addressed multi-layer transmissions previously, however there are constraints regarding how those layers are coded and modulated. As such, we need to define more carefully terms such as \ac{QoS} data streams, codewords and layers.
+
+The \ac{PDSCH} is the main data bearing channel and is allocated to users on a dynamic and opportunistic basis. The \ac{PUSCH} is its \ac{UL}-dual. Such shared channels carry data in \acp{TB} which correspond to a \ac{MAC} layer \ac{PDU}. They are passed from the \ac{MAC} layer to the \ac{PHY} layer once per \ac{TTI}. And a series of \acp{TB} from the same \ac{QoS} flow constitutes a \ac{QoS} data stream. 
+
+The \acp{TB} from the \ac{QoS} data stream have a \ac{CRC} added to them. Then they are segmented into smaller chunks called \acp{CB} and each of those chunks has its own \ac{CRC}. These \acp{CB} are then coded with \ac{LDPC} which is a code that outperforms polar and turbo codes achieving higher code efficiency at considerable lower complexity and with less implementations challenges \cite{qualcomm_innovative_five}. Finally, the \acp{CB} are put back together. Figure \ref{fig:tb_to_codewords} represents the transformation from \acp{TB} to codewords described in this paragraph.
+
+\imagecapcontrol{Literature Review/TB_to_codewords.png}{Block diagram of channel coding chain at the transmitter.}{fig:tb_to_codewords}{.46}{-1mm}
+
+A codeword before modulated is scrambled so as to giving the data to be transmitted useful properties that facilitate demodulation. After modulated, each codeword is separated into a maximum of 4 layers. Then each layers is precoded (in case of the \ac{TX}-side). Frequently, layers are called independent data streams over-the-air, or often data streams, therefore attention to context is required.
+
+Posteriorly, the precoded signals need to be mapped to the respective \acp{RE} since certain signals, namely reference signals, are transmitted at specific time-frequency resources only such that the receiver knows where that reference signal can be found. Each \ac{RE} consists of one subcarrier used for the duration of one \ac{OFDM} symbol, therefore each PRB consists of 168 \acp{RE}.
+
+Then, \ac{OFDM} symbols are generated and mapped from the logical antenna ports to the physical antenna ports. Such mapping depends on the manufacturer's antenna geometry. We review in these considerations in more detail the next section.
+
+Figure \ref{fig:codewords_to_ant} summarises the chain of events from codewords to layers to actual transmission in physical antennas. Although both Figure \ref{fig:tb_to_codewords} and \ref{fig:codewords_to_ant} have transmitter-side block diagrams and descriptions, the receive side is the same, only reversed.
+
+\imagecapcontrol{Literature Review/codewords.png}{Block diagram at the transmitter: from codewords to physical antennas.}{fig:codewords_to_ant}{.46}{-5mm}
+
+
+There can be a maximum of 2 codewords per user. The maximum transmitted layers also have a limit at 8 layers per user when the user is served alone (SU-MIMO) and 2 layers per user when more than one user is served simultaneously (MU-MIMO) \cite{3gpp-codebooks}.
+
+
+\todo[inline]{Format last image as previous}
+
+\subsection*{Massive MIMO}
+
+New Radio operates with several reference signals with tasks as specific as phase-tracking for modulations since as seen previously they require a tight phase synchronisation. We are most interested in three: %two? explain why just two beforehand PERHAPS: Beam management before
+
+\begin{itemize} %perhaps don't include the DMRS..
+    %\item \ac{DMRS} - used to estimate the radio channel for demodulation. It is added to the data before the precoding step (see Figure \ref{fig:codewords_to_ant}) therefore it undergoes exactly the same transformations as the data. Its function is to equalise the channel at the reception. To support multiple-layer MIMO transmission, multiple orthogonal \acp{DMRS} can be scheduled, one for each layer. The \ac{DMRS} is UE-specific, confined to a scheduled resource, and transmitted only when necessary, both in DL and UL. 
+    \item \ac{CSI-RS} - % we may refer to REs.
+    \item \ac{SRS} - 
+\end{itemize}
+% Note about this section: only present things! Decisions are made in the methodology section! i.e. say how things work here. in methodology say we decide to go for GoB.
+
+
+% Works in TDD and in FDD \cite{8255833}, although in FDD it looses the reciprocity benefit thus downlink pilots are used in either types of beamforming.
+
+% IMPORTANT: mention TTI delays of around 5 ttis for channel measurement
+
+
+% this is an okay read to set structures: https://www.nttdocomo.co.jp/english/binary/pdf/corporate/technology/rd/technical_journal/bn/vol20_3/vol20_3_007en.pdf 
+
+% ericson phy too: https://www.ericsson.com/en/reports-and-papers/ericsson-technology-review/articles/designing-for-the-future-the-5g-nr-physical-layer 
+
+\subsubsection*{Beam Management} 
+Beam management paper \cite{8947954}
+\subsubsection*{Channel State Information}
 The codebook-based beamforming mentioned in Section \ref{sec:types_of_beamforming} is CSI-RS-based.
 
 The non-codebook-based beamforming SRS-based.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Why mmWave?}
-
-30 GHz (1cm) to 300 GHz(1mm), but 20-30 in a loose sense is included too.
-
-% Why going to higher frequencies?
-- Spectrum available: Hundreds of MHz below 6 GHz vs Tens of GHz in mmWaves;
-
-\subsection{Massive MIMO}
-
-% For differences between conventional MIMO and Massive MIMO, see
-% https://ma-mimo.ellintech.se/2017/10/17/six-differences-between-mu-mimo-and-massive-mimo/
-% (note that GoB-based is also in conformity with Massive MIMO.)
-
-
 % When making a case about SRS and requiring a lot of pilots, see also:
 % MIMO has unlimited capacity Emil paper (solution for pilot contamination) + The pilot contamination video on cracking the nut
 % Most likely: even with this solution, there won't be enough pilots for 64 antennas per UE
-% Note: the video says that under the rayleigh fading, we have such limitations, but fading is never absolute rayleigh, and often is quite different
-% from it! That just makes the math easier!
 
 
-
+\begin{comment}
 % Advantages of Massive MIMO
 
-When the small-scale fading between antenna elements is sufficiently uncorrelated, which is the case when AEs in arrays are separated more than half-wavelength, then the channel will tend to a deterministic state as the number of AEs increases in BSs or terminals. This happens because the more diversity there is in the channel, the less relevant the big oscillations become because all oscillations average out . This effect is called channel hardening \cite{1327795}.
+When the small-scale fading between antenna elements is sufficiently uncorrelated, which is the case when AEs in arrays are separated more than half-wavelength, then the channel will tend to a deterministic state as the number of AEs increases in BSs or terminals. This happens because the more diversity, the less likely it is that all channels have big oscillations. In essence, the oscillations average out and this average with very litte to no oscillations becomes the current channel. This effect is called channel hardening \cite{1327795}.
 
-% Massive MIMO has multiple advantages on itself, independently of working with GoBs or in free-format operation. Academia has supported the first strategy, while industry has been lying on the second \cite{tddVSfdd_massiveMIMO}
+% Massive MIMO works with GoBs and free-format operation. Academia has supported the first strategy, while industry has been lying on the second \cite{tddVSfdd_massiveMIMO}
 
 % other advantages: much more gain from beamforming and diversity combining, and possibility of spatial multiplexing due to smaller beams. Overall interference reduction from the beams.
 
@@ -115,34 +225,13 @@ The antennas in a BS are cross-polarised \cite{3gpp-antennas} which means the BS
 
 \image{5G phy/planar_array.png}{Replace this with high quality image, still with indexes starting in the top corner and be consistent with the appendix A(do in powerpoint?)}{fig:array}{.8}
 
-Thus, in summary, the mechanism to orthogonality can be polarisations or all together independent paths. When using a GoBs there is a constraint that it is not present in free-format beamforming which is the discretisation of beams. This leads to two major differences when using a GoB as opposed to the implicit variant: i) in order to consider different paths, one has to code reference signals in different beams explicitly and await feedback; and ii) if each polarisations in the BS has a similar response to either polarisation in the UE, then they would interfere significantly, because they can only be transmitted in the beam.
-
 To achieve both degrees of freedom in orthogonality to the UE, the polarisation mechanism in the GoB needs to separate transmissions on a polarisation basis. This means that one must assess the quality of the channel for a single polarisation before considering a transmission on that polarisation. 
 
 
 A maximum of two layers between each UE and each BS is supported in the MU-MIMO codebook \cite{3gpp-codebooks}. But, since UEs do not necessarily beamform codebook-based, each UE may receive/transmit from/to several BSs simultaneously, up to a maximum of eight layers, since this is the the maximum number of layers in the SU-MIMO codebook \cite{3gpp-codebooks}.
 
 
-Therefore, both in GoB operation and in implicit beamforming, this provides the optimal way of proceeding with regards to layer separation, assuming constant total transmit power (i.e. using half the antennas, double the power per antenna can be used).
-
-
-
-
-
-
-% GoB operation: GoB design
 % There are many papers that do codebook design.
-% But they are fairly complicated to implement. We have taken a simple approach of doing a pseudo-non-interfering GoBs.
-
-
-
-
-
-
-
-
-
-
 
 \todo[inline]{Contrast between access beams and fine tuned beams and assumption that we are connected and only managing beam alignment}
 
@@ -184,12 +273,46 @@ Nevertheless, in Section \ref{sec:GoB} we propose a simpler and more manageable 
 
 
 
-% \cite{8947954}
-
-
-% get that last email on the ports of srs and how multiple csi-rs are sent: each resource uses 32 codes (32 ports) and after that different resource elements
-
-
 %CSI images:
 % https://www.sciencedirect.com/topics/engineering/channel-reciprocity
 % https://www.rcrwireless.com/20181015/5g/5g-nr-scanner-based-vs-ue-based-field-measurements 
+
+
+
+
+
+\end{comment}
+
+
+\subsection*{Mobile mmWave}
+
+There are two \acp{FR} in 5G. The specific frequencies of each range are represented in \ref{tab:frs}. Additionally, not all numerologies are available in all bands due to bandwidth constraints. Moreover, \ac{TDD} and \ac{FDD} operation are band dependent too. In particular, FR2 only supports \ac{TDD} operation.
+
+\begin{table}[h]
+    \centering
+    \caption{frs}
+    \label{tab:frs}
+    \begin{tabular}{c|c|c|}
+        \cline{2-3}
+        \multicolumn{1}{l|}{}              & Frequency Range 1 & Frequency Range 2 \\ \hline
+        \multicolumn{1}{|c|}{Frequencies}  & 410 - 7125 MHz    & 24250 - 52600 MHz \\ \hline
+        \multicolumn{1}{|c|}{Numerologies} & 0, 1, 2        & 2, 3           \\ \hline
+        \multicolumn{1}{|c|}{Duplexing}    & TDD, FDD       & TDD               \\ \hline
+        \multicolumn{1}{|c|}{Overhead}    & UL: 0.08 / DL: 0.14      & UL: 0.10 / DL: 0.18               \\ \hline
+    \end{tabular}
+\end{table}
+
+%The maximum transmission bandwidth for one \ac{CC} \cite{} 
+
+% The maximum number of \acp{PRB} is 275 which corresponds to 50 MHz, 100 Mhz, 200 Mhz and 400 Mhz in numerologies 0 to 3. 
+%Considerably more than 20 MHz in LTE. %cite..
+
+% Decide if the 
+
+Although \ac{FR}1 is commonly called `sub-6 GHz', the upper limit has been increased to around 7 GHz \cite{3gpp_bands}. Additionally, Table \ref{tab:frs} contains the overheads of each frequency range for UL and DL, in accordance with \cite{3gpp_overheads}.
+
+
+% difference between throughputs and bitrates. Frequency ranges overheads.
+% Between the actual application bit rate and the bit rate supplied to layer 3 (packet-level) there are still IP headers overhead, TCP overhead
+
+In FR1 the standard allows practically all frequency bands. In FR2 however, there are more specific bands. Roughly speaking, two chunks are currently accounted for in the standards: from 24 to 30 GHz and from 37 to 43 GHz, depending on the location around the globe. In Europe, the assigned mmWave band is 24.25 to 27.5 GHz \cite{5g_2020}.

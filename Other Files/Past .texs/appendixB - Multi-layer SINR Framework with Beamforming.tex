@@ -1,0 +1,97 @@
+\fancychapter{Multi-layer SINR Framework with Beamforming}
+\label{ap:b}
+
+%From symbols to powers. See Haibin doc and notes on 'why $\sum|w_i|^2 = 1$ guarantees no power scaling'.
+
+
+\section{Received power from a precoded transmission and combined reception}
+Consider the link between an $N_t$ antenna transmitter and an $N_r$ antenna receiver. The transmitter uses $P_0$ total power to get the signal across a channel $\bm{H}$, a $N_t$ by $N_r$ matrix. Furthermore, the transmitter uses a $N_t$ by 1 precoder $\bm{w}_t$ to magnify the power towards the receiver and the receiver uses a $N_r$ by $1$ combiner $\bm{w}_r$ to better collect the power from the transmitter. Finally, consider $\bm{h}_{i,*}$ as the $1$ by $N_r$ vector of coefficients that describes the channel transformation from the transmitter's $i$-th antenna to the receiver's.
+
+
+% The received power is: 
+\begin{align} \label{eq:rx_pow}
+    P_r = P_0 \left|\bm{w}_t^\text{T} \ \bm{H} \ \bm{w}_r \right|^2 
+\end{align}
+
+
+\begin{comment}
+This is wrong!
+
+    \begin{align}
+        
+    &= P_0 \sum_{i=1}^{N_t} \left|  \bm{w}_{t_i} \bm{h}_{i,*} \ \bm{w}_r \right|^2 = \\
+    &= P_0 \mathlarger{\sum}_{i=1}^{N_t} \left| \bm{w}_{t_i} \right|^2 \sum_{j=1}^{N_r} \left| \bm{h}_{i,j} \ \bm{w}_{r_j} \right|^2 = \\
+    &= d
+    \end{align}
+\end{comment}
+
+Notice that if MRC is applied in the receiving, Equation \eqref{eq:rx_pow} simplifies as in Equation \eqref{eq:rx_pow2}:
+
+
+\begin{equation} \label{eq:rx_pow2}
+    P_r = P_0 \left| \bm{w}_t^\text{T} \bm{H}  \frac{\ \left(\bm{w}_t^\text{T} \bm{H}\right)^H}{\left| \bm{w}_t^\text{T} \bm{H}\right|}\right|^2 = P_0 \left| \bm{w}_t^\text{T} \bm{H}\right|^2
+\end{equation}
+
+Further note that Equation \eqref{eq:rx_pow2} is applicable to any number of transmitter and receiver antennas.
+
+A detail often overlooked are the normalisations. Every beamformer, transmit or receive side, should always be normalised to its norm, like Equation \eqref{eq:norm} shows. Note that applying this normalisation in an already normalised vector causes no change.
+
+\begin{equation} \label{eq:norm}
+    \bm{w} = \frac{\bm{w}}{\left|\bm{w}\right|}
+\end{equation}
+
+
+% This huge comment is because of the following:
+% I thought There should be an explicit normalisation for the receive precoder. But all normalisations are to the norm.
+\begin{comment}
+
+If MRC is applied when receiving, exactly with the same formula as when transmitting, Equation \eqref{eq:rx_pow} simplifies to Equation \eqref{eq:rx_pow2}. But this is not correct.
+
+
+\begin{equation} \label{eq:rx_pow2}
+    P_r = P_0 \left| \bm{w}_t^\text{T} \bm{H}  \frac{\ \left(\bm{w}_t^\text{T} \bm{H}\right)^H}{\left| \bm{w}_t^\text{T} \bm{H}\right|}\right|^2 = P_0 \left| \bm{w}_t^\text{T} \bm{H}\right|^2
+\end{equation}
+
+But this formula does not does not provide the real received power, only something proportional to it, normalised to the number of receive antennas. This common mistake happens due to normalisations. We present the correct formula for the absolute power at the end of this section.
+
+\subsection*{Correction with normalisations}
+Notably, observe how normalisations for transmission and reception beamformers should differ. For the transmission, we need to normalise the weight vector to have unitary norm because all the power contributions come from the total transmit power, which we fully decouple from the precoding step. Mathematically, the following (in Equation \eqref{eq:t_norm}) should not alter the value of the precoder. 
+
+\begin{equation} \label{eq:t_norm}
+    \bm{w}_t = \frac{\bm{w}_t}{\left|\bm{w}_t\right|}
+\end{equation}
+
+For the reception however, the weights' normalisation should be such that no power scaling per antenna element takes place. If $|w_i| = 1$ then the amplitude of the signal coming from that antenna will not be scaled, and hence the power also will not be scaled. Depending on the combining strategy, some scaling is desirable in order to prioritise better paths. Thus, instead of imposing no scaling per antenna, we impose a limit on the contribution of all elements $\sum_{i=1}^{N_r} |w_i|^2 = N_r$, or, analogously, taking the square root of both sides, we obtain $\sqrt{\sum_{i=1}^{N_r} |w_i|^2} = |w| = \sqrt{N_r}$. The normalisation present in Equation \eqref{eq:r_norm}.
+
+\begin{equation} \label{eq:r_norm}
+    \bm{w}_r = \frac{\sqrt{N_r} \bm{w}_r}{\left|\bm{w}_r\right|}
+\end{equation}
+
+Expression \eqref{eq:rx_pow2} is derived using a transmit normalisation in both transmit and receive beamformers. This is something very widely done as means of comparing beamformers and beamforming architectures, since it eliminates the dependence with the number of antennas. However, in order to obtain an absolute value of the received power, the number of antennas is something very relevant. The correct formula for the received power is Equation \eqref{eq:final_rx_pow}.
+
+
+\begin{equation} \label{eq:final_rx_pow}
+    P_r = P_0 \left| \bm{w}_t^\text{T} \bm{H}\right|^2 N_r
+\end{equation}
+
+Further note that Equation \eqref{eq:rx_pow} applies to any number of transmitter and receiver antennas. 
+\end{comment}
+
+
+\subsection{SINR Formula Deduction?}
+
+\subsection{SINR Formula}
+
+\todo[inline]{Separate expression for the Signal power, inter-layer interference, inter-cell interference, intra-cell interference, and noise (or make the formula fit in some other way.)}
+
+
+\begin{align}
+    \text{SINR}_{bmv} = \frac{\bm{b}_{bmv} \left( \bm{H}_{bm} \bm{w}_{bmv} \right) P^{tx}_{bmv}}{\mathlarger{\sum}_{\ m' \in \hspace{.05cm} \mathcal{M}_b} \sum_{v' = 1}^{V_{bm'}} \left| \bm{C}_{bmm'}(v,v')\right|^2 P^{tx}_{bm'v'} \hspace{.05cm} + \hspace{.05cm}  \mathlarger{\mathlarger{\sum}}_{\substack{b' \in \hspace{.05cm} \mathcal{B} \\ b' \neq b}} \mathlarger{\sum}_{\ \hspace{.05cm} m' \in \hspace{.05cm} \mathcal{M}_{b'}} \sum_{v' = 1}^{V_{b'm'}} \left| \bm{D}_{bmb'm'}(v,v') \right|^2 P^{tx}_{b'm'v'} \hspace{.05cm} + \hspace{.05cm} N \left| \bm{b}_{bmv} \right|^2 }
+\end{align}
+
+And vectorised:
+
+% if the summation sign is small, the limits can go inline. use \limits to prevent that
+\begin{equation}
+    \text{SINR}_{bm} = \frac{\bm{B}_{bm} \left( \bm{H}_{bm} \bm{W}_{bm} \right) \bm{p}^{tx}_{bm}}{\mathlarger{\sum}_{\ m' \in \hspace{.05cm} \mathcal{M}_b} \left| \bm{C}_{bmm'}\right|_{\text{e.w}}^{\odot2} \bm{p}^{tx}_{bm'} \hspace{.05cm} + \hspace{.05cm}  \mathlarger{\sum}_{\substack{b' \in \hspace{.05cm} \mathcal{B} \\ b' \neq b}} \sum\limits_{\ \hspace{.05cm} m' \in \hspace{.05cm} \mathcal{M}_{b'}} \left| \bm{D}_{bmb'm'} \right|_{\text{e.w}}^{\odot2} \bm{p}^{tx}_{b'm'} \hspace{.05cm} + \hspace{.05cm} N \left| \bm{B}_{bm} \right|_{=}^2 }
+\end{equation}

@@ -52,6 +52,10 @@
 \subsubsection*{Latin alphabet}
 
 % A
+$A_{bs}$ \mytab antenna element from base station \\
+$A_{u}$ \mytab antenna element from user \acs{HDM} \\
+$A_{cam}$ \mytab antenna element from camera \\
+
 
 % B
 $B$ \mytab bandwidth \\
@@ -60,8 +64,14 @@ $BLER_0$ \mytab target \acs{BLER} \\
 
 
 % C
+$C_t$ \mytab coordinates of centre of the table \\
+$C_m$ \mytab coordinates of centre of mass of the room \\
 
 % D
+$d_f$ \mytab distance to the front of the user for camera placement \\
+$d_s$ \mytab distance to the side of the user for camera placement \\
+$d_{out}$ \mytab distance outwards from the head centre for \acs{HDM} antenna offset\\
+$d_{up}$ \mytab distance upwards from the head centre for \acs{HDM} antenna offset\\
 
 % E
 $E_b$ \mytab energy per bit \\
@@ -71,7 +81,7 @@ $E_b$ \mytab energy per bit \\
 % G
 
 % H
-$\bm{H}_{bmp}$ \mytab channel matrix between BS $b$ and UE $m$ in BSs polarisation $p$\\
+$\bm{H}_{bul}$ \mytab channel matrix between BS $b$ and UE $u$ in layer $l$\\
 
 % I
 % J
@@ -83,10 +93,8 @@ $k_B$ \mytab Boltzmann constant\\
 
 % L for lengths, and latencies -> this will change
 $L_{max}$ \mytab maximum latency for the radio link \\
-$L_\text{sch}$  \mytab length of scheduling information update period \\
-$L_\text{csi}$  \mytab length of \acs{CSI} update period \\
-$L_\text{slot}$ \mytab length of slot period \\
-$L_\text{TB}$ \mytab length of a transport block, in bits \\
+$L_{sch}$  \mytab length of scheduling information update period \\
+$L_{TB}$ \mytab length of a transport block, in bits \\
 
 % M
 
@@ -94,63 +102,93 @@ $L_\text{TB}$ \mytab length of a transport block, in bits \\
 $N_0$ \mytab noise power spectral density \\
 $N_r$ \mytab number of receive antennas \\
 $N_t$ \mytab number of transmit antennas \\
+$N_{users}$ \mytab number users or participants \\
 $N_{phy}$ \mytab number of physical users \\
 $N_{vir}$ \mytab number of virtual users \\
-$N_\text{CSI Beams}$ \mytab number of beams with CSI-RS, per polarisation \\
-$N_\text{BS}$ \mytab number of \acsp{BS} \\
-$N_\text{UE}$ \mytab number of \acsp{UE} \\
-$N_\text{symb}^\text{PRB}$ \mytab number of symbols per PRB \\
-$N_\text{bits}^\text{symb}$ \mytab number of bits per symbol \\
-$N_\text{info bits}^\text{symb}$ \mytab number of information bits per symbol \\
-$N_\text{bits}^\text{slot}$ \mytab number of bits per slot \\
-$N_\text{req PRB}$ \mytab number of requested PRBs by a UE for an UL transmission \\
-$N_\text{TB}^\text{slot}$ \mytab number of transport blocks per slot \\
-$N_{bml}^\text{PRB}$ \mytab number of PRBs scheduled for a transmission \\
-${ }$ \mytab between BS $b$ and UE $m$ in layer $l$ \\
-$NF_r$ \mytab noise figure at the receiver \\
+$N_{CSI}$ \mytab number of beams with CSI-RS\\
+$N_{bs}$ \mytab number of \acsp{BS} \\
+$N_{ue}$ \mytab number of \acsp{UE} \\
+$N_{cam}$ \mytab number of cameras \\
 $N_x$ \mytab number of antennas along the x-dimension\\
 $N_y$ \mytab number of antennas along the y-dimension\\
-$NF_\text{BS}$ \mytab BS noise figure \\
-$NF_\text{UE}$ \mytab UE noise figure\\
+$N^{DL}_{slots}$ \mytab number of \acs{DL} slots in a transmission period\\
+$N^{UL}_{slots}$ \mytab number of \acs{UL} slots in a transmission period\\
+$N^{TDD}_{slots}$ \mytab number slots in a transmission period\\
+$N^{CSI}_{slots}$ \mytab number slots between \acs{CSI} updates\\
+$N^{SCH}_{slots}$ \mytab number slots between scheduling updates\\
+$N_{ant}^{UE}$ \mytab number of antennas on the \acs{UE} side\\
+$N_{ant}^{BS}$ \mytab number of antennas on the \acs{BS} side\
+$NF_{BS}$ \mytab BS noise figure \\
+$NF_{UE}$ \mytab UE noise figure\\
+$NF_{r}$ \mytab noise figure at the receiver\\
+
+
+$N_{symb}^{PRB}$ \mytab number of symbols per PRB \\
+$N_{bits}^{symb}$ \mytab number of bits per symbol \\
+$N_{info bits}^{symb}$ \mytab number of information bits per symbol \\
+$N_{bits}^{slot}$ \mytab number of bits per slot \\
+$N_{PRB, bu}$ \mytab number of PRBs scheduled for a transmission between BS $b$ and UE $u$ \\
+$N_{PRB, bul}$ \mytab number of PRBs scheduled for a transmission between BS $b$ and UE $u$ in layer $l$\\
 
 % O
 
 % P (used for powers)
-$P_n$ \mytab noise power \\
+$P_N$ \mytab noise power \\
+$P_u$ \mytab position of user $u$ \\
 $P_r$ \mytab received power \\
-$P_s$ \mytab received signal power \\
+$P_s$ \mytab signal power \\
 $P_t$ \mytab transmit power \\
-$P_t^\text{UE}$ \mytab maximum transmit power per UE\\
-$P_t^\text{BS}$ \mytab maximum transmit power per BS \\
-$P_{bml}^\text{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $m$ in layer $l$ \\
-$P_{bml}^\text{UE}$ \mytab transmit power at the UE for a link between BS $b$ and  UE $m$ in layer $l$ \\
-$P_\text{IntraCI}$ \mytab interference power from intra-cell interference sources \\
-$P_\text{InterCI}$ \mytab interference power from inter-cell interference sources \\
-$P_\text{ILI}$ \mytab interference power from inter-layer interference \\
-${ }$ \mytab (applicable when there is a multi-layer transmission) \\
-$P_\text{PRB}$ \mytab transmit power per PRB \\
+$P_{t, max}^{UE}$ \mytab maximum transmit power per UE\\
+$P_{t, max}^{BS}$ \mytab maximum transmit power per BS \\
+$P_{r, bu}^{UE}$ \mytab received power at the UE for a link between BS $b$ and UE $u$ \\
+$P_{t, bu}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $u$ \\
+$P_{t, bu}^{UE}$ \mytab transmit power at the UE for a link between BS $b$ and UE $u$ \\
+$P_{t, bu}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $u$ \\
+$P_{t, bu}^{UE}$ \mytab transmit power at the UE for a link between BS $b$ and UE $u$ \\
+$P_{t, bul}$ \mytab transmit power for a link between BS $b$ and UE $u$ in layer $l$ \\
+$P_{t, bul}^{UE}$ \mytab transmit power at the UE for a link between BS $b$ and UE $u$ in layer $l$ \\
+$P_{t, bul}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $u$ in layer $l$ \\
+$P_{IaCI}$ \mytab interference power from intra-cell interference \\
+$P_{IeCI}$ \mytab interference power from inter-cell interference \\
+$P_{ILI}$ \mytab interference power from inter-layer interference \\
+
+
 
 % Q
 $Q_m$ \mytab modulation order \\
 $Q_{P-I}$ \mytab P-frame to I-frame ratio \\
 
 % R
+$r_t$ \mytab radius of table \\
+$r_u$ \mytab radius of user circumference of disposition\\
+$r_{DL/UL}$ \mytab ratio between \acs{DL} and \acs{UL} application throughputs\\
+$r_{P/I}$ \mytab ratio between P-frame and I-frame sizes\\
 $R_b$ \mytab bit rate \\
 $\hat{R}_b$ \mytab estimated bit rate \\
 $R_c$ \mytab code rate \\
+$R_{packet}$ \mytab packet arrival rate \\
+$\overline{R}$ \mytab average application information rate or throughput \\
 $\overline{R}_{DL}$ \mytab average application information rate in the \ac{DL}\\
+$\overline{R}_{UL}$ \mytab average application information rate in the \ac{UL}\\
+$R_F$ \mytab frame rate \\
+
 
 % S
-$s_\text{TDD}$ \mytab TDD split \\
-$SINR_\text{eff}$ \mytab effective SINR, i.e. aggregated over all scheduled PRBs \\
-$SINR_i$ \mytab SINR of the i-th PRB \\
+$s$ \mytab speed of user head position change \\
+$s_\text{TDD}$ \mytab \acs{TDD} split \\
+$SINR_\text{eff}$ \mytab effective \acs{SINR}, i.e. aggregated over all scheduled PRBs \\
+$SINR_i$ \mytab SINR of the i-th \acs{PRB} \\
 $S_t$ \mytab power spectral density at transmission\\
-$S_I$ \mytab size of I frame\\
-$S_P$ \mytab size of P frame\\
+$S_I$ \mytab size of I-frame\\
+$S_P$ \mytab size of P-frame\\
+$S_{packet}$ \mytab size of a packet\\
+$S_{GoP}$ \mytab size of a \acs{GoP}\\
 
 % T for periods [s] and Temperatures
-$T_\text{slot}$  \mytab slot duration \\
 $T$ \mytab noise temperature\\
+$T_{slot, \mu}$ \mytab slot duration for numerology $\mu$\\
+$T_{rot}$ \mytab interval between consecutive orientations when head rotating\\
+
 
 % U
 
@@ -164,6 +202,10 @@ $T$ \mytab noise temperature\\
 $\bm{w}$ \mytab vector of beamforming weights \\
 $\bm{w}_{\phi, \theta}$ \mytab vector of beamforming weights from a GoB with direction $(\phi, \theta)$ \\
 $\bm{w}_{i,j}$ \mytab vector of beamforming weights from a GoB with grid indices $(i,j)$\\
+$\bm{w}^{BS}_{bu}$ \mytab vector of beamforming weights between BS panel $b$ and UE $u$, at the BS \\
+$\bm{w}^{UE}_{bu}$ \mytab vector of beamforming weights between BS panel $b$ and UE $u$, at the UE \\
+$\bm{w}_{t, bul}$ \mytab transmit weights vector between BS panel $b$ and UE $u$, in layer $l$\\
+$\bm{w}_{r, bul}$ \mytab receive weights vector between BS panel $b$ and UE $u$, in layer $l$\\
 
 % Z
 
@@ -173,10 +215,15 @@ $\bm{w}_{i,j}$ \mytab vector of beamforming weights from a GoB with grid indices
 
 % Alpha (Α α)
 $\alpha_P$ \mytab power compensation factor for UL power control\\
+$\alpha_u$ \mytab angle from the centre of the table to user $u$\\
 
 % Beta (Β β)
+$\beta_x$ \mytab upper limit on uniform distribution for rotation around x axis \\
+$\beta_y$ \mytab upper limit on uniform distribution for rotation around y axis \\
+$\beta_z$ \mytab upper limit on uniform distribution for rotation around z axis \\
 
 % Gamma (Γ γ)
+$\gamma$ \mytab burstiness parameter for application traffic\\
 $\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update\\
 
 % Delta (Δ δ)
@@ -185,6 +232,9 @@ $\Delta_{OLLA}$ \mytab outer loop link adaptation step\\
 % Ε ε
 % Ζ ζ
 % Η η
+$\eta_{OH}$ \mytab overhead efficiency \\
+$\eta_{slot}$ \mytab slot efficiency \\
+$\eta_{CSI}$ \mytab CSI slot efficiency \\
 % Θ θ
 % Ι ι
 % Κ κ
@@ -193,13 +243,24 @@ $\Delta_{OLLA}$ \mytab outer loop link adaptation step\\
 % Ν ν
 % Ξ ξ
 % Ο ο
+$o$ \mytab overlap parameter for application traffic\\
+
 % Π π
 % Ρ ρ
-$\rho$ \mytab number of bits per symbol, used in SINR mapping algorithm (MIESM)\\
+$\rho$ \mytab number of bits per symbol for SINR mapping\\
 
 % Σ σ/ς
+$\sigma_x$ \mytab standard deviation of normal distribution for position coordinate x \\
+$\sigma_y$ \mytab standard deviation of normal distribution for position coordinate y \\
+$\sigma_z$ \mytab standard deviation of normal distribution for position coordinate z \\
+
+
+
+
 % Tau (Τ τ)  - used for delays
-$\tau_\text{CSI}$   \mytab \acsp{CSI} delay in number of \acsp{TTI} \\
+$\tau_{CSI}$ \mytab \acsp{CSI} delay, in number of \acsp{TTI} \\
+$\tau_{ACK}$ \mytab delay before acknowledgement, in number of \acsp{TTI} \\
+
 % Υ υ
 % Φ φ
 % Χ χ

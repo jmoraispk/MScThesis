@@ -1,0 +1,42 @@
+
+\subsection*{Simulate the TTI}
+
+It is time to obtain the outcomes of the realised transmissions: the SINRs each UE got in each PRB and how those resulted in the success or failure of the transport blocks. The steps follow:
+
+
+\subsubsection*{TBS calculation}
+
+Obtain the \acs{TBS} - we get the number of bits sent in the slot in the numerator in Equation \eqref{eq:bitrate}, and the \ac{TBS} is a fraction of this number. Note that if we have only one \ac{TB} per slot, our bitrate will either be one from the table (if $T_{slot} = 1\text{ms}$), or zero, respectively, if the block has been successfully transmitted or not. Thus, we define the number of transport blocks per slot $N_{TB}^{slot}$ and it related with the size of each \ac{TB} $L_{TB}$ as shown in Equation \eqref{eq:TBS}.
+
+
+\begin{equation} \label{eq:TBS}
+    L_{TB} = \frac{N_{bits}^{slot}}{N_{TB}^{slot}}
+\end{equation}
+
+This such manner, $N_{TB}^{slot}$ TBs are sent per slot and the experienced bit rates depend on how many of them are delivered with no errors. 
+
+
+% constant number of TB influences olla update rate...  
+
+% There are places where the exact tb size is computed. cite where.
+
+\subsubsection*{Compute and Aggregate Realised SINR}
+Compute realised SINR per PRB
+
+\subsubsection*{Compute Block Errors}
+
+Compute \ac{BLER} from $SINR_{eff}$ and the MCS used for the transmission by using curve with the correspondent CQI index in Figure \ref{fig:blercurves}.
+
+Flip a \acs{BLER}-biased coin to determine if each block was well received or not.
+    
+
+\subsubsection*{Update Link Adaptation, Buffers and Performance Indicators}
+
+we need to update the buffers with the information that was transmitted. We model an ordered buffer, i.e. if only third transport block in a set of five block gets lost, then the bits that would be sent in that transport block are not removed from the buffer.
+
+In essence, this means that the BLER may cause packets to be arrive out of order. This phenomenon is represented in Figure \ref{fig:buf}: assuming a TB with the same size as a packet, the bits that didn't arrive successfully are kept in the transmission buffer.
+
+\image{SLS/ordered_buffer.png}{Buffer state before and after a transmission, with $TBS = L_\text{pck}$}{fig:buf}{.4}
+
+
+Further note that if a TB is not the size of a packet, which happens more frequently than otherwise, and gets lost, then the bits from more than one packet will be left waiting at the transmission buffer. This increases the likelihood that a packet is discarded due to excessive delay, but makes the modelling considerable more realistic. So, the latencies supported in a given scenario are closer to reality, which, unfortunately, means higher latencies.

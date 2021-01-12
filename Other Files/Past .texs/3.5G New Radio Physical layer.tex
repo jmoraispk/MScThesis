@@ -1,0 +1,150 @@
+\section{5G Physical layer}
+\label{sec:5gphy}
+
+The length of the RB in time is called the Transmission Time Interval
+(TTI). It is also considered to be the minimum division to perform operations. 
+
+5G uses \ac{OFDMA} to multiplex access to different UEs simultaneously. OFDMA works by\dots 12 subcarriers, 14 symbols. The symbol duration is inversely \ii{equal} to the subcarrier spacing. But some guard time is used too, so that is not completely the case. In table REF are the different numerologies, or subcarrier spacings/bandwidths, and respective symbol and slot durations in 5G. A slot always has 14 symbols and we call a \ac{PRB} to 12 subcarriers used for a slot's duration.
+
+\todo[inline]{put table with numerologies, symbol and slot time}
+% Modulating 
+1/B = 
+symbol time = 
+slot time = 
+
+% SEE THE THESIS PREPARATION! THIS HAS BEEN DONE THERE ALREADY!
+% Therefore, if transport block is lost, it will take the BS a couple of TTIs before re transmitting the information on that packet, making it more likely that the packet is dropped.
+
+What spectrum bands? What are frequency ranges, and the numerologies allowed in them...
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The codebook-based beamforming mentioned in Section \ref{sec:types_of_beamforming} is CSI-RS-based.
+
+The non-codebook-based beamforming SRS-based.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% mmWave has higher free-space path loss (20dB at factor 10 frequency increase) - is doesn't propagate worse, the factor comes from 
+% a smaller effective area at the receiving side due to a smaller physical area
+% Also have a look at: https://ma-mimo.ellintech.se/2019/10/29/is-the-pathloss-larger-at-mmwave-frequencies/
+
+\subsection{Why mmWave?}
+
+30 GHz (1cm) to 300 GHz(1mm), but 20-30 in a loose sense is included too.
+
+
+
+% Why going to higher frequencies?
+- Spectrum available: Hundreds of MHz below 6 GHz vs Tens of GHz in mmWaves;
+
+% downsides
+- Radio cost - increasing throughput, via densification, more spectrum or more SE, it always required investment;
+- Coverage myth - because there's higher path loss. Where the path loss comes from? From smaller antennas? But smaller antennas allow beamforming. 10x higher freq, 20 dB attenuation (is a matter of effective area! it's proportional to the wavelength squared)
+
+\cite{phdthesis} also has quite nice images for analog, hybrid and digital beamforming.
+
+
+
+\subsection{Massive MIMO}
+
+% For differences between conventional MIMO and Massive MIMO, see
+% https://ma-mimo.ellintech.se/2017/10/17/six-differences-between-mu-mimo-and-massive-mimo/
+% (note that GoB-based is also in conformity with Massive MIMO.)
+
+
+% When making a case about SRS and requiring a lot of pilots, see also:
+% MIMO has unlimited capacity Emil paper (solution for pilot contamination) + The pilot contamination video on cracking the nut
+% Most likely: even with this solution, there won't be enough pilots for 64 antennas per UE
+% Note: the video says that under the rayleigh fading, we have such limitations, but fading is never absolute rayleigh, and often is quite different
+% from it! That just makes the math easier!
+
+
+
+% Advantages of Massive MIMO
+
+When the small-scale fading between antenna elements is sufficiently uncorrelated, which is the case when AEs in arrays are separated more than half-wavelength, then the channel will tend to a deterministic state as the number of AEs increases in BSs or terminals. This happens because the more diversity there is in the channel, the less relevant the big oscillations become because all oscillations average out . This effect is called channel hardening \cite{1327795}.
+
+% Massive MIMO has multiple advantages on itself, independently of working with GoBs or in free-format operation. Academia has supported the first strategy, while industry has been lying on the second \cite{tddVSfdd_massiveMIMO}
+
+% other advantages: much more gain from beamforming and diversity combining, and possibility of spatial multiplexing due to smaller beams. Overall interference reduction from the beams.
+
+% Note: there are several flavours of GoB: per subcarrier vs whole band  and individual set of N beams vs common subspace of beams \cite{tddVSfdd_massiveMIMO}: D-GOB, H-GOB (individual N beams) and D-SUB and H-SUB (common subspace).
+
+% 'reciprocity-based' avoids feedback!!! it's not a great name because there is reciprocity in the codebook-based approach also, in the sense that the estimation only needs to happen in one direction.
+
+
+% we still use GoB even though feedback is needed because the tendency seems to be to the growth of antenna arrays in UEs, which will make sounding them very difficult and is much different from the classic massive MIMO approach of focusing all complexity at the BS side having UEs with a single antenna.
+
+% Also, GoBs supports FDD too. Despite free-format Massive MIMO also working in FDD, the reciprocity-only principle is broken from the use of different bands, hence it is be far less efficient. Since TDD is available as well, canonical Massive MIMO is not used in FDD 
+
+% ignoring the pilot contamination problem, increasing the number of user antennas is beneficial for gain but also for increasing possible spatial multiplexing \cite{7500452}. Since that is the industry tendency
+
+% there are many strategies to mitigate pilot contamination \cite{8094949} \cite{7996674}
+
+% There are good reasons to make the GoB choice and good to pick the canonical form of massive mimo.
+% We need to check which is best, but gob for now since that appears to be te direction 3GPP has taken by defining the codebooks.
+
+
+% TDD has reciprocity which halves the required signalling. 
+% mmWave only has TDD, so it will be TDD. However, do not forget the drawbacks of TDD https://ma-mimo.ellintech.se/2018/06/22/disadvantages-with-tdd/
+% This is why doing an approach that supports FDD too is important.
+
+
+% perhaps 6G has tdd only with full-fledge canonical massive mimo with great pilot contamination schemes such that  perfect spatial multiplexing is only limited by how many antennas the BS has. 
+
+Time it takes to obtain CSI: CSI delay = 4 TTIs
+
+% Implicit vs Explicit Beamforming
+
+Allow us to coin the terms 'implicit' and 'explicit' beamforming, more commonly called free-format and codebook-based, respectively. It makes sense to think about the beamforming computation step as implicit when it comes from matrix operations, it's like extracting a beamformer that was implicit in vector spaces. See Appendix \ref{ap:b} for a thorough explanation and examples of implicit beamforming. Explicit beamforming, by contrast, the beams (and beamforming vectors) are predefined in a codebook. To obtain the beam to use from the codebook, several of them are chosen (the ones most likely to be most effective) to carry well-known reference signals, and the UE reports the effectiveness of the best ones.
+
+One is associated with SRS and the other with CSI-RS-based operation.
+
+
+
+
+% In Massive MIMO, it is worth saying something about antennas. In Massive MIMO research 'an antenna' element is an element of a fully digital array, having a dedicated rf chain with DAC/ADC (for transmitting/receiving).
+
+Massive MIMO assumes 10x more antennas than users because that way, statistically speaking, it is possible to have independent paths to all users simultaneously. However, that may not lead to the best \ac{SE} \cite{7294693}, proving the relevance of modelling real scenarios. This is especially true when deriving realizable metrics for an application. 
+
+Increasing the number of antennas in the UE will provide considerably more flexibility, although making the SRS approach quickly impractical.
+
+
+
+
+
+
+\subsection*{Multi-layer transmission}
+
+Also in this area 3GPP has left room for interpretation providing more flexibility for manufacturers' implementation.
+
+It is important to understand how orthogonal data streams (or layers, the terms will be used interchangeably) can be transmitted with no significant interference between them. This mechanism is fundamentally different in implicit and explicit beamforming.
+
+When the beams are not previously defined (implicit beamforming), the precoders are computed from the channel matrix $H$, through, essentially, matrix operations (See Appendix \ref{ap:a} for examples). This leads to an implicit treatment of different propagation paths and distinct polarisations. Not only one can't proceed this way with a codebook-based approach, but also there are gains to be had when a explicit polarisation separation is done on the BS side.
+
+The antennas in a BS are cross-polarised \cite{3gpp-antennas} which means the BS is capable of transmitting orthogonal polarisations. This offers a degree of freedom and does not limit the number of layers to two. In order to send multiple streams it is necessary to use either different polarisations or choose distinct paths. Note that when we refer to polarisations, we are referring to all elements oriented the same way in the antenna array. Figure \ref{fig:array} differentiates the single polarised in two colours: all elements making +45\textdegree with the vertical are in red, and all elements making -45 \textdegree with the vertical are in blue.
+
+
+\image{5G phy/planar_array.png}{Replace this with high quality image, still with indexes starting in the top corner and be consistent with the appendix A(do in powerpoint?)}{fig:array}{.8}
+
+Thus, in summary, the mechanism to orthogonality can be polarisations or all together independent paths. When using a GoBs there is a constraint that it is not present in free-format beamforming which is the discretisation of beams. This leads to two major differences when using a GoB as opposed to the implicit variant: i) in order to consider different paths, one has to code reference signals in different beams explicitly and await feedback; and ii) if each polarisations in the BS has a similar response to either polarisation in the UE, then they would interfere significantly, because they can only be transmitted in the beam.
+
+To achieve both degrees of freedom in orthogonality to the UE, the polarisation mechanism in the GoB needs to separate transmissions on a polarisation basis. This means that one must assess the quality of the channel for a single polarisation before considering a transmission on that polarisation. 
+
+
+A maximum of two layers between each UE and each BS is supported in the MU-MIMO codebook \cite{3gpp-codebooks}. But, since UEs do not necessarily beamform codebook-based, each UE may receive/transmit from/to several BSs simultaneously, up to a maximum of eight layers, since this is the the maximum number of layers in the SU-MIMO codebook \cite{3gpp-codebooks}.
+
+
+Therefore, both in GoB operation and in implicit beamforming, this provides the optimal way of proceeding with regards to layer separation, assuming constant total transmit power (i.e. using half the antennas, double the power per antenna can be used).
+
+
+
+
+
+
+% GoB operation: GoB design
+% There are many papers that do codebook design.
+% But they are fairly complicated to implement. We have taken a simple approach of doing a pseudo-non-interfering GoBs.

@@ -1,0 +1,33 @@
+Use this template instead:
+https://www.overleaf.com/latex/templates/ist-ul-msc-thesis/wrhbmbvzpttw
+
+With the figures and nomenclature from this one:
+https://fenix.tecnico.ulisboa.pt/homepage/ist31052/documentos-para-elaboracao-da-tese
+
+
+
+APPENDICES:
+- put everything on parallelisation in an appendix
+- put every complex deduction in an appendix:
+	A framework for SINR computations:
+	- say what a channel gain is;
+	- say how to compute the received power from a UE;
+	- say how to compute the interference in the UL and in the DL.
+
+
+-> I'm okay with having a 40 page thesis with other 40 pages in appendices;
+
+
+SYMBOLS & ABBREVIATIONS:
+
+run a script of a ctrl + F that replaces every symbol and every abbreviation by the proper references.
+E.g.
+
+v -> \gls{v} 
+TTI -> \ac{TTI}
+TTIs -> \acs{TTI}
+...
+
+- Add pdfbookmarks to all chapters
+- Be sure the references are ordered! When citing, be sure they do: [1][24] and not [24][1] 
+	- \cite{24ref, 1ref} works well for when you don't know which is which, it orders automatically!
