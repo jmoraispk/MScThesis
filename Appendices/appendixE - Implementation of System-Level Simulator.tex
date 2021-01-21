@@ -1,0 +1,197 @@
+\fancychapter{On the Implementation of a System-level Simulator}
+\label{ap:d}
+
+% put here everything that has to do with implementation
+% flow_control explanations, parallelisation stuff, etc...
+
+
+
+% FILTER WHAT IS on the appendix C file
+
+
+There are many more parameters than the ones presented here. For instance, it is possible to use different bandwidths and different numbers of PRBs in different frequencies, different antennas across users, place users around rectangular tables or in non-standard places, hybrid architectures for each antenna, change the height across users, put separate UEs in each camera, among plenty of other things. The total number of setting variables, both for channel trace generation and for actual simulation, is ... (COUNT)
+
+As of now, the simulator counts with more than 18000 lines of code, counting empty lines and comments as well.
+
+
+
+
+
+
+\section{SXR Radio Channel Generation}
+\label{sec:implementation}
+
+
+% count the number of total parameters, many were not mentioned in the thesis because they are very implementation-oriented
+
+
+The Radio Channel Generation process uses Quadriga as a channel generator. 
+
+It's programmed in Matlab and compiled to an executable. That executable is then run in different subprocesses/threads to parallelise the workload and reducing the computation time of this phase.
+
+
+In this section, firstly we list the parameters required to generate the channel traces and the input arguments used to execute the each instance. We include a short summary for each parameter and a more detailed description of the arguments.
+
+The arguments are particularly important since they it's through them that Python and Matlab interface. So, they will control the phases of the radio channel simulation.
+
+Subsequently, each section exposes the well-defined phases of the generation process, and we'll understand how these parameters come together.
+
+\subsection{Parameters and Arguments}
+
+With 3 arguments and 98 parameters (as of writing this)
+
+The three arguments are:
+
+\begin{itemize}
+    \item \textit{flow\_control} - controls the flow of the program. It is required to execute individual parts of the code, which is needed for the practicality of using a single executable in the while parallelising, as described ahead;
+    \item \textit{instance\_info} - used for parallelisation management. It is a 2 element array. The first element is the parallelisation level with values from 0 to 3 representing, respectively, no parallelisation, parallelisation on the frequency level, on the BS-level or on the UE-level. Figure \ref{fig:parallel_2}, shows this difference. This influences the number of instances each time division will be further partitioned in and should be more clear after a look on how Quadriga works. The second element depends on the \textit{flow\_control} value. In the setup phase ($flow\_control \in \{1, 2\}$) it tells Matlab how many high-level instances the simulation should be prepared for, this will lead to the generation of those many builders. In the execution phase, it tells Matlab which instance should be executed. As expected, the value in the execution phase should not pass the value given in the setup phase as the maximum;
+\end{itemize}
+
+The table below summarises how the arguments change value with \textit{flow\_control}:
+
+\image{Implementation/RadCh/flow_control_table.jpg}{Awaiting SLS completion.}{fig:flow_control}{.26}
+
+
+\subsubsection*{Channel Generation in the Simulation Flow}
+
+Now that we have chosen the Channel Model, back to the simulation flow.
+
+By the end of the simulation, the result is a channel in time domain, with a set of coefficients of the form of expression \eqref{eq:c_time}. In order, one reads below the \acs{UE} index, the \acs{BS} index, the frequency index, the number of \acp{AE} in that pair of \acs{UE}-\acs{BS}, for all paths in a given time instant, or like Quadriga calls them, snapshots.
+\begin{gather} \label{eq:c_time}
+    \text{C}(\text{UE}_m, \text{BS}_b, \text{F}_1) = [\text{N}_{\text{AE}_{\text{UE}_m}}, \text{N}_{\text{AE}_{\text{BS}_b}}, \text{N}_\text{paths}, \text{snap}] \ , \\ 
+    \forall m \in \left\{1, \dots, \text{N}_\text{UE}\right\}, b \in \left\{1, \dots, \text{N}_\text{BS}\right\} \nonumber
+\end{gather}
+
+Further note that there'll be a snapshot for each \acs{TTI}.
+Since we need information across the carrier frequency, we further convert the time domain channel to frequency domain. It's to the Frequency Response that we call Channel Coefficients. Below, \eqref{eq:c_freq} shows the dimensions of this matrix. 
+
+\begin{gather} \label{eq:c_freq}
+    \text{FR}(\text{UE}_m, \text{BS}_b, \text{F}_\text{f\_idx}) = [\text{N}_{\text{AE}_{\text{UE}_m}}, \text{N}_{\text{AE}_{\text{BS}_b}}, \text{N}_\text{PRB}, \text{snap}] \ , \\
+    \forall m \in \left\{1, \dots, \text{N}_\text{UE}\right\}, b \in \left\{1, \dots, \text{N}_\text{BS}\right\} \nonumber, \text{f\_idx} \in \left\{1, ..., \text{N}_\text{Freq} \right\}
+\end{gather}
+
+
+This is the end result. How to get to the end result, after the all the setup of the previous section, the next steps are preparing for a parallelisation, if that's the case.
+
+If the instance is running in parallel, this phase first splits the tracks, and then creates a builder for each segment of the track. Effectively, each track is a sequence of positions at certain instants. Hence splitting a track is making a separation in time.
+
+
+The channel is saved in time domain. This allows the conversion to multiple bandwidths later. Therefore, each simulation only requires the centre of the frequency band (i.e. 3.5 GHz, 26 GHz) and it's possible afterwards to convert to a 25 MHz carrier or to 400 MHz carrier. 
+
+Note that the resolution in the frequency domain (spaces \acsp{PRB}) is inverse to the resolution in the time domain (interval between samples). As a result, we need to simulate the time domain with the interval of the highest numerology we want to use.
+
+As means of simplifying implementation, the same time interval is used for every frequency band even if we want to simulate different numerologies in each band. The time interval used is correspondent to the highest numerology across bands.
+
+
+
+\subsection{Blocking Model}
+
+The blocking model applies changes to the channel in time domain such that the received signal is attenuated by a certain amount that should be realistic with the blocking case. 
+
+Further note the blocking modifications to the channel are done in Time Domain. As opposed to the frequency channel, where the paths and path delays have used to compute the frequency response and are no longer available, in time domain the per path information is still available, and this individual path information is required as it contains the angles of arrival and departure of each path.
+
+A contribution from a TNO's intern named Sandra. An overview of the model follows.
+
+\bb{Overview of the blocking model here.}
+
+\begin{comment}
+
+
+\subsection{Parallelisation Engine}
+
+\subsubsection*{Motivation}
+Parallelisation is a must. Take the following example as motivation: a single channel coefficient is complex number that takes up 8 bytes, 4 bytes of single-precision (see \ref{optimisation_strats} for why on single-precision is enough) for the real part and 4 bytes for the imaginary part, and we have one of these coefficients for every antenna pair, for a given amount of \acsp{TTI} and \acsp{PRB}. The following equation estimates how many coefficients are needed for a given simulation. We may call \ref{eq:load_estimation} the Load Estimation Equation.
+
+\begin{equation} \label{eq:load_estimation}
+    \text{N}_\text{coeff} = \text{N}_{UE} \cdot \text{N}_\text{BS} \cdot \text{N}_{\text{AE}_\text{UE}} \cdot \text{N}_{\text{AE}_\text{BS}} \cdot \text{Sim\_Dur} [\text{s}] \cdot \left(1000 \times 2^\mu\right) [\text{TTIs per s}] \cdot \text{N}_{\text{PRB}} \cdot \text{M}_\text{pol}
+\end{equation}
+
+Furthermore, if we want to consider separate layers on the orthogonal polarisations by using the dual-polarised antenna elements, we need to multiply by 2 the number of elements in the arrays that use those kinds of elements, i.e. if we consider \acsp{UE} having only one omnidirectional antenna, then only the \ac{BS}'s number of \acsp{AE} need to be multiplied by 2. Let us call this multiplier the orthogonal polarisation multiplier, and denote it by $M_\text{pol}$.
+
+These typical values for a conservative simulation:
+\begin{multicols}{2}
+\begin{itemize}
+    \item $\text{N}_{UE} = 4$
+    \item $\text{N}_\text{BS} = 2$
+    \item $\text{N}_{\text{AE}_\text{UE}} = 8$
+    \item $\text{N}_{\text{AE}_\text{BS}} = 64$
+    \item $\text{Sim\_Dur} = 10 $ s
+    \item $\mu = 3 \Rightarrow 8000  $ TTIs/s
+    \item $\text{N}_{\text{PRB}} = 100$
+    \item $\text{M}_\text{pol} = 4$
+\end{itemize}
+\end{multicols}
+
+The simulation duration needs to be representative of a meeting, and contain all the ranges of head movement that a meeting has. If we give very little talk time to each participant, and consider a moderate simulation with few users, a simulation duration of 10 seconds is plausible.
+
+The values above result in roughly $128 \times 10^9$ coefficients. If we multiply this number by the 8 bytes of memory required per coefficient, we get almost 1 TB. Furthermore, it takes around 4 minutes to generate 1 GB worth of coefficients in a Intel Core i5-7300U @ 2.60 GHz. Thus, at least 2 days per Terabyte. Since we intend to perform several of these simulations, parallelisation is a must. 
+
+Not only regarding time, but memory wise, parallelisation also allows us to leverage multiple physically separated storages, without having to setup a transmission mechanism. Finally, still in the memory department, Matlab has a limit of efficient matrix size handling, which happens to be 75 GB in many systems. Therefore, some segmentation would be necessary to compute the complete channels.
+
+
+
+\subsubsection*{How the parallelisation shapes the workflow}
+
+The complete workload is divided in chunks, represented as blue squares in Figure \ref{fig:parallel_1}. These chunks are then grouped into jobs, depending on how we want to split the workload (see Figure \ref{fig:parallel_2}), which are no more than tasks that are attributed to workers, which run on subprocesses or threads, in a physical core. As such, there can be multiple workers per core, if hyperthreading is supported, and that number can be further multiplied by the \acs{CPU} count of the machine to reach the number of tasks that can be executed in parallel in a single machine. And this parallelisation engine supports easy deployment for multi-machine execution, as will be evident in a few paragraphs.
+
+\image{Implementation/RadCh/Parallelisation_part1.png}{DO THIS}{fig:parallel_1}{.365}
+
+\image{Implementation/RadCh/Parallelisation_part2.png}{DO THIS}{fig:parallel_2}{.365}
+
+%\image{Implementation/RadCh/Parallelisation_complete.png}{DO THIS}{fig:parallel_1}{.85}
+
+As an example, Figures \ref{fig:parallel_1} and \ref{fig:parallel_2} assume 2 frequencies, 3 \acsp{BS} and 4 \acsp{UE}.
+
+How much of the work is assigned to each worker determines how long that worker will take to complete the job. 
+The more each worker has to do, the less workers are required, but each worker takes longer to finish it's job. Bear in mind that there can only be so many workers working at the same time in one machine.
+
+A job can run on a logical core. Normally there's two logical cores per physical core since Hyper-Threading was first introduced by Intel \cite{wiki:hyperthreading}. The maximum number of workers may be even less than the number of logical cores, for example, due to a \acs{RAM} limitations.
+
+If the execution is on a single machine, the only reason to create more instances than the number of logical cores is to use as little \acs{RAM} as possible in each instance. If \acs{RAM} is the limiting factor, or if the trace generation happens in multiple machines simultaneously, then several time divisions help making smaller chunks that allow higher degrees of parallelisation.
+
+Two parameters are sufficient to determine the job size of each instance: i) how many chunks of the workload each instance has to process - the 4 options given in \ref{fig:parallel_2}; and ii) the number Time Divisions - basically, the height of each blue rectangle in Figure \ref{fig:parallel_1}. This determines the number of workers required.
+
+At this point, it's worth diving into some Quadriga specifics. This is particularly important if one wants to develop on top of what is built here. In terms of nomenclature each workload chunk is a Quadriga channel builder. A builder is specific to a \acs{BS}-\acs{UE} pair - \acs{TX}-\acs{RX} pair, if we use Quadriga's terms - in a certain frequency band, and for a specific period of time. The builder contains the necessary information to generate the channel coefficients for that well-parameterised case.
+
+To the most attentive reader, the term 'Time Division` in \ref{fig:parallel_1} regards a portion of the full simulation duration. Time Divisions get us smaller chunks of the total workload, allowing higher degrees of parallelisation. And, in the builders folder, there will be a builder set for each time division, each builder set containing all builders on that time interval.
+
+Builder sets contain several builders - a set with a single builder is only possible if there's only 1 \acs{BS}, 1 \acs{UE}, 1 frequency and the workload is made for one instance only, so completely useless for parallelisation purposes. Further, whenever a new instance is initialised it goes to one of these sets and pics a couple of builders from inside. How many builders it picks up is given exactly in \ref{fig:parallel_2}. Shown in \ref{fig:parallel_1} is what each builder corresponds to. Finally, each builder having an index makes possible to address a specific portion of the workload with ease, such as  when the channels need to be aggregated in time domain for the blocking procedure to happen.
+
+
+
+
+
+
+
+The only requirement for execution in a multi-machine setting is builder consistency. As long as the builders are transferred or generated again in the new machine with the same settings, it works.
+
+\subsection*{Drawback}
+The only purpose of this section is to illustrate the only drawback of this approach, the loss of repeatability with when doing time segmentation. More concretely, repeating a simulation with the same parameters gives always the same result, but a simulation where only the number of time divisions changes should have identical results as previously but a slight change happens.
+Figure \ref{fig:drawback} illustrates a zoomed-in vision of the differences. The left half is slightly lower, the top half is slightly higher, and there's an abrupt transition between the two.
+
+
+\image{Implementation/RadCh/drawback1.png}{DO THIS}{fig:drawback}{.4}
+
+
+In \ref{fig:drawback} each snapshot is a quarter of a millisecond long, so indeed the changes are minuscule and can be ignored. Their severity increases with the time division length, but in realistic simulations there is no noticeable difference between an uninterrupted channel and a channel segmented in time and then stitched. Figure \ref{fig:draw_back_proof} shows 2 seconds of a more realistic simulation. The stitching happens at 1 second mark, showing how imperceptible the transition is in the big picture. As said, all values drift a very small percentage to the ones generated without the parallelisation technique of time division, but we show the drawback only affects repeatability, completely unnoticeably.
+
+\image{Implementation/RadCh/drawback2.png}{DO THIS}{fig:draw_back_proof}{.33}
+
+
+Qualitatively speaking, choosing of different random generator seeds represents a channel considerably different, so much so that the difference it's easily identified visually. Hence, one can safely make the case that the stitched channel is well within the range of possible values for a channel response. And, to the best of our knowledge, this is a bug internal to Quadriga, and it has been reported.
+
+\subsection{Optimisation strategies} \label{optimisation_strats}
+
+Generating the channel coefficients for multiple users, multiple BSs, multiple frequencies bands with multiple bandwidths, requires one channel generation. This is possible because we are generate all the information at once and then either performing small computations to obtain the remaining or simply using parts of it. 
+
+More concretely, if \acsp{UE} and \acsp{BS} are in the same place we can simply take the coefficients that correspond to that \acs{UE} or \acs{BS}. Likewise for frequency and the bandwidths are generates as described in \ref{subsec:channel_gen}
+
+
+\subsubsection*{Floating-point Precision}
+Although all the computations are made using double-precision, for convenience since that's Matlab's default data type, the channel coefficients are stored as single-precision floating points.
+
+The choice of single- instead of double-precision results from the range of values supported by each. Matlab constructs the single-precision data type according to IEEE Standard 754 using 32 bits to store numbers roughly from $1.8 \times 10^{-38}$ to $3.4 \times 10^{38}$. As such, single-precision allows us to represent numbers in the logarithmic scale in the range $\left[-380, 380\right]$ dB for field intensities or symbol energies, and half that for powers, i.e. $\left[-190, 190\right]$, which is sufficient for our application. This covers the range, regarding how precise the representation is, since only 23 of those 32 bits are used for the mantissa (fractional part), we have $1 / 2^23$ of precision before the representable value changes. In other words, about 6 decimal places that we're sure of being correct. We do not require that much precision, therefore singles can be used without loss of useful information.
+
+Singles use 4 bytes per data point requiring half of the necessary memory of doubles. The gain is substantial when Terabytes of data are concerned. Additionally, besides saving and loading, subsequent operations on single-precision data are faster.
+
+\end{comment}

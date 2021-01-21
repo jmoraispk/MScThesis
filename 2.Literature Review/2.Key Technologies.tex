@@ -1,17 +1,16 @@
 \section{Key Technologies and Techniques}
 \label{sec:key_tech}
 
-In order to support applications with requirements that far surpass what the previous generations of mobile communications is capable of there are some technologies and techniques that need to be surveyed. This section presents how higher throughputs are achieved in the state-of-the-art. Firstly we start from the fundamentals relating bandwidth and spectral efficiency with throughput with an equation. Then we present the major key advancement for each term that contributes to the throughput and how impactful are these advancements. Finally, we make a bridge to standardisation by showing how these advancements are integrated in the current standard.
+This section presents how higher throughputs and lower latencies that far surpass what previous generations of mobile communications were capable of are achieved in today's wireless communications. Firstly we start off from a fundamental equation that relates bandwidth and spectral efficiency with throughput. Then we present the major key advancement for each term and make a connection to improved latency as well. Finally, we bridge to standardisation to show how these advancements are integrated in the current 5G standard.
 
-Equation \eqref{eq:basics} summarises in a simple way how to increase throughput in a single-cell system. In essence, we either increase the amount of resources (bandwidth) or we increase how well we use the available resources. From \ac{4G}, there has been advancements in both domains and we will present them subsequently.
+Equation \eqref{eq:basics} summarises in a simple way how to increase throughput in a single-cell system. In essence, we either increase the amount of resources (bandwidth) or we increase how well we use the available resources. From \ac{4G}, there have been advancements in both domains and we will present them subsequently.
 
 \begin{equation} \label{eq:basics}
     \text{Throughput (bits/s) = Bandwidth (Hz) $\times$ Spectral efficiency (bits/s/Hz).}    
 \end{equation}
 
 
-Increasing the available bandwidth leads to performance gains and there are many examples as to why. Two examples are of particular relevance to show ahead how the increase in spectrum is exploited by the standards. Figure \ref{fig:rect_pulse} shows a rectangular pulse in time and its respective footprint in frequency, a 
-normalized sinc function. As such, we see that shorter pulses in time, i.e. smaller $\tau$, require more bandwidth. Naturally, we want the pulses as short as possible to send as many in as little time, hence increasing the information transfer rate.
+Regarding the first term, increasing the available bandwidth leads to performance gains and there are many examples as to why. Two examples are of particular relevance to show ahead how the increase in spectrum is exploited by the standards. Figure \ref{fig:rect_pulse} shows a rectangular pulse in time and its respective footprint in frequency, a normalized sinc function. As such, we see that shorter pulses in time, i.e. smaller $\tau$, require more bandwidth. Naturally, we want the pulses as short as possible to send as many in as little time, hence increasing the information transfer rate.
 
 % Cite wikipedia: https://en.wikipedia.org/wiki/Fourier_transform
 
@@ -21,32 +20,33 @@ The second reason has to do with how resources are distributed to allow user mul
 
 \subsection*{More Spectrum}
 
-The advancement consists in using higher frequencies. Frequencies between 30 and 300 GHz are called the millimetre wave (mmWave) spectrum since its wavelength goes from 1 centimetre to 1 millimetre, respectively. However, frequencies from 20 GHz are also included out of convenience. The mmWave spectrum is considerably less occupied than below 6 GHz and yields more than 10 times the available bandwidth at a fraction of the cost. Figure \ref{fig:spectrum} summarises shows a comparison in terms of absolute quantity of spectrum below 6 GHz and from 24 to 100 GHz.
+The advancement consists in using higher frequencies. Frequencies between 30 and 300 GHz are part of the millimetre wave (mmWave) spectrum since its have wavelengths ranges from 1 centimetre to 1 millimetre, respectively. Frequencies from 24 GHz are also commonly included out of convenience. The mmWave spectrum is considerably less occupied than the spectrum below 6 GHz and yields more than 10 times the available bandwidth at a fraction of the cost \cite{spectrum_price}. And, more available spectrum permits higher bit rates and lower latencies. %Figure \ref{fig:spectrum} shows a comparison in terms of absolute quantity of spectrum below 6 GHz and from 24 to 100 GHz.
 
-\imagecapcontrol{Literature Review/spectrum.png}{Simple spectrum overview: sub-6 GHz and }{fig:spectrum}{.5}{-0mm} 
+%\imagecapcontrol{Literature Review/spectrum.png}{Simple spectrum overview: sub-6 GHz and }{fig:spectrum}{.5}{-0mm} 
 
-One advantage of using the newly available bandwidth to make the transmitted signals shorter in time-domain, besides taking less time to transmit, is shortening the time to interact. This means requests can be answered quicker because information takes less time to travel. We will revisit this concept in the next section when we introduce the concept of numerologies which is how 5G New Radio achieves more agile transmission.
+One advantage of using the newly available bandwidth to make the transmitted signals shorter in time-domain, besides taking less time to transmit, is shortening the time to interact. We will revisit this concept in the next section when we introduce the concept of numerologies which is how 5G New Radio achieves more agile transmission.
 
-However, using higher frequencies also introduces some new propagation challenges, listed below. Figure \ref{fig:propagation} exemplifies some of the propagation terms.
+However, using higher frequencies also introduces some new propagation challenges \cite{rappaport_potentials_and_challenges, it_will_work}, listed below. Figure \ref{fig:propagation} illustrates some of the propagation terms.
 
 \begin{itemize}
-    \item The spectrum is more volatile due to the smaller wavelength - a 10 cm translation in 35 GHz makes the signal oscillate as a 1 metre translation in 3.5 GHz;
-    \item The waves diffract (bend around obstacles) less and the penetration loss (or material absorption) is higher. Although penetration depends on the material, for most materials the absorption increases linearly with frequency, and this frequency-dependent behaviour also happens with diffraction loss;
-    \item Rays scatter more since irregularities in surfaces are comparatively larger due to a smaller wavelength, therefore reflections are more diffuse;
+    \item Rapid channel fluctuations - given the smaller wavelength, smaller spatial shifts cause. Mathematically, the coherence time (time during which the channel can be considered non-changing) is inversely proportional to the carrier frequency, therefore higher frequencies yield a more volatile channel \cite{Rappaport_wireless_coms};
+    The spectrum is more volatile due to the smaller wavelength. In other words, the quality of the signal fluctuates more due to multipath propagation;
+    \item Susceptibility to shadowing - The waves diffract (bend around obstacles) less and the penetration loss (or material absorption) is higher \cite{Rappaport_wireless_coms}. Although penetration depends on the material, for most materials the absorption increases linearly with frequency. Similarly, the power diffracted reduces with frequency. Therefore, obstacles cause higher attenuations in higher frequencies;
+    \item More scattering - rays scatter more since irregularities in surfaces are comparatively larger due to a smaller wavelength, therefore reflections are more diffuse \cite{Rappaport_wireless_coms}. Nonetheless, since there is less penetration, effectively more power is reflected \cite{more_reflection};
 \end{itemize}
 
-\imagecapcontrol{Literature Review/propagation.jpg}{Illustration of propagation phenomena. Source \cite{propagation_pic}}{fig:propagation}{.3}{-0mm}
+\imagecapcontrol{Literature Review/propagation.jpg}{Illustration of propagation phenomena. \cite{propagation_pic}}{fig:propagation}{.3}{-0mm}
 
 
 In essence, the \ac{LoS} path carries relatively more power than \ac{NLoS} multipath components, and this complicates the propagation when there is no \ac{LoS}.
 
-Lastly, there is one very important difference when using higher frequencies. Since the effective radiator size is proportional to the wavelength, the antennas in mmWaves will be proportionally smaller. This has two consequences: first, there will be an higher attenuation or path loss; second, there can be more antenna elements in the same physical area and this significantly overcompensates the higher path loss.
+Lastly, there is one very important difference when using higher frequencies. Since the effective radiator size is proportional to the wavelength, the antennas in mmWaves will be proportionally smaller. This has two consequences: first, there will be an higher attenuation or path loss; second, there can be more antenna elements in the same physical area and this significantly compensates the higher path loss \cite{it_will_work}.
 
 
 
 \subsection*{The Effect of Smaller Antennas}
 
-Let us introduce the the Friis Equation in \eqref{eq:Friis} to carefully analyse this effect. We see the received power $P_r$ is function of the transmit power $P_t$, the transmitter gain in the direction of the receiver $G_t$, the distance between the transmitter and the receiver $d$ (since there is a spatial power spreading along the spherical surface with that radius), and the effective area at the receiver $A_{er}$ to account for how much of the energy present in the receiver's vicinity can be captured by its the antenna.
+Let us introduce the Friis Equation \cite{Rappaport_wireless_coms} in \eqref{eq:Friis} to carefully analyse this effect. We see the received power $P_r$ is function of the transmit power $P_t$, the transmitter gain in the direction of the receiver $G_t$, the distance between the transmitter and the receiver $d$ (since power spreads along the spherical surface with that radius), and the effective area at the receiver $A_{er}$, which takes into account how much of the energy present in the receiver's vicinity can be captured by its antenna.
 
 \begin{equation} \label{eq:Friis}
     P_r = P_t G_t \frac{1}{4\pi d^2} A_{er}
@@ -58,20 +58,20 @@ From antenna theory and reciprocity principles, the gain and the effective area 
     A_e = \frac{\lambda^2 G}{4 \pi}
 \end{equation}
 
-And applying \eqref{eq:gain_eff_area_relation} to \eqref{eq:Friis} we obtain \eqref{eq:Friis2}. This quick derivation is useful because it allows us to pin point exactly where the extra path loss from higher frequencies comes from. The direct dependence with frequency has to do with a smaller effective area, which is related with an overall smaller radiator. Note that stepping from 3 to 30 GHz an half-wavelength dipole would get 10 times smaller leading to 100 times less effective area or 20 dB extra free-space path loss.
+And applying \eqref{eq:gain_eff_area_relation} to \eqref{eq:Friis} we obtain \eqref{eq:Friis2}. This quick derivation is useful because it allows us to pinpoint exactly where the extra path loss at higher frequencies comes from. The direct dependence with frequency has to do with a smaller effective area, which is caused by a smaller antenna/radiator. Note that stepping from 3 to 30 GHz an half-wavelength dipole would get 10 times smaller leading to 100 times less effective area or 20 dB extra free-space path loss.
 
 \begin{equation} \label{eq:Friis2}
     P_r =\frac{P_t G_t G_r \lambda^2}{(4\pi d)^2}
 \end{equation}
 
-Fortunately, there is a major advantage of having smaller antennas. Smaller antennas allow us to form antenna arrays with more antenna elements than previously. As such, an tenfold increase in frequency allows an hundredfold increase in number of elements in the same physical area, which traduces to 20 dB extra directional gain per antenna array if all antenna elements are optimally used with one hundredth of the power. Therefore, if we increase the number of antenna elements of the receiver and transmitter and we can use each element optimally, we effectively improve the received power by 20 dB with the same transmit power. 
+Fortunately, there is a major advantage of having smaller antennas. Smaller antennas allow us to form antenna arrays with more antenna elements than previously. As such, an tenfold increase in frequency allows a hundredfold increase in number of elements in the same physical area, which traduces to 20 dB extra directional gain per antenna array if all antenna elements are optimally used with one hundredth of the power. Therefore, if we increase the number of antenna elements of the receiver and transmitter and we can use each element optimally, we effectively improve the received power by 20 dB with the same transmit power. 
 
-The technique of making antenna elements constructively interfere in the directions of interest, and destructively interference in the direction where the signal causes harmful interference to other connections will be analysed next in the part about to spectral efficiency.
+The technique of making antenna elements constructively interfere in the directions of interest, and destructively interference in the direction where the signal causes harmful interference to other connections is analysed next.
 
 
-\subsection*{More Spectral Efficiency}
+\subsection*{Higher Spectral Efficiency}
 
-The most promising technology to enhance spectral efficiency is massive \ac{MIMO} \cite{8861014}. Massive \ac{MIMO} consists of having at least 10 times more antennas than the users intended to be served simultaneously. Statistically under Rayleigh fading assumptions, this leads to a high likelihood of obtaining independent channels to all users simultaneously. Essentially, this enables all users to be served simultaneously in the same time-frequency resources by spatial separating the streams.
+The most promising technology to enhance spectral efficiency is massive \ac{MIMO} \cite{8861014}. Massive \ac{MIMO} consists of having at least 10 times more antennas than the number of users intended to be served simultaneously. Statistically under Rayleigh fading assumptions, this leads to a high likelihood of obtaining independent channels to all users simultaneously. Essentially, this enables all users to be served simultaneously in the same time-frequency resources by spatial separating the streams. However, that may not lead to the best \ac{SE} \cite{7294693}, proving the relevance of modelling real scenarios. 
 
 Since Marzetta's seminal paper on the asymptotic results of increasing the number of antennas in \acp{BS} \cite{5595728}, massive \ac{MIMO} has played a critical role in enhancing the performance of wireless systems. Figure \ref{fig:mamimo} represents how increasing the elements plays a role in spectral efficiency by increasing the number of simultaneously served users.
 
@@ -79,36 +79,33 @@ Since Marzetta's seminal paper on the asymptotic results of increasing the numbe
 
 \imagecapcontrol{Literature Review/mamimo.png}{Antenna element impact on simultaneously served users. From Mathworks.}{fig:mamimo}{.7}{-0mm}
 
-The selling point of massive MIMO is that increasing the number of antennas not only increases the number of simultaneously served users, thus increasing the aggregated throughput, but also increases the quality of servitude of each of those users due to beamforming gains, as we will explore ahead. 
+One important massive MIMO benefit is when small-scale fading (fast variations) between antenna elements is sufficiently uncorrelated, which is the case when AEs in arrays are separated more than half-wavelength, then the channel will tend to a deterministic state as the number of AEs increases in BSs or terminals. This happens because the more diversity, the less likely it is that all channels have big oscillations. In essence, the oscillations average out and this average with little to no oscillations dictates the channel. This effect is called channel hardening \cite{1327795}.
 
-Regarding the first benefit, independent data streams over the air, more commonly called layers, explore diversity in space between any combination of receiver and transmitter antennas. The more antennas, the more likely it is that a certain propagation path yields sufficient orthogonality by smartly using the available antennas.
+But the main selling points of massive MIMO are two. First, increasing the number of antennas increases the number of simultaneously served users, which can lead to increased aggregated throughput. Note that the total transmit power needs to be shared among more users, and serving users simultaneously may increase the interference each user experiences. However, the possibility of opting to serve more users when the conditions favour it guarantees higher aggregated throughputs in those occasions. Second, it increases the quality of servitude of each of those users due to beamforming gains \cite{7500452}, as we will explore ahead. 
 
-When data streams are sent to a single user (see Figure \ref{fig:multilayer}), we call it SU-MIMO (Single-User MIMO) operation, and when different streams target different users, having one or more streams per user, we call it MU-MIMO (Multi-User MIMO) mode of operation. However, the system requires information about the channel, it needs to know the multipath information to decide which paths to exploit for transmission. Therefore, let us inspect how the channel is represented and how information about it can be acquired.
+Regarding the increasing the independent data streams over the air, more commonly called layers, it explores space diversity between combinations of receiver and transmitter antennas. The more antennas, the more likely it is that a certain propagation path is sufficiently orthogonal to another.
 
-% cite https://sploty.com/en/lte-e-utran-open-loop-spatial-multiplexing-tm3.html 
-\imagecapcontrol{Literature Review/multilayer_transmission.png}{Example of single-user multilayer transmission. Source .}{fig:multilayer}{.55}{-0mm}
+When one or more data streams are sent to a single user, as in Figure \ref{fig:multilayer}, we call it SU-MIMO (Single-User MIMO) operation, and when different streams target different users, having one or more streams per user, we call it MU-MIMO (Multi-User MIMO) mode of operation. However, the system requires information about the channel, it needs to know the multipath information to decide which paths to exploit for transmission. Therefore, let us inspect how the channel is represented and how information about it can be acquired.
 
+\imagecapcontrol{Literature Review/multilayer_transmission.png}{Example of single-user multilayer transmission. \cite{multilayer_fig}}{fig:multilayer}{.55}{-0mm}
 
 
 \subsection*{MIMO Channel}
 
-Figure \ref{fig:mimo_channel} shows how the channel is seen from a system perspective. The complex scalars $h_{ij}$ hold the transformation that occurs between the $i$-th antenna at the \ac{TX} and the $j$-th antenna at the \ac{RX}. These complex numbers are usually called channel impulse responses, or simply channel coefficients.
+Figure \ref{fig:mimo_channel} shows how the channel is seen from a system perspective. The complex scalars $h_{ij}$ hold the amplitude and phase field transformations that occurs between the $i$-th antenna at the \ac{TX} and the $j$-th antenna at the \ac{RX}. They are called channel impulse responses or simply channel coefficients.
 
-\imagecapcontrol{Literature Review/mimo_channel.png}{mimo channel }{fig:mimo_channel}{.6}{-0mm}
+\imagecapcontrol{Literature Review/mimo_channel.png}{Mimo channel system representation.}{fig:mimo_channel}{.6}{-0mm}
 
-Each channel coefficient has an amplitude and a phase. The amplitude is a positive real number smaller than one and shows how much the transmitted signal has been attenuated before it reaches the receiver. The phase tells us the phase difference between the transmitted and captured fields. Recall that the transmitting antenna excites a propagating disturbance in the electric and magnetic fields (an electromagnetic wave) and this disturbance propagates by oscillating having a phase associated with that propagation. As such this phase plays an important role in determining if fields from different antennas will constructively or destructively interfere, see Figure \ref{fig:interference}.
+Each channel coefficient has an amplitude and a phase. The amplitude is a positive real number smaller than one and shows how much the transmitted signal has been attenuated before it reaches the receiver. The phase tells us the phase difference between the transmitted and captured fields. Recall that the transmitting antenna excites a propagating disturbance in the electric and magnetic fields (an electromagnetic wave) and this disturbance propagates by oscillating having an associated phase. As such, the phase plays an important role in determining whether fields from different antennas interfere constructively or destructively, see Figure \ref{fig:interference}.
 
-%\cite{} https://www.phys.uconn.edu/~gibson/Notes/Section5_2/Sec5_2.htm
-\imagecapcontrol{Literature Review/constructive_and_destructive_interference.png}{Constructive and destructive interference of waves.}{fig:interference}{.5}{-0mm}
+\imagecapcontrol{Literature Review/constructive_and_destructive_interference.png}{Constructive and destructive interference of waves. \cite{interference_fig}}{fig:interference}{.5}{-0mm}
 
 
-The channel matrix $\bm{H} \in \mathbb{C}^{N_r \times N_t}$, made out of channel coefficients respectively connecting transmitter and receiver antennas is only valid for a specific time and frequency. It holds throughout the coherence bandwidth during the coherence time. 
+The channel matrix $\bm{H} \in \mathbb{C}^{N_r \times N_t}$ from Figure \ref{fig:mimo_channel} is only valid for a specific time and frequency. It holds throughout the coherence bandwidth during the coherence time. 
 
-%cite Rappaport, Wireless Communications, Prentice Hall, 2002 and Goldsmith, Andrea (2005), Wireless Communications (IN the first sentence of the next par)
+The precise definitions of these quantities require detailed channel knowledge namely about the exact powers and propagation delays of each path and maximum Doppler shift which is related with \ac{UE} speed \cite{Rappaport_wireless_coms,wireless_coms_andrea_goldsmith}. This knowledge is very hard to measure accurately in reality, so both the coherence time and bandwidth are estimated and parameters of the system are made to match the estimation, namely to the time duration and bandwidth of a \ac{PRB} \cite{fundamentals_wireless_david_tse}.
 
-The precise definitions of these quantities require detailed channel knowledge namely about the exact powers and propagation delays of each path and maximum Doppler shift which is related with \ac{UE} speed. Since such knowledge is very hard to measure accurately in reality, instead both the coherence bandwidth and coherence time are estimated and assumed equal to certain parameters of the system. Usual values are the time duration and bandwidth of a \ac{PRB}. %cite Fundamentals of Wireless Communication1 David Tse
-
-The channel matrix $\bm{H}$ relates the $N_r$ by 1 received signal $\bm{y}$ with the $N_t$ by 1 transmitted signal $\bm{x}$, plus the received noise $\bm{n}$ in each antenna with the same dimensions as $\bm{x}$. Equation \eqref{eq:channel} represents this relation.
+The channel matrix $\bm{H}$ relates the $N_r \times 1$ received signal $\bm{y}$ with the $N_t \times 1$ transmitted signal $\bm{x}$, plus the $N_r \times 1$ received noise $\bm{n}$. Equation \eqref{eq:channel} presents this relation.
 
 
 \begin{equation} \label{eq:channel}
@@ -116,21 +113,23 @@ The channel matrix $\bm{H}$ relates the $N_r$ by 1 received signal $\bm{y}$ with
 \end{equation}
 
 
-Therefore, to obtain an estimate the channel matrix it is required to send known signals. In traditional massive MIMO formulations these signals (called pilots) are emitted by each single-antenna \ac{UE}. Then the channel to each \ac{UE} is estimated through linear algebra methods.
+Therefore, to obtain an estimate of the channel matrix it is required to send known signals. In traditional massive MIMO formulations these signals (called pilots) are emitted by each single-antenna \ac{UE}. Then the channel to each \ac{UE} is estimated through linear algebra methods \cite{fundamentals_of_massive_mimo}.
 
-However, nowadays \acp{UE} have more than one antenna and each different antenna needs to send a different signal to the \ac{BS}. One can foresee complications due to an excessive need of orthogonal reference signals. Further ahead we will see how this is done precisely by visiting the 5G standards. 
+However, nowadays \acp{UE} have more than one antenna and each antenna needs to send a different signal to the \ac{BS}. One can foresee complications due to an excessive need of reference signals that need to be orthogonal to prevent interference. Further ahead we will see how this is done precisely by visiting the 5G standards. 
 
-Additionally, it is not required that all the \ac{TX}/\ac{RX} antenna elements are located in the same place. One way of increasing the spatial diversity is to use multi-panel systems \cite{8316768}. Distinct panels can be used to jointly serve a user, enhancing throughput and coverage \cite{6804225}. Allowing a user to access the network in different locations, and to be serve by one or a combination of access points, improves the likelihood of achieving the required QoS and improves network efficiency by enabling more options for load balancing and interference mitigation \cite{dmimo_tno}.
+Additionally, it is not required that all the \ac{TX}/\ac{RX} antenna elements are located in the same place. Normally, antenna elements are only spaced half wavelength since it is enough to guarantee enough independence and also to reduce interference between elements. An antenna array has distances in this order between elements. But, one way of increasing the spatial diversity is to place antenna arrays spatially apart (several tenths or hundreds of wavelengths). This is called a multi-panel configuration \cite{8316768}. 
+
+Distinct panels can be used to jointly serve a user, enhancing throughput and coverage \cite{6804225}. Allowing a user to access the network in different locations, and to be serve by one or a combination of access points, statistically improves the QoS and improves network efficiency by enabling more options for load balancing and interference mitigation \cite{dmimo_tno}.
 
 We conclude that having more antennas allows serving more users because there will be more orthogonal paths encoded in $\bm{H}$ to be used for concurrent transmission. To exactly know how to perform those transmissions, we need to understand what beamforming is. 
 
 \subsection*{Beamforming}
 
-Beamforming is a signal processing technique used in sensor arrays for spatial filtering through sensor interaction. More concretely, by changing the amplitude and phase of the signal fed to each antenna element of an antenna array, it is possible to maximise the constructive interference of the radiated fields in a particular point in space, thus improving the reception of the signal at that point. The same can be achieved to reduce interference by making the signals from each antenna destructively interfere. Furthermore, beamforming can be applied not only at the transmitter to enhance the signal at the receiver, but also at the receiver, to coherently combine the signals that each antenna captured. Normally, when applied to the transmitter, since the complex weights are multiplied to the signal before transmission it is called precoding, and by the same logic when applied to the receiver is called combining.
+Beamforming is a signal processing technique. It consists of changing the amplitude and phase of the signal fed to each antenna element of an antenna array in order to create constructive interference in a particular point in space, thus improving the transmission or reception of the signal at that point. The same can be achieved to reduce interference by making the signals from each antenna destructively interfere. Furthermore, beamforming can be applied not only at the transmitter to enhance the signal at the receiver, but also at the receiver, to coherently combine the signals that each antenna captured. Normally, when applied to the transmitter, since the complex weights are multiplied to the signal before transmission it is called precoding, and by the same logic when applied to the receiver is called combining.
 
 Signal superposition happens on a field level. Thus if the fields radiated by 100 elements add up constructively, the amplitude of the signal grows 100 times, which equates to 10000 times more power. Despite the ten-thousandfold array gain, the total gain will be one-hundredfold because we automatically reduce the transmit power of each element by 100 times (equal to the number of elements), in order to have the total array transmit power constant and independent of the number of elements.
 
-Not forgetting the necessary power per antenna element is smaller proportionally to the number of elements, see in Table \ref{tab:beamfroming_gain} the total gain obtained from beamforming with different antenna sizes in a \ac{ULA} where the element are placed in a line along the same direction. We can see that as the number of elements increases, the total power gain increases and the \ac{HPBW} decreases - \ac{HPBW} is the beamwidth between the points where the gain is 3 dBs below the maximum - i.e. the beams get narrower.
+Table \ref{tab:beamfroming_gain} shows the total gain (array gain plus element gain) obtained from beamforming with different antenna sizes with a \ac{ULA} - in this array the elements are placed in a line. We can see that as the number of elements $N$ increases, the total power gain increases and the \ac{HPBW} decreases - \ac{HPBW} is the beamwidth between the points where the gain is 3 dBs below the maximum - i.e. the beams get narrower. Note that the increase in array gain by doubling the elements is 6 dB, but the element power gain decreases 3 dB because only half the power per element is available. The element used is the cross-polarised element described by 3GPP \cite{3gpp_antennas}.
 
 \begin{table}[!h]
     \centering
@@ -146,7 +145,7 @@ Not forgetting the necessary power per antenna element is smaller proportionally
     \end{tabular}
 \end{table}
 
-Since the table considers a linear (one-dimensional) array, the beamwidth measured is not the same in all planes - the beamwidth changes only on the plane along which the number of elements changes, i.e. if the elements along the vertical increase, the beamwidth in a vertical cut decreases. Figure \ref{fig:rad_patterns} illustrates this exactly.
+Since the table considers a linear (one-dimensional) array, the beamwidth measured is not the same in all planes - the beamwidth changes only in the plane along which the number of elements is changed, i.e. if the elements along the vertical increase, the beamwidth in a vertical plane decreases. Figure \ref{fig:rad_patterns} illustrates the radiation pattern changing in the vertical plane according with the number of vertical elements. The array pattern further depends on inter-element spacing which is kept at half-wavelength throughout this thesis.
 
 \threeimagessidebyside{Literature Review/4x4v2.png}{4 vertical by 4 horizontal}{fig:4x4}{.35}{Literature Review/8x4v2.png}{8 vertical by 4 horizontal}{fig:8x4}{.4}{Literature Review/16x4v2.png}{16 vertical by 4 horizontal}{fig:16x4}{.45}{Radiation patterns for arrays with different elements along the vertical}{fig:rad_patterns}{0.3}{0.3}{0.3}
 
@@ -156,29 +155,54 @@ From Table \ref{tab:beamfroming_gain}, Figure \ref{fig:rad_patterns} and literat
     G_{total} = G_{ele} + 10 \log10(N) \ [\text{dBi}]
 \end{equation}
 
-More importantly, we know the beamforming flexibility and gain is directly proportional to the number of antenna elements of an antenna array. Transmissions with enhanced directivity allow more power at the receiver and less power in other directions, decreasing the interference. Reception with beamforming also permits receiving more of the supposed signal and suppress sources of interference. Therefore, beamforming makes transmissions more efficient by allowing higher \acp{MCS} due to the extra gain.
+More importantly, we know the beamforming gain is directly proportional to the number of antenna elements of an antenna array. Transmissions with enhanced directivity allow more power at the receiver and less power in other directions, decreasing the interference. Reception with beamforming also permits receiving more of the supposed signal and suppress sources of interference. Therefore, beamforming makes transmissions more efficient by increasing the \ac{SINR} thus allowing higher \acp{MCS}.
+
+
+\subsection*{Antenna Architectures for Beamforming} \label{sec:analog_hybrid_digital_bf}
+
+Beamforming flexibility, like the number of users served simultaneously and the accuracy of directions to focus power, is directly connected with the antenna architecture. After all, independently of how good the software is, it is always limited by the hardware. Let us analyse what challenges the hardware poses before diving into the signal processing techniques.
+
+With the increase in number of antenna elements, strategies to reduce the cost begin to develop. Figure 
+\ref{fig:bf_architectures} shows three generic TX side architectures, each with a different associated cost and performance. The only difference to \acs{RX} side architecture is the presence of an \ac{ADC} instead of a \ac{DAC}. 
+
+\imagecapcontrol{Literature Review/hybrid bf/all2.png}{Transmit side antenna array architectures.}{fig:bf_architectures}{.29}{-1mm}
+
+We need to understand what some basic components do to understand how they impact cost and performance. There are essentially three sets of components:
+
+\begin{itemize}%[leftmargin=*]
+    \item The \ac{BB} refers to the domain of original frequencies of the signal, before it is used to modulate a high-frequency carrier. It is in these lower frequencies that digital signal processing happens;
+    \item The \ac{TRX} chain is the physical processing chain used for transmitting and receiving signals;nowadays cellular antenna systems are used in both directions. It is made out of a \ac{DAC}, a \ac{ADC} and the respective \ac{RF} chains consisting of filters, mixers, and amplifiers. Analog architectures only have one TRX chain, digital have as many as antenna elements and hybrid have more than one but less than digital;
+    \item Phase shifters are used to add phase differences between elements in architectures where the same signal is fed to more than one antenna element, i.e. analog and hybrid. Digital architectures do not need phase shifters since the phase between individual elements is set from the digital domain. 
+\end{itemize}
+
+Regarding costs, the cost of a BB unit rises with the number of antenna elements due to the required processing power, and than with the number of digital ports, especially in mmWave. But only the latter changes across architectures, and little compared with other components. Similarly with phase shifters; its cost rises with frequency, but it is insignificant compared with the cost of a full \ac{TRX} chain.
+
+With respect to flexibility, it all comes down to how much can the signal vary across antenna elements. In the analog case, the signal is the same with the exception of a phase difference. This still allows for beamforming, but only one direction at once since all signals are fed to the same phase shifters and thus directed to the same place. The digital counterpart is the most flexible: the signal can vary in amplitude and phase across elements and is able to direct in a specific manner as many signals as elements. However, the cost is practically proportional to the number of elements. 
+
+The hybrid option provides a trade-off between the previous two. It has more TRX chains than analog, so it can send more simultaneous signals, but it looses in steering capabilities. Moreover, it requires connecting each RF chain to each antenna element with phase shifters in between, thus involving numerous connections and numerous phase shifters. In not fully-connected variants, hybrid beamforming looses even further beam steering flexibility, ultimately degenerating in the analog case.
+
+
+In essence, the more TRX chains the antenna has, the more flexible and expensive it is. In industry, a 64T64R refers to the number of TRX, actually 64 TX chains and 64 RX chains. If an array has 128 elements but only 64 \acsp{TRX}, then it has to have two-element sub-arrays, i.e. two antenna element connected to each TRX. And this is how beamforming performance is quantified in terms of hardware. Let us address software possibilities now.
 
 
 \subsection*{Types of Beamforming} \label{sec:types_of_beamforming}
 
-Beamforming is not a new technique \cite{6591907} and has had applications in many fields such as radar, sonar, seismology, radio astronomy, acoustics and biomedicine. In today's mobile communications, it plays a crucial role. Expectedly, not all processing techniques are useful in all fields. So let us distinguish two considerably different types of beamforming and survey the most useful techniques used in wireless communications
+Beamforming is not a new technique \cite{6591907} and has had applications in many fields such as radar, sonar, seismology, radio astronomy, acoustics and biomedicine. In today's mobile communications, it plays a crucial role. Expectedly, not all processing techniques are useful in all fields. So let us distinguish the two different types of beamforming and survey the most useful techniques used in wireless communications.
 
 The two types of beamforming used in wireless communications have several equivalent denominations but the difference is simple:
 \begin{itemize}
-    \item Open-loop / explicit / codebook-based / pre-determined / quantized / feedback-based beamforming - the possible beams are fixed and pre-established. Acquiring \ac{CSI} serves only to pick from a codebook, or \ac{GoB}, which beam to use. Therefore a common approach is the \ac{BS} encoding reference signals in a few beams it thinks are most likely the best for a given \ac{UE}, and the \ac{UE} explicitly reports a feedback message stating which beam carried the reference signal received with the most success. The feedback overhead is considerably smaller. The resultant beam is not a perfect fit to the channel, it represents instead a trade-off between optimal performance and prohibitive amounts of \ac{CSI} acquisition overhead.
-    \item Closed-loop / implicit / non-codebook-based / free-format / eigen / reciprocity-based beamforming - the range of possible beams is infinite and the actual beam is implicitly derived directly from \ac{CSI}. This mode of operation does not use codebooks. Instead precise \ac{CSI} is acquired through the uplink of orthogonal reference signals (pilots) and used directly to determine the beamforming vector in the downlink direction. Note the reciprocal nature present in determining the downlink beam from the transformations involved in the uplink. Multipath information is implicit in the channel matrix and vector of weights to use is derived with signal processing techniques. The resultant beam optimally fits the channel measurements with respect to the quantities we aim to optimise with our processing techniques.
+    \item Closed-loop / explicit / codebook-based / pre-determined / quantized / feedback-based beamforming - the possible beams are fixed and pre-established. The \ac{BS} encodes reference signals in a few beams it thinks are most likely the best for a given \ac{UE}, and the \ac{UE} explicitly reports a feedback message stating which beam carried the reference signal received with the most success. This process serves to pick from a codebook, or \ac{GoB}, which beam to use. The feedback overhead is smaller than its counterpart. The resultant beam is not a perfect fit to the channel, it represents instead a trade-off between optimal performance and prohibitive amounts of overhead. 
+    \item Open-loop / implicit / non-codebook-based / free-format / eigen / reciprocity-based beamforming - the range of possible beams is infinite and the actual beam is implicitly derived directly from the transmitted reference signals. This mode of operation does not use codebooks. It is based on the \ac{UL} of orthogonal reference signals (pilots) to estimate the channel matrix. Multipath information is implicit in the channel matrix and vector of weights to use is derived with signal processing techniques. Note the reciprocal nature of this approach when \ac{UL} and \ac{DL} beamformers can be derives from the same process. The resultant beam optimally fits the channel measurements with respect to the quantities we aim to optimise with our processing techniques.
 \end{itemize}
 
-Take the following example to solidify the difference. Assuming the only propagation path from transmitter to receiver is the \ac{LoS} feedback-based beamforming sends reference signals in three directions (e.g. -25\tdeg in elevation and 33\tdeg, 34\tdeg and 35\tdeg in azimuth) and awaits for feedback on which suits the \ac{UE} the best, while free-format beamforming extracts from several received signals the best direction to beamform (e.g. -24.5443\tdeg elevation and 34.1222\tdeg azimuth).
+Take the following example to solidify the difference. Assuming the only propagation path from transmitter to receiver is the \ac{LoS}, with feedback-based beamforming reference signals are sent (e.g. in three directions, -25\tdeg in elevation and 33\tdeg, 34\tdeg and 35\tdeg in azimuth) and awaits feedback on which beam suits the \ac{UE} best, while with free-format beamforming the best direction to beamform (e.g. -24.5443\tdeg elevation and 34.1222\tdeg azimuth) is extracted from the channel matrix derived from reference signals coming from each of UE's antennas.
 
-Conventional beam-steering is a direction-based technique for pre-determined beamforming. Since the beam is steered to one direction only, it is expected to perform less optimally due to focusing all energy in a single path. Although in \ac{LoS} scenarios it performs almost optimally, it fails to take advantage of scenarios with many propagation paths. Ayach \cite{6292865} proves that this simple technique achieves more than 90\% of the maximum rate with optimal beamforming even in unrealistically unfavourable multipath-rich environments. The actual loss in gain is about 4\% with a realistic number of paths for indoor environments \cite{8891356}. Therefore, it should not impact our results significantly.
-
-
+Conventional beam-steering \cite{balanis_antennas} is a direction-based technique for feedback-based beamforming. With multipath propagation, since the beam is steered to one direction only, it is expected to perform less optimally due to focusing all energy in a single path \cite{6292865}. %Although in \ac{LoS} scenarios it performs close to optimally, it fails to take advantage of scenarios with many propagation paths . %Ayach \cite{6292865} proves that this simple technique achieves more than 90\% of the maximum rate with optimal beamforming even in unrealistically unfavourable multipath-rich environments. The actual loss in gain is about 4\% with a realistic number of paths for indoor environments \cite{8891356}. Therefore, it should not impact our results significantly.
 %Other more sophisticated techniques could be used \cite{beam_steering_techniques}, not necessarily from the same type of beamforming.
 
-In Appendix \ref{sec:beam_steering} we make an integral derivation of the weights to be applied to each antenna element in order to conventionally beam-steer the signal to a certain direction. Also, we provide considerably more details regarding how this techniques works. Nonetheless, it is also worth to survey implicit beamforming techniques since they can be employed simultaneously.
+In Appendix \ref{sec:beam_steering} we make an integral derivation of the complex weights to be applied to each antenna element in order to conventionally steer the signal to a certain direction. Nonetheless, it is worth surveying implicit beamforming techniques since they can be employed alongside explicit beamforming, and is motivated in the canonical massive MIMO formulation.
 
-The most common implicit beamforming technique is \ac{MR} \cite{795811}. When \ac{MR} beamformer is applied to transmission it is called \ac{MRT}, and \ac{MRC} when applied at the reception. Equation \ref{eq:mr} shows ths computation of \ac{MR} by calculating the Hermitian (conjugate transpose) of the channel vector and normalising such that the weights vector has unitary norm. Normalisation serves to prevent power scaling in the mathematics as we do not want to modify the total transmitted/received power with the beamforming.
+The most common implicit beamforming technique is \ac{MR} \cite{795811}. When \ac{MR} beamformer is applied to transmission it is called \ac{MRT}, and \ac{MRC} when applied at the reception. Equation \ref{eq:mr} shows this computation of \ac{MR} by calculating the Hermitian (conjugate transpose) of the channel vector and normalising such that the weights vector has unitary norm. Normalisation serves to prevent power scaling in the mathematics as we do not want to modify the total transmitted/received power with the beamforming.
 
 \begin{equation} \label{eq:mr}
     \bm{w}^\text{MR} = \frac{\bm{h}^\text{H}}{|\bm{h}|}
@@ -186,4 +210,4 @@ The most common implicit beamforming technique is \ac{MR} \cite{795811}. When \a
 
 Observe that $\bm{h}$ is not a matrix. This is because \ac{MR} can only optimise the transmission/reception to/from one point, therefore $\bm{h}$ is $N_t$ by 1 in case of transmission, containing the coefficient that connect each of the transmit antennas to one of the receiver's antennas. And $\bm{h}$ is $N_r$ by 1 when computing the \ac{MRC}.
 
-Currently, we have surveyed the most promising principles to cope with the increased requirement demands. Let us now analyse the relevant standardisation efforts to show how such principles are currently used in today's mobile communication networks.
+Currently, we have surveyed the most promising principles to cope with demands. Let us now analyse the relevant standardisation efforts to show how such principles are currently used in 5G access networks.

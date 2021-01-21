@@ -1,4 +1,40 @@
-\section*{Conclusions}
+\subsection*{Conclusion}
+
+This section brings this thesis to a closure. Here we make a summary and present the most prominent future work directions.
+
+We started off by introducing this work. There we mentioned how the connectivity requirements never were so big, and how they do not appear to slow down. Faced with this issue of ever-growing demands, network operators need to constantly upgrade their networks. The new fifth generation of cellular communications promises to deliver, but its complexity is paramount. The main differences to the previous generation are in the radio interface and in the network architecture. The vision is virtualisation, to run several virtual services on top of the same physical network. We take a step in this direction, and model relevant application and radio layer parameters in an effort to study what radio access choices impact performance in the application. The long-term purpose is to use those insights to create an autonomously managed virtual network slice that optimally configures the network, wireless access included, to provide the user with the best performance possible.
 
 
-Something something concluding...
+Naturally, such arduous task requires a careful survey of the literature. We do this in Chapter 2. Firstly, social virtual reality meeting applications are seen in lights of network requirements. Then we probe what aspects in the application have influence in the radio channel, thus we study where cameras, headsets and base stations are placed, and user movement models. Then, we review traffic models - the network fulfil such traffic. To finish the application survey, we read on different approaches to optimise the radio layer for this demanding real-time application.
+
+Given the requirements, we proceed to survey the key technologies of today. Massive MIMO and mmWaves are the answer, and in the same section we present what they entail. Then we probe how these technologies are standardised and used in today's emerging 5G networks. We also inspect relevant physical layer specifications and network equipment. To finalise literature review, we choose the channel generator to create the propagation environment onto which we will be simulating transmissions.
+
+Chapter 3 is where we show how everything comes together in our simulation framework. We present all modelling considerations, starting with the application. We describe the physical setting in the room, what antennas are used and how they are placed, e.g. in the headsets. We model the head movement of a user and we detail a flexible application traffic model based on video streaming.
+
+Subsequently, we show how the propagation environment changes with the previous application considerations, like antenna placement and user behaviour. This radio channel is measured by the network to make resource management decisions. We present and model the tasks carried by the network. These include channel state information acquisition, user scheduling and the actual transmission.
+
+In the fourth Chapter is assessed the result of all modelling considerations. In the previous chapter we defined the parameters that dictate all modelled aspects and in this chapter we give them values to precisely describe the simulation scenarios. We see how the channel quality changed from a conference with a single user to a multi-user conference. More importantly, we verified that our modelling produces realistic results that relate coherently among themselves. We can measure throughputs and latencies and quantify the QoS from a set of application, propagation environment and network settings. This tells us this simulator has been successfully designed.
+
+This work is still in its infancy. We foresee viable future work directions.
+
+\subsection*{Future Work}
+\label{sec:future-work}
+
+We identify primarily two areas of interest: further developing this simulator to make it (even) more realistic, and to pursue different work
+
+
+
+\begin{itemize}
+    \item Perform extensive sensitivity analysis - parameters in the simulator can be changed and performance measured in order to derive insights about how settings impact performance, both in combinations and individually. Some examples of settings to change are: numbers of meeting participants, user behaviour, antenna arrays' placement, size, architecture, and geometry, bandwidths, frequency bands, numerologies, settings of the latency-aware packet scheduler, multi-user scheduling strategies, TDD splits, number of base stations and their location, multi-BS operation algorithms (D-MIMO), acknowledgement delays, channel state information and scheduling periodicities, target \acs{BLER} and link adaptation parameter.
+    \item Improvements to make the simulator more realistic - some modelling considerations can be considered simplistic. More realism can be achieved by improving modelling. Moreover, such improvements often lead to thoughts on how something can be done differently, and generate more work directions; 
+    \item Use flexible slots and mini-slots - this should give offer more granularity in the time domain, reducing latency and making resources fit better the demand;
+    \item Reciprocity-based beamforming - The performance difference between \ac{GoB} and reciprocity-based beamforming has not been studied in mmWaves \cite{tddVSfdd_massiveMIMO}. This may require to quantifying overheads of CSI-RS and SRS;
+    \item Development of new resource management mechanisms, possibly AI-based;
+    \item Human blocking - one of mmWaves biggest challenges the facility with which the signal can be blocked. This direction includes human blockage modelling and measures to attenuate the impact of a blockage event. More precisely, smart multi-BS operation algorithms, or perhaps the usage of different additional hardware like intelligent reflective surfaces \cite{8936989} or relays. Ray tracing simulations may be required to have an accurate representation of the reflections;
+    \item Slice interaction and management - when there are conflicts between slices, how to solve them? The process should require quantifying how much each slice needs a given modification to the network, and what priority does that slice have and use that information to make slices interact seemingly.
+\end{itemize}
+
+Solely for sake of conciseness, this selection is nowhere near exhaustive. During development of each component of the framework, plenty of more detailed research directions have been identified. So much so, that we intend to continue working in this exciting project beyond this thesis.
+
+
+

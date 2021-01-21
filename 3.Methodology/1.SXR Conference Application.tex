@@ -4,9 +4,9 @@
 This section contains all modelling initiatives and assumptions for a SXR conference meeting. Firstly, the physical placement of \acp{BS}, users and cameras is presented. Then we address antenna placement, orientation, geometry and architecture. The placement and orientation are particularly important since it defines how user movement will influences channel quality variability. Subsequently the user behaviour is modelled. Lastly, we present our model for the traffic characteristic based in the packet arrival profile of real-time video streaming.
 
 \subsection{Physical Setting}
-\label{ue_placement}
+\label{sec:ue_placement}
 
-Physical and virtual users are uniformly distributed around the table. Naturally, depending on the number of participants/users $N_{u}$, the table radius $r_{t}$ should be changed to maintain a resemblance to reality. Also, the physical and virtual users are as intercalated or interlayed as much as their numbers, respectively, $N_{phy}$ and $N_{vir}$, allow. For realistic measures for the case of $N_{phy} = N_{vir} = 4$ see Figure \ref{fig:room_size}.
+Physical and virtual users are uniformly distributed around the table. Naturally, depending on the number of participants/users $N_{u}$, the table radius $r_{t}$ should be changed to resemble reality. Also, the physical and virtual users are as intercalated/interlayed as their numbers, respectively, $N_{phy}$ and $N_{vir}$, allow. Realistic measures for the case of $N_{phy} = N_{vir} = 4$ are in Figure \ref{fig:room_size}.
 
 \imagecapcontrol{Methodology/Application/room size.png}{Example of room and table size measures.}{fig:room_size}{.6}{-0mm}
 
@@ -25,22 +25,22 @@ The table is placed at the centre of the room and the precise user position is d
     \alpha_u &= u  \frac{2 \pi}{N_u} - \frac{\pi}{2} \ , \ \forall \ u \in \left\{0, ..., N_u - 1\right\} \label{eq:user_pos2}
 \end{align}
 
-\subsection{Antenna Placement, Orientation and Geometry}
+\subsection{Antennas}
 
-Antenna arrays with half-wavelength distance between elements are used. As a reference, consider the antenna is initially placed in the yOz plane, before being translated to its position and rotated to its orientation. We consider antenna elements from the \ac{BS} $A_{bs}$, from user's \ac{HMD} $A_{u}$ and from cameras $A_{cam}$ to be single-polarised and part of a cross-polarised element defined by 3GPP. 
+Antenna arrays with half-wavelength distance between elements are used. As a reference, consider the antenna is initially placed in the yOz plane, before being translated to its position and rotated to its orientation. We consider antenna elements from the \ac{BS}, from user's \ac{HMD} and from cameras to be single-polarised and part of a cross-polarised element defined by 3GPP. 
 
 Having the antenna in the plane of reference, let us call $N_V$ and $N_H$, respectively, to the number of vertical (parallel to z-axis) cross-polarised antenna elements and the number of horizontal (parallel to y-axis) antenna elements. We also assume all BS panels have the same number and type of elements. And users and cameras also have the same antennas among themselves. 
 
 The antenna size of a \ac{BS} panel is $N_{V,bs}$ by $N_{H,bs}$. Likewise, a user's antenna size is $N_{V,u}$ by $N_{H,u}$, and a camera's is $N_{V,cam}$ by $N_{H,cam}$. However, the physical proportions of the antenna array should be kept unchanged since one of advantage of higher frequencies is the higher element count. As such, we fix the BS size to e.g. $20 \times 20$ cm, and change the element count according to frequency. Figure \ref{fig:antennas} shows this for 3.5 GHz and 26 GHz.
 
 
-\imagecapcontrol{Methodology/Application/antennas.png}{Antennas}{fig:antennas}{.26}{-0mm}
+\imagecapcontrol{Methodology/Application/antennas.png}{Antenna size and geometry modelling example.}{fig:antennas}{.26}{-0mm}
 
 We see in Figure \ref{fig:antennas} that while at 3.5 GHz only 16 antenna element fit in the 20cm square \ac{BS} panel form factor, at 26 GHz the array has 1024 cross-polarised elements. The respective half-wavelengths at those frequencies are also shown, as well as other realistic possibilities for antennas in the \ac{HMD} and camera.
 
-With regards to positioning of antennas in the user's \ac{HMD} antennas, the centre of the antenna array coincides with the instantaneous user position. However, the antenna elements have an offset such that variations in head orientation also cause change in the position of each element. These considerations make the antenna elements move with the user's head as if they were on top of glasses.
+With regards to positioning of antennas in the user's \ac{HMD}, the centre of the antenna array coincides with the instantaneous user position. However, the antenna elements have an offset such that variations in head orientation also cause change in the position of each element. These considerations make the antenna elements move with the user's head as if they were on top of glasses.
 
-In detail, we set an offset distance outwards in direction of user orientation $d_{out}$, and an offset distance along the z-axis $d_{up}$, both measured from the centre of the user's head in the respective directions. An example with $d_{out} = 0.15$ and $d_{up} = 0.05$ is illustrated in \ref{fig:ant_offset}, simulating antennas placed across the top of a minimalistic pair of \ac{AR} glasses. Another interesting placement with potential would be on top of the user's head.
+In detail, we set an offset distance outwards in direction of user orientation $d_{o}$, and an offset distance along the z-axis $d_{u}$, both measured from the centre of the user's head in the respective directions. An example with $d_{o} = 0.15$ and $d_{u} = 0.05$ is illustrated in \ref{fig:ant_offset}, simulating antennas placed across the top of a minimalistic pair of \ac{AR} glasses. Another interesting placement with potential would be on top of the user's head.
 
 \threeimagessidebyside{Methodology/Application/ant_head_1.png}{Random View}{fig:table1}{.2}{Methodology/Application/ant_head_2.png}{Front view}{fig:table2}{.2}{Methodology/Application/ant_head_3.png}{Side View}{fig:table3}{.2}{HMD 6-element uniform linear array placement example for 3.5 GHz.}{fig:ant_offset}{0.35}{0.3}{0.3}
 
@@ -52,7 +52,7 @@ Concerning \acsp{BS} antennas, Figure \ref{fig:multiple_bs} shows the five posit
 
 \image{Methodology/Application/multiple_BS_side.png}{Multiple \ac{BS} panels position and orientation with $6 \times 4$ panels for 600 MHz.}{fig:multiple_bs}{.2}
 
-The orientation of the user's antenna $O_{u}$ is defined in the next subsection dedicated to user behaviour in terms of movement.
+The orientation of the user's antenna $O_{u}$ is the same as the user's orientation, which is defined in the next subsection, dedicated to user behaviour in terms of movement.
 
 Finally, all antennas have a fully connected (or digital) architecture, i.e. each antenna element possesses its own radio frequency chain. Despite more expensive, this architecture is required in place of the more cost-efficient hybrid architecture due to radiation pattern symmetries.
 
@@ -80,7 +80,7 @@ Change in orientation is quantified by three rotations around the cartesian axis
 
 \begin{itemize}
     \item Wobbling while staring - while looking to a certain user, there are deviations from the centre. Limiting the angle of deviation create a cone of focus, as in Figure \ref{fig:head_rotation_cone}. The figure shows pitch and roll rotations. The orientation of the antenna is constantly inside this cone. The cone is created from random sampling uniform distributions between $\pm \beta$, where $\beta$ is the uniform distribution limit. The limits for roll, pitch and yaw, respectively, right-hand rotation around the x, the y and the z axis, are $(\beta_x, \beta_y, \beta_z)$.
-    \item Change of focus - at the beginning of the simulation we define a speaker list, with users and the instants they start speaking. When a new user starts speaking, every other user turns its head to this new speaker, and this new speaker looks at the last user speaking, as if answering. This orientation change is more accentuated than head wobbling. The cone of focus is always centred at the user that is currently speaking.
+    \item Change of focus - at the beginning of the simulation we define a speaker list, with users and the instants they start speaking. When a new user starts speaking, every other user turns its head to this new speaker, and this new speaker looks at the last user speaking, as if answering. This orientation change is more accentuated than head wobbling. The cone of focus is always centred at the user that is currently speaking. By default, each user looks at every other user in equal time intervals of $T_{sim} / N_{users}$, where $T_{sim}$ is the simulation duration.
 \end{itemize}
 
 

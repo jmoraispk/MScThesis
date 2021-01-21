@@ -1,0 +1,60 @@
+\fancychapter{Mutual Information Effective SINR Mapping}
+\label{ap:miesm}
+
+\bb{Disclaimer:} practically all content in this appendix was not authored by the author of this thesis. Instead, it was taken from a non-public report on `Radio channel modelling for LTE system-level simulations' authored by Onno Mantel, Yohan Toh, Manolis Chrysallos and Remco Litjens, from TNO, a Dutch research company.
+
+Physical-layer abstraction models are an important building block of system-level simulators for mobile networks. In wideband systems, the \acs{SINR} varies over the system bandwidth and the link is typically characterised by a set of SINR values for the different \acsp{PRB} in the band. This is schematically illustrated in Figure 2-1. Physical-layer abstraction models translate the set of PRB-specific SINR values into one effective SINR, denoted $SINR_{eff}$, over the assigned bandwidth. This process is also referred to as Effective SINR Mapping (ESM). Different ESM functions have been proposed in the literature \cite{1651855}.
+
+\imagecapcontrol{Appendices/miesm1.png}{Effective SINR mapping result.}{fig:miesm1}{.35}{-1mm}
+
+
+The effective SINR mapping using MI-ESM is given by:
+
+\begin{equation} \label{eq:miesm}
+    SINR_{eff} = I_k^{-1} \left( \frac{1}{N} \sum_{i=1}^N I_k\left(SINR_i\right)\right)
+\end{equation}
+
+where $SINR_i$ is the SINR of PRB $i$ and N is the number of assigned PRBs in the considered bandwidth. $I_k$ is the \ac{BICM} capacity for the considered modulation order $k$. It is given by:
+
+
+\begin{equation}
+    I_k(SINR_i) = k - \mathbb{E}\left\{ \frac{1}{2^k} \sum_{p=1}^k \sum_{b=0}^1 \sum_{z \in \mathcal{\chi}_b^p} \log_2 \frac{\sum_{\hat{x} \in \chi} e^{- \left| Y - \sqrt{SINR_i / \beta_k} (\hat{x} - z)  \right|^2}}{\sum_{\hat{x} \in \chi_b^p} e^{- \left| Y - \sqrt{SINR_i / \beta_k} (\hat{x} - z)  \right|^2}}\right\} 
+\end{equation}
+
+% figure out two different CHIs?
+
+where:
+
+\begin{itemize}
+    \item $\chi$ is the set of $2k$ constellation symbols for the modulation order $k$. For instance, for modulation order $k = 2$ the corresponding constellation symbols are $1/\sqrt{2} (-1-j)$, $1/\sqrt{2} (-1+j)$, $1/\sqrt{2} (1-j)$, and $1/\sqrt{2} (1+j)$.
+    \item $\chi^p_b$ is the subset of constellation symbols for which bit $b$ equals $p$. For instance, $\chi_{-1}^1$ is 
+    is $\{1/\sqrt{2} (-1-j), 1/\sqrt{2} (-1+j)\}$. Note that $b$ is the (zero-indexed) index of the bit, and $p$ is the value of the bit.
+    \item $Y$ is a complex stochastic variable which is normally distributed with zero mean and unit variance.
+    \item $\beta_k$ is a calibration parameter which is MCS-dependent. The parameter is not always included in the equation (see e.g. \cite{miesm1}), suggesting that is also possible to apply MI-ESM without calibration parameter.
+\end{itemize}
+
+
+The quantity $I_k$ is also referred to as the `mutual information' and is commonly used in information theory to describe the relationship between two variables that are sampled simultaneously. In particular, it tells how much information is
+communicated in one variable about the other. In the context of MI-ESM, this should be seen as to what extent a received symbol provides information about the transmitted symbol. For high SINR (ideal channel) the mutual information is
+maximum and equal to the number of bits per symbol. For low SINR (no data transfer possible) the mutual information reduces to zero, i.e., the received symbol provides no information about the transmitted symbol. 
+
+Figure \ref{fig:miesm} shows the BICM capacity $I_k$ for the three modulation orders $k$ ($k = 2$ for QPSK, $k = 4$ for 16QAM, $k = 6$ for 64QAM) used in LTE. This figure should be read as follows:
+
+\begin{itemize}
+    \item For low SINR (left side of the plot), the mutual information is zero. The received bit sequence per symbol is statistically independent of the transmitted bit sequence, and thus no information is sent over the link.
+    \item For high SINR (right side of the plot), the mutual information is equal to the number of bits per symbol - 2 in the case of QPSK, 4 in the case of 16QAM, and 6 in the case of 64QAM. The received bit sequence is identical to the transmitted sequence.
+    \item For intermediate SINR, the mutual information value lies somewhere in between these two extreme values. Since 4QAM applies more bits per symbol than 16QAM (or QPSK), it is more vulnerable to channel distortions. Therefore a higher SINR is required to achieve the maximum mutual information value. 
+
+\end{itemize}
+
+
+\image{Appendices/MIESM.png}{Mutual Information versus SINR for the three modulations orders in LTE.}{fig:miesm}{.5}
+
+Thus, we understand that MI-ESM works as follows:
+
+\begin{itemize}
+    \item Per PRB the mutual information is computed, depending on the SINR for that PRB. For low SINR, the mutual information is zero, meaning that no useful information can be extracted for that PRB. For high SINR, the mutual information is equal to the number of bits per symbol for the given modulation order. This means that all the information in the symbol can be successfully transferred.
+    \item Then the average is determined of these mutual information values per PRB.
+    \item Subsequently, the effective SINR is determined as the SINR that would yield this average mutual information if it were applied on all PRBs.
+\end{itemize}
+

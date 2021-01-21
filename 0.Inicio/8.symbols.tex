@@ -46,58 +46,42 @@
 
 
 
-\chapter*{List of Symbols} \todo{should this be called nomenclature instead?}
-(not perfectly alphabetically ordered \ii{yet})
-
+\chapter*{List of Symbols} 
 \subsubsection*{Latin alphabet}
-
+\todo[inline]{not perfectly alphabetically ordered \ii{yet}}
 % A
-$A_{bs}$ \mytab antenna element from base station \\
-$A_{u}$ \mytab antenna element from user \acs{HDM} \\
-$A_{cam}$ \mytab antenna element from camera \\
-
-
+$a_\phi$ \mytab azimuth lower limit for \acs{GoB}\\
+$a_\theta$ \mytab elevation lower limit for \acs{GoB}\\
 % B
+$b_\phi$ \mytab azimuth upper limit for \acs{GoB}\\
+$b_\theta$ \mytab elevation lower limit for \acs{GoB} \\
 $B$ \mytab bandwidth \\
 $BLER_0$ \mytab target \acs{BLER} \\
-
-
-
 % C
 $C_t$ \mytab coordinates of centre of the table \\
 $C_m$ \mytab coordinates of centre of mass of the room \\
-
 % D
 $d_f$ \mytab distance to the front of the user for camera placement \\
+$d_F$ \mytab Fraunhofer distance \\
 $d_s$ \mytab distance to the side of the user for camera placement \\
-$d_{out}$ \mytab distance outwards from the head centre for \acs{HDM} antenna offset\\
-$d_{up}$ \mytab distance upwards from the head centre for \acs{HDM} antenna offset\\
-
+$d_{out}$ \mytab distance outwards from the head centre for \acs{HMD} antenna offset\\
+$d_{up}$ \mytab distance upwards from the head centre for \acs{HMD} antenna offset\\
+$D$ \mytab largest dimension of radiator to estimate effective area \\
 % E
 $E_b$ \mytab energy per bit \\
-
 % F
-
 % G
-
 % H
 $\bm{H}_{bul}$ \mytab channel matrix between BS $b$ and UE $u$ in layer $l$\\
-
 % I
+$I$ \mytab interference\\
 % J
 $j$ \mytab imaginary unit $\left(j = \sqrt{-1}\right)$\\
-
-
 % K
 $k_B$ \mytab Boltzmann constant\\
-
 % L for lengths, and latencies -> this will change
 $L_{max}$ \mytab maximum latency for the radio link \\
-$L_{sch}$  \mytab length of scheduling information update period \\
-$L_{TB}$ \mytab length of a transport block, in bits \\
-
 % M
-
 % N (for numbers of something, mainly)
 $N_0$ \mytab noise power spectral density \\
 $N_r$ \mytab number of receive antennas \\
@@ -117,22 +101,21 @@ $N^{TDD}_{slots}$ \mytab number slots in a transmission period\\
 $N^{CSI}_{slots}$ \mytab number slots between \acs{CSI} updates\\
 $N^{SCH}_{slots}$ \mytab number slots between scheduling updates\\
 $N_{ant}^{UE}$ \mytab number of antennas on the \acs{UE} side\\
-$N_{ant}^{BS}$ \mytab number of antennas on the \acs{BS} side\
+$N_{ant}^{BS}$ \mytab number of antennas on the \acs{BS} side\\
 $NF_{BS}$ \mytab BS noise figure \\
 $NF_{UE}$ \mytab UE noise figure\\
 $NF_{r}$ \mytab noise figure at the receiver\\
-
-
+$N_{PRB, bu}$ \mytab number of PRBs allocated for link between BS $b$ and UE $u$ \\
+$N_{PRB, bul}$ \mytab number of PRBs allocated for link between BS $b$ and UE $u$ in layer $l$\\
 $N_{symb}^{PRB}$ \mytab number of symbols per PRB \\
 $N_{bits}^{symb}$ \mytab number of bits per symbol \\
 $N_{info bits}^{symb}$ \mytab number of information bits per symbol \\
 $N_{bits}^{slot}$ \mytab number of bits per slot \\
-$N_{PRB, bu}$ \mytab number of PRBs scheduled for a transmission between BS $b$ and UE $u$ \\
-$N_{PRB, bul}$ \mytab number of PRBs scheduled for a transmission between BS $b$ and UE $u$ in layer $l$\\
-
+$N_{bits}^{PRB}$ \mytab number of bits per PRB \\
+$N_{bits, bul}$ \mytab number of bits to be sent between BS $b$ and UE $u$ in layer $l$\\
 % O
-
 % P (used for powers)
+$p$ \mytab scheduling priority\\
 $P_N$ \mytab noise power \\
 $P_u$ \mytab position of user $u$ \\
 $P_r$ \mytab received power \\
@@ -140,9 +123,7 @@ $P_s$ \mytab signal power \\
 $P_t$ \mytab transmit power \\
 $P_{t, max}^{UE}$ \mytab maximum transmit power per UE\\
 $P_{t, max}^{BS}$ \mytab maximum transmit power per BS \\
-$P_{r, bu}^{UE}$ \mytab received power at the UE for a link between BS $b$ and UE $u$ \\
-$P_{t, bu}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $u$ \\
-$P_{t, bu}^{UE}$ \mytab transmit power at the UE for a link between BS $b$ and UE $u$ \\
+$P_{r, bu}^{UE}$ \mytab received power by the UE for a link between BS $b$ and UE $u$ \\
 $P_{t, bu}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and UE $u$ \\
 $P_{t, bu}^{UE}$ \mytab transmit power at the UE for a link between BS $b$ and UE $u$ \\
 $P_{t, bul}$ \mytab transmit power for a link between BS $b$ and UE $u$ in layer $l$ \\
@@ -151,160 +132,120 @@ $P_{t, bul}^{BS}$ \mytab transmit power at the BS for a link between BS $b$ and 
 $P_{IaCI}$ \mytab interference power from intra-cell interference \\
 $P_{IeCI}$ \mytab interference power from inter-cell interference \\
 $P_{ILI}$ \mytab interference power from inter-layer interference \\
-
-
-
 % Q
 $Q_m$ \mytab modulation order \\
-$Q_{P-I}$ \mytab P-frame to I-frame ratio \\
-
 % R
+$r_\phi$\mytab azimuth resolution for \acs{GoB} \\
+$r_\theta$\mytab elevation resolution for \acs{GoB} \\
 $r_t$ \mytab radius of table \\
 $r_u$ \mytab radius of user circumference of disposition\\
 $r_{DL/UL}$ \mytab ratio between \acs{DL} and \acs{UL} application throughputs\\
 $r_{P/I}$ \mytab ratio between P-frame and I-frame sizes\\
-$R_b$ \mytab bit rate \\
+$R_b$ \mytab instantaneous bit rate \\
 $\hat{R}_b$ \mytab estimated bit rate \\
 $R_c$ \mytab code rate \\
 $R_{packet}$ \mytab packet arrival rate \\
-$\overline{R}$ \mytab average application information rate or throughput \\
-$\overline{R}_{DL}$ \mytab average application information rate in the \ac{DL}\\
-$\overline{R}_{UL}$ \mytab average application information rate in the \ac{UL}\\
+$R$ \mytab instantaneous throughput \\
+$\overline{R}$ \mytab average application throughput \\
+$\overline{R}_{DL}$ \mytab average application throughput in the \acs{DL}\\
+$\overline{R}_{UL}$ \mytab average application throughput in the \acs{UL}\\
 $R_F$ \mytab frame rate \\
-
-
 % S
 $s$ \mytab speed of user head position change \\
-$s_\text{TDD}$ \mytab \acs{TDD} split \\
-$SINR_\text{eff}$ \mytab effective \acs{SINR}, i.e. aggregated over all scheduled PRBs \\
+$s_{TDD}$ \mytab \acs{TDD} split \\
+$SINR_{eff}$ \mytab effective \acs{SINR}, i.e. aggregated over all scheduled PRBs \\
 $SINR_i$ \mytab SINR of the i-th \acs{PRB} \\
-$S_t$ \mytab power spectral density at transmission\\
+%$S_t$ \mytab power spectral density at transmission\\
 $S_I$ \mytab size of I-frame\\
 $S_P$ \mytab size of P-frame\\
 $S_{packet}$ \mytab size of a packet\\
 $S_{GoP}$ \mytab size of a \acs{GoP}\\
-
+$S_{TB}$ \mytab size of a \acs{TB}\\
+$S_{TB, max}$ \mytab maximum size of a \acs{TB}\\
 % T for periods [s] and Temperatures
 $T$ \mytab noise temperature\\
+$T_{sim}$ \mytab simulation duration\\
 $T_{slot, \mu}$ \mytab slot duration for numerology $\mu$\\
 $T_{rot}$ \mytab interval between consecutive orientations when head rotating\\
-
-
 % U
-
 % V
-
 % X
-
 % Y
-
 % W
 $\bm{w}$ \mytab vector of beamforming weights \\
-$\bm{w}_{\phi, \theta}$ \mytab vector of beamforming weights from a GoB with direction $(\phi, \theta)$ \\
-$\bm{w}_{i,j}$ \mytab vector of beamforming weights from a GoB with grid indices $(i,j)$\\
-$\bm{w}^{BS}_{bu}$ \mytab vector of beamforming weights between BS panel $b$ and UE $u$, at the BS \\
-$\bm{w}^{UE}_{bu}$ \mytab vector of beamforming weights between BS panel $b$ and UE $u$, at the UE \\
+$\bm{w}_{\phi, \theta}$ \mytab beamforming weights from a GoB with direction $(\phi, \theta)$ \\
+$\bm{w}_{i,j}$ \mytab beamforming weights vector with grid indices $(i,j)$, from a GoB\\
+$\bm{w}^{BS}_{bu}$ \mytab beamforming weights between BS panel $b$ and UE $u$, at the BS \\
+$\bm{w}^{UE}_{bu}$ \mytab beamforming weights between BS panel $b$ and UE $u$, at the UE \\
 $\bm{w}_{t, bul}$ \mytab transmit weights vector between BS panel $b$ and UE $u$, in layer $l$\\
 $\bm{w}_{r, bul}$ \mytab receive weights vector between BS panel $b$ and UE $u$, in layer $l$\\
-
 % Z
-
-%\vspace{1cm}
 
 \subsubsection*{Greek alphabet}
 
 % Alpha (Α α)
 $\alpha_P$ \mytab power compensation factor for UL power control\\
 $\alpha_u$ \mytab angle from the centre of the table to user $u$\\
-
 % Beta (Β β)
 $\beta_x$ \mytab upper limit on uniform distribution for rotation around x axis \\
 $\beta_y$ \mytab upper limit on uniform distribution for rotation around y axis \\
 $\beta_z$ \mytab upper limit on uniform distribution for rotation around z axis \\
-
 % Gamma (Γ γ)
 $\gamma$ \mytab burstiness parameter for application traffic\\
 $\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update\\
-
 % Delta (Δ δ)
 $\Delta_{OLLA}$ \mytab outer loop link adaptation step\\
-
 % Ε ε
 % Ζ ζ
 % Η η
-$\eta_{OH}$ \mytab overhead efficiency \\
-$\eta_{slot}$ \mytab slot efficiency \\
-$\eta_{CSI}$ \mytab CSI slot efficiency \\
+$\eta_{OH}$ \mytab efficiency due to overhead\\
+$\eta_{slot}$ \mytab efficiency in bit rate from slot format\\
+$\eta_{CSI}$ \mytab efficiency from CSI acquisition\\
 % Θ θ
 % Ι ι
 % Κ κ
 % Λ λ
+$\lambda$ \mytab wavelength\\
 % Μ μ
 % Ν ν
 % Ξ ξ
 % Ο ο
 $o$ \mytab overlap parameter for application traffic\\
-
 % Π π
 % Ρ ρ
-$\rho$ \mytab number of bits per symbol for SINR mapping\\
-
 % Σ σ/ς
 $\sigma_x$ \mytab standard deviation of normal distribution for position coordinate x \\
 $\sigma_y$ \mytab standard deviation of normal distribution for position coordinate y \\
 $\sigma_z$ \mytab standard deviation of normal distribution for position coordinate z \\
-
-
-
-
 % Tau (Τ τ)  - used for delays
 $\tau_{CSI}$ \mytab \acsp{CSI} delay, in number of \acsp{TTI} \\
 $\tau_{ACK}$ \mytab delay before acknowledgement, in number of \acsp{TTI} \\
-
 % Υ υ
 % Φ φ
 % Χ χ
 % Ψ ψ
 % Ω ω
 
-
-
-
-
-
-
 \subsubsection*{Sets:}
 
-$\mathbb{N}$ \mytab set of natural numbers \\
-$\mathbb{N}_0$ \mytab set of natural numbers including zero\\
-
-
-
+$\mathbb{N}$ \mytab natural numbers \\
+$\mathbb{N}_0$ \mytab natural numbers including zero\\
+$\mathcal{B}$ \mytab base station panels\\
+$\mathcal{U}_b$ \mytab users served by base station $b$\\ 
+$\mathcal{L}_{bu}$ \mytab layers scheduled between base station $b$ and user equipment $u$\\
+$\mathcal{F}$ \mytab frequencies to simulate\\
 
 
 \subsubsection*{Other nomenclature}
 
 
 $\bm{A}$ \mytab matrix\\
-
 $\bm{a}$ \mytab column vector\\
-
 $|\bm{a}|$ \mytab euclidean norm of vector $\bm{a}$\\
-
 $\bm{A}^\text{T}$ \mytab transpose of $\bm{A}$\\
 $\bm{A}^\text{H}$ \mytab Hermitian of $\bm{A}$, also know as the transpose conjugate of $\bm{A}$\\
-
-% $\ceil{a}{b}$ \mytab Ceil $a$ to $b$ decimal places, i.e. round $a$ to the next $10^-b$. 
 $\ceil{a}$ \mytab ceil $a$, i.e. round up $a$ to the nearest integer\\
-
-$\floor{\cdot}$ \mytab floor $a$, i.e. round down $a$ to the nearest integer \\
-
-
-% $A_\text{[dB]}$ \mytab the quantity A is expressed in dB.\\
-
-
-
-
+$\floor{a}$ \mytab floor $a$, i.e. round down $a$ to the nearest integer \\
 
 
 \clearpage

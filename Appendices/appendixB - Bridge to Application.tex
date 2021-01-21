@@ -1,0 +1,33 @@
+\fancychapter{Bridge to Application QoE}
+\label{sec:bridge_to_application}
+
+Previously we defined a method to compute the size of an I-frame based on the average throughput. Here we relate application parameters such as resolutions and pixel colour depths to the computation of an I-frame. This way, we can say that if we support a throughput which corresponds to a given I-frame size, we also support any application layer settings that get the same frame size.
+
+
+To compute the uncompressed I-frame size $S_{I,uncomp.}$ from application parameters we use \eqref{eq:app_layer_param1} with the following parameters:
+\begin{itemize}
+    \item Resolution or number of pixels per frame $N_{pixels}^{frame}$ - e.g. 4K is 3840 horizontal pixels by 2160 pixel on the vertical;
+    \item Pixel format or number of channels per pixel $N_{ch}^{pixel}$ - channels refer to the components of that pixel, e.g. RGB has 3 channels, one for red, one for green and one for blue;
+    \item Pixel depth or average number of bits per channel $\overline{N_{bits}^{ch}}$ - e.g. if each channel uses 8 bits to specify its value, the average will be 8 bits per channel, and in RGB this would mean 24 bits per pixel, from the multiplication with $N_{ch}^{pixel}$;
+    \item Depth Resolution $D_{res}$ - in RGBD (RGB + depth) cameras there is an extra channel for depth and this parameter holds how many bits it involves.
+\end{itemize}
+
+\begin{equation} \label{eq:app_layer_param1}
+    S_{I, uncomp.} = N_{pixel}^{frame} \times \left(N_{ch}^{pixel} \times \overline{N_{bits}^{ch}} + D_{res}\right)
+\end{equation}
+
+Now we need to bridge this uncompressed I-frame size to the actual I-frame size to be sent, thus pos-compression. Equation \eqref{eq:app_layer_param2} shows how the two relate, and \eqref{eq:app_layer_param3} shows how to compute the ratio between the two. The remaining compression ratio $RCR$ is the ratio between compressed and . Therefore, if the encoder is expected to compress the stream to 1/300, and the compression from using IP frames is 3 times, then $RCR$ is 1/100 because we do not want to compress the I frame. This step is necessary because the encoder is also responsible for generating I and P frames. Therefore, the total compression ratio $C_T$ attributed to the encoder must be separated in the $RCR$ and the ratio that we implicitly apply by considering I and P frames $C_{IP}$.
+
+\begin{gather}
+    I_{size} = I_{{\text{size}}_\text{uncomp.}} \times \text{RCR}  \label{eq:app_layer_param2} \\
+    RCR = \frac{C_T}{C_{IP}} \label{eq:app_layer_param3} 
+\end{gather}
+
+And to obtain $C_{IP}$, the compression from using I and P frames instead of only I frames, see Equation \ref{eq:app_layer_param4}.
+
+\begin{align}
+    C_{IP} & = \frac{\text{Avg. Frame Size after IP compression}}{\text{Avg. Frame Size before IP compression}} \nonumber \\
+    & = \frac{S_I \frac{1 + r_{P/I} (S_{GoP} - 1)}{S_{GoP}}}{S_I} = \frac{1 + r_{P/I} (S_{GoP} - 1)}{S_{GoP}}\label{eq:app_layer_param4} 
+\end{align}
+
+To summarise, besides the application parameters listed previously in the $S_{I, uncomp.}$ computation, we require an application total compression ratio $C_T$ to compute $S_I$.

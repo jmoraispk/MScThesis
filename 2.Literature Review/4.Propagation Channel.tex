@@ -1,0 +1,50 @@
+\section{Propagation Channel}
+\label{sec:radio_channel}
+
+We aim to generate the propagation channel for an indoor application. In this section we present and justify requirements and choice of channel generator. Many of the requirements have been presented already, like supporting massive MIMO, time-evolving simulations to encompass meeting dynamics in the channel coefficients, support for sub-6 GHz and \acsp{mmWave}, among others.
+
+Firstly, with the increase in frequency and the decrease in proximity between \acsp{UE} and \acsp{BS}, there is a concern about the commonly used far-field approximations in propagation equations incurring in significant errors. Therefore, let us access whether we can assume spherical waves as plane waves safely.
+
+
+\subsection*{Near-field Verification}
+The Rayleigh or Fraunhofer distance $d_F$ corresponds to the distance of the interface between the Fresnel and Fraunhofer regions, respectively, the near-field and the far-field regions. It is defined in Equation \eqref{fraun}. If any of our TX-RX pairs are distanced less than $d_F$, then near-field equations must be used.
+\begin{equation} \label{fraun}
+    d_F = \frac{2 D^2}{\lambda}
+\end{equation} 
+
+Above, $D$ is the largest dimension of the radiator or radiator array, namely the diagonal in square arrays, and $\lambda$ the wavelength. Using Equation \ref{fraun} for a frequency of 30 GHz (to get a small wavelength of 10 mm), and using the conservative value of $D = 20 $ cm, we obtain $d_{F} = 8 $ metres, which may be beyond room dimensions, thus making the whole room inside the near-field zone. 
+
+Some authors propose more complex approaches to make this decision \cite{4799060}, but the proposed thresholds lead to higher decision distances, therefore we can be sure that support for spherical waves is necessary.
+
+
+\subsection*{Requirements and Choice}
+
+In summary, the channel generator must support:
+
+\setlength{\columnsep}{-2.5cm}
+\begin{multicols}{2} 
+    \begin{itemize}
+        \item Spherical waves
+        \item Indoor scenarios
+        \item 3GPP compliant
+        \item Time evolution
+        \item Massive MIMO
+        \item Sub-6 GHz and mmWave frequencies
+        \item 3D antenna and propagation modelling
+        \item Spatial consistency
+    \end{itemize}
+\end{multicols}
+
+The requirement yet to justify is spatial consistency. Spatial consistency of slow-fading comprises having large scale signal oscillations correlated in space since in actuality similar positions in space have correlated propagation conditions.
+
+Furthermore, it should be open-source as one needs to know what happens \ii{under the hood} at all times, and it facilitates reproducibility. From an extensive survey to more than 50 channel models \cite{channel_survey}, the option that checks all boxes is Quadriga \cite{quadriga}, a \ac{GBSM} widely accepted by the community.
+
+
+One of the main decisions while choosing a channel generator is between deterministic ray-trace-like approaches and stochastic approaches based on channel measurements. The first is more precise however more computationally demanding, contrary to the second. Given the complexity involved with developing deterministic generators, it is unlikely that one complies with such diverse requirements. The only deterministic option that fulfilled a satisfactory set of requirements was Remcom's Wireless InSite \cite{remcom}. However, it is closed-source and perhaps the complexity may be problematic down the line. Thus we opted for QuaDRiGa, which stands for QUAsi-DeteRministic RadIo channel GenerAtor and appears to provide the best trade-off between the complexity of deterministic models and speed of stochastic models.
+
+
+Other alternative could be to side-step channel generation and modify a fully working system-level simulator. However, complete simulators were not chosen mainly because few are 3GPP compliant. These simulators cannot be used solely for channel generation because that component is not easily accessible and requires dissecting the simulators to obtain the channel coefficients. Moreover, and besides missing one or more of the requirements stated above, many simulators are poorly documented. Some of the verified simulators include NYUSIM \cite{nyusim}, Vienna Simulator \cite{Vienna5GSLS}, Matlab's 5G Toolbox \cite{5G_toolbox}, CloudRT \cite{cloudRT}, WiSE \cite{wise} and 5G K-SIM \cite{8610404}.
+
+
+
+
