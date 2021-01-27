@@ -1,9 +1,11 @@
 \section{Propagation Channel}
 \label{sec:radio_channel}
 
-We aim to generate the propagation channel for an indoor application. In this section we present and justify requirements and choice of channel generator. Many of the requirements have been presented already, like supporting massive MIMO, time-evolving simulations to encompass meeting dynamics in the channel coefficients, support for sub-6 GHz and \acsp{mmWave}, among others.
+We aim to model the propagation channel for an indoor environment. In this section we present and justify requirements and choice of channel model. Modelling the radio channel is needed because the quality of connections is directly related with the quality of the channel. Moreover, the radio access network equipment relies on several management mechanisms to optimise link given different propagation conditions. As such, modelling those conditions is a must.
 
-Firstly, with the increase in frequency and the decrease in proximity between \acsp{UE} and \acsp{BS}, there is a concern about the commonly used far-field approximations in propagation equations incurring in significant errors. Therefore, let us access whether we can assume spherical waves as plane waves safely.
+Traditional models are not sufficiently precise to our application \cite{1232163}. For instance, we need a channel model that takes into account 3D radiation patterns of antenna arrays (for massive MIMO) and the majority of traditional models only use the maximum gain of the antenna. We justify the requirements, survey literature for a channel model that fulfils them and weight the most important considerations regarding our choice.
+
+Firstly, with the increase in frequency and the decrease in proximity between \acsp{UE} and \acsp{BS}, there is a concern about the commonly used far-field approximations in propagation equations incurring in significant errors. Therefore, we assess whether spherical waves can be assumed as plane waves.
 
 
 \subsection*{Near-field Verification}
@@ -16,10 +18,10 @@ Above, $D$ is the largest dimension of the radiator or radiator array, namely th
 
 Some authors propose more complex approaches to make this decision \cite{4799060}, but the proposed thresholds lead to higher decision distances, therefore we can be sure that support for spherical waves is necessary.
 
-
+\vspace{.5cm}
 \subsection*{Requirements and Choice}
 
-In summary, the channel generator must support:
+In summary, taking into account previously identified requirements, the channel model must support:
 
 \setlength{\columnsep}{-2.5cm}
 \begin{multicols}{2} 
@@ -27,7 +29,7 @@ In summary, the channel generator must support:
         \item Spherical waves
         \item Indoor scenarios
         \item 3GPP compliant
-        \item Time evolution
+        \item Time-evolution
         \item Massive MIMO
         \item Sub-6 GHz and mmWave frequencies
         \item 3D antenna and propagation modelling
@@ -37,13 +39,16 @@ In summary, the channel generator must support:
 
 The requirement yet to justify is spatial consistency. Spatial consistency of slow-fading comprises having large scale signal oscillations correlated in space since in actuality similar positions in space have correlated propagation conditions.
 
-Furthermore, it should be open-source as one needs to know what happens \ii{under the hood} at all times, and it facilitates reproducibility. From an extensive survey to more than 50 channel models \cite{channel_survey}, the option that checks all boxes is Quadriga \cite{quadriga}, a \ac{GBSM} widely accepted by the community.
+Furthermore, the model should be implemented, instead of only providing the guidelines for implementation \cite{7481518}. And it should be open-source as one needs to know what happens \ii{under the hood} at all times, it facilitates reproducibility and integration with remaining components. 
+
+Our choice is facilitated with an extensive survey of more than 50 channel models for 5G \cite{channel_survey}. This survey characterises models with respect to modelling approach (e.g. stochastic or deterministic), compatible frequency range, support for large arrays, spherical waves, mobility, blockage, gaseous absorption, among others. And searching for our requirements, the only channel model that checks all boxes is Quadriga \cite{quadriga}, a \ac{GBSM} widely accepted by the community. Refer to \cite{channel_survey} for an in-depth comparison of channel models for 5G. Nonetheless, we justify our choice further.
+
+One of the main decisions while choosing a channel model is between deterministic ray-trace-like approaches and stochastic approaches based on channel measurements. The first is more precise however more computationally demanding, contrary to the second. Given the complexity involved with developing deterministic generators, it is unlikely that one complies with such a diverse set of requirements. The only deterministic option that fulfilled a satisfactory set of requirements was Remcom's Wireless InSite \cite{remcom}. However, it is closed-source and perhaps the complexity may be problematic down the line. Thus opting for a \ac{Quadriga} appears to provide the best trade-off between the complexity of deterministic models and speed of stochastic models.
 
 
-One of the main decisions while choosing a channel generator is between deterministic ray-trace-like approaches and stochastic approaches based on channel measurements. The first is more precise however more computationally demanding, contrary to the second. Given the complexity involved with developing deterministic generators, it is unlikely that one complies with such diverse requirements. The only deterministic option that fulfilled a satisfactory set of requirements was Remcom's Wireless InSite \cite{remcom}. However, it is closed-source and perhaps the complexity may be problematic down the line. Thus we opted for QuaDRiGa, which stands for QUAsi-DeteRministic RadIo channel GenerAtor and appears to provide the best trade-off between the complexity of deterministic models and speed of stochastic models.
+Other alternative could be to side-step channel generation and modify a fully working system-level simulator. However, complete simulators tend to be oriented towards certain types of applications or environments. NYUSIM \cite{nyusim} does not support indoor environments and Vienna Simulator \cite{Vienna5GSLS} only simulates the downlink. In essence, they lack generality to include our requirements. To the best of our knowledge, these two are the simulators most validated and accepted by the community.
 
-
-Other alternative could be to side-step channel generation and modify a fully working system-level simulator. However, complete simulators were not chosen mainly because few are 3GPP compliant. These simulators cannot be used solely for channel generation because that component is not easily accessible and requires dissecting the simulators to obtain the channel coefficients. Moreover, and besides missing one or more of the requirements stated above, many simulators are poorly documented. Some of the verified simulators include NYUSIM \cite{nyusim}, Vienna Simulator \cite{Vienna5GSLS}, Matlab's 5G Toolbox \cite{5G_toolbox}, CloudRT \cite{cloudRT}, WiSE \cite{wise} and 5G K-SIM \cite{8610404}.
+The few that model the channel in compliance with 3GPP, miss one or more requirements from the list above and cannot be used solely for channel modelling because obtaining the channel model requires dissecting the simulator. Some simulators are too low-level for a system-level simulation and require settings at the bit-level, e.g. Matlab's 5G Toolbox \cite{5G_toolbox}.Contrary to Matlab's 5G Toolbox, many simulators are poorly documented. Other incompatible simulators we reviews are, for example, CloudRT \cite{cloudRT}, WiSE \cite{wise} and 5G K-SIM \cite{8610404}.
 
 
 

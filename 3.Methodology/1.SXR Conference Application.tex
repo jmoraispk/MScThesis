@@ -26,7 +26,7 @@ The table is placed at the centre of the room and the precise user position is d
 \end{align}
 
 \subsection{Antennas}
-
+\label{sec:modelling_antennas}
 Antenna arrays with half-wavelength distance between elements are used. As a reference, consider the antenna is initially placed in the yOz plane, before being translated to its position and rotated to its orientation. We consider antenna elements from the \ac{BS}, from user's \ac{HMD} and from cameras to be single-polarised and part of a cross-polarised element defined by 3GPP. 
 
 Having the antenna in the plane of reference, let us call $N_V$ and $N_H$, respectively, to the number of vertical (parallel to z-axis) cross-polarised antenna elements and the number of horizontal (parallel to y-axis) antenna elements. We also assume all BS panels have the same number and type of elements. And users and cameras also have the same antennas among themselves. 
@@ -50,7 +50,7 @@ A camera is static, their antenna arrays are simply oriented towards the ceiling
 
 Concerning \acsp{BS} antennas, Figure \ref{fig:multiple_bs} shows the five positions considered, at a frequency of 600 MHz to facilitate the distinction of individual antenna elements. Each antenna panel is pointed at a the centre of mass of the room $C_m$ - for the case of a 6 by 6 metre room with a ceiling at 3 metres tall $C_m = (3, 3, 1.5)$. In practice, the orientation comes from its position relative to the centre of mass: $O_{bs} = P_{bs} - C_m$.
 
-\image{Methodology/Application/multiple_BS_side.png}{Multiple \ac{BS} panels position and orientation with $6 \times 4$ panels for 600 MHz.}{fig:multiple_bs}{.2}
+\image{Methodology/Application/multiple_BS_side.png}{Position of multiple panels, each with $6 \times 4$ elements, for 600 MHz.}{fig:multiple_bs}{.2}
 
 The orientation of the user's antenna $O_{u}$ is the same as the user's orientation, which is defined in the next subsection, dedicated to user behaviour in terms of movement.
 
@@ -133,7 +133,7 @@ In essence, the translation and rotation mechanisms are similar. Both positions 
 
 % consider moving the video-streaming stuff here to the literature review with proper references
 
-The model that determines the size and time of arrival of packets resembles video streaming. We chose video streaming to shape our incoming traffic because nowadays there still is plenty of uncertainty regarding what format to store 3D user representations performs the best light of meeting throughput requirements, performance in capture and encoding speeds, ease of stitching multiple streams together, among other. As such, we made a solid, relatively general model based on well-known traffic characteristics of video-streaming.
+The model that determines the size and time of arrival of packets resembles video streaming. We chose video streaming to shape our incoming traffic because nowadays there still is plenty of uncertainty regarding what format for 3D user representations performs the terms of throughput requirements, capture and encoding speeds, ease of stitching multiple streams together, among other. As such, we made a solid, relatively general model based on well-known traffic characteristics of video-streaming. 
 
 The packet generation process is frame-based. In modern video streaming, not all video frames are equal. There are I-frames (Intra-coded frames), that constitute essentially the complete picture.Then there are frames that considerably smaller: P-frames (previous-dependent), and B frames (bi-dependent, previous and forward dependent). P and B frames use less space because they can use information from adjacent frames to decompress, thus this is information that can be derived and does not need to be transmitted. For simplicity the models uses P-frames only, although the process described in this section only requires minor intuitive modifications to include B-frames as well.
 
@@ -185,4 +185,5 @@ When the burstiness parameter is at its maximum of 1, the packets arrive to the 
 
 Finally, we need to coordinate packet arrival for the different users, in the \acs{UL} and \acs{DL}. In the \acs{DL}, since all packets come from the \acs{MCU} it makes sense that all all users have packets to be received simultaneously. In the UL however, there can be coordination in order to separate I frames as much as possible in order to put the network under less load.
 
-% Make an appendix with the application layer stuff?
+
+As a final note, for generality purposes, we try to make as few assumptions as possible about the application layer. For an insight on how to map such an average application bit rate to actual application QoE, see Appendix \ref{sec:bridge_to_application}.

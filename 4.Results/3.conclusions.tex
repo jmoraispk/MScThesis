@@ -1,13 +1,15 @@
 \section*{Conclusions}
 
-In this chapter we started by defining the scenario as clearly as possible, as well as any simplifications that took place while simulating such scenario. We provided values to all variables we had previously defined in the Modelling Chapter.
+This chapter objective was to validate the modelling framework.
 
-Then, we assessed two reasons for rapid bit rate oscillations. One reason is when the number of packets arriving each TTI oscillates and the achieved bit rate is capped by the number of packets in the buffer. This is the situations in the Section \ref{sec:single-user}, characteristic of a very good channel. And we have naturally concluded that we can only measure accurately what bit rate the link can achieve when the incoming packet bit rate surpasses the achievable bit rate.
+In this chapter we started by defining the scenario as clearly as possible, as well as any simplifications that took place while simulating such scenario. We provided values to all variables we had previously defined in the Methodology Chapter.
+
+Then, we assessed two reasons for rapid bit rate oscillations. One reason is when the number of packets arriving each TTI oscillates and the achieved bit rate is capped by the number of packets in the buffer. This happens when the channel is very good, which is the situation in Section \ref{sec:single-user}. And we have naturally concluded that we can only measure accurately what bit rate the link can achieve when the incoming packet bit rate surpasses the achievable bit rate.
 
 The other possibility is when the channel is not optimal, to the point of causing some blocks to have errors, resulting in oscillations in the achieved bit rate. A mix case of phases with bit errors and phases with stable conditions is also possible, and often the case, which makes the situation harder to dissect and demands resorting to other metrics as well. Section \ref{sec:multi-user} was dedicated to exposing some of the metrics we can extract from simulations in order to assess these more complex situations. Also, the most important relations between metrics were put forth.
 
-Moreover, we have identified places that require further attention. There can be implementation bugs, or perhaps some adjustments to the modelling are required. Nonetheless, we have shown working simulations with predominantly coherent results. 
+Although conclusions on radio layer configurations and deployment need to be done carefully given the light statistical evidence, we proved how they can be derived. For the scenario with multiple users, the requirements of 80 Mbps and 10 ms were only possible for UE 2, under the current setting. Actually, UE 2 supported such bit rate with sub-millisecond latencies. Next steps include expanding the quantity of acquired data from each simulation, longer simulations to enable correlation between events on a larger time scale, such as the head rotation, and altogether simulations on different channel realisations. 
 
-Finally, we presented where we stand in terms of current results, how they can be useful to understand the system, and why that is a considerable step towards more advanced impact analysis. Above all, we can only manage what we can measure, and we need to make sure the measurements are correct.
+Moreover, we have identified places that require further attention. Certainly some adjustments to the modelling and implementation are required to solve the few observed inconsistencies. Nonetheless, we have shown working simulations with predominantly coherent results. 
 
 

@@ -1,5 +1,21 @@
+\subsection*{Future Work}
+\label{sec:future-work}
 
-%\section*{Future Work}
-%\label{sec:future-work}
+We foresee an autonomously managed Social XR network slice. One clear direction of work is to expand modelling to the remaining of the network, beyond the radio access. However, there are numerous challenges on the radio layer will likely constitute bottlenecks as the application requirements increase. Therefore we focus our future work analysis on radio access.
 
-% everything is in conclusions
+Towards achieving this vision, we identify the following viable future work directions:
+
+\begin{itemize}
+    \item Perform extensive sensitivity analysis - parameters in the simulator can be changed and performance measured in order to derive insights about how settings impact performance, both in combinations and individually. Some examples of settings to change are: numbers of meeting participants, user behaviour, antenna arrays' placement, size, architecture, and geometry, bandwidths, frequency bands, numerologies, settings of the latency-aware packet scheduler, multi-user scheduling strategies, TDD splits, number of base stations and their location, multi-BS operation algorithms (D-MIMO), acknowledgement delays, channel state information and scheduling periodicities, target \acs{BLER} and link adaptation parameter.
+    \item Improvements to make the simulator more realistic - some modelling considerations can be considered simplistic. More realism can be achieved by improving modelling. Moreover, such improvements often lead to thoughts on how something can be done differently, and generate more work directions; 
+    \item Flexible slots and mini-slots - we mention in the background that one of the most important advancements of 5G New Radio is a flexible slot-based transmission structure. The standards also allow for symbol-based transmissions (mini-slots) \cite{3GPP_minislots}, although with more constraints. Nonetheless, it provides unseen granularity in the time domain allowing lower latencies;
+    \item Reciprocity-based beamforming - the performance difference between \ac{GoB} and reciprocity-based beamforming has not been studied in mmWaves \cite{tddVSfdd_massiveMIMO}. This may require to quantifying overheads of CSI-RS and SRS;
+    \item Development of new resource management mechanisms, possibly AI-based;
+    \item Human blocking - mmWaves are more susceptible to blockages than lower frequencies. This direction includes human blockage modelling and the development of measures and procedures to attenuate the impact of a blockage event. More precisely, examples of possibles solutions may be smart multi-BS operation algorithms, or the usage of additional hardware like intelligent reflective surfaces \cite{8936989} or relays. It may be the case where ray tracing simulations are required to have an accurate representation of the reflections;
+    \item Slice interaction and management - when there are conflicts between slices, how to solve them? The process should require quantifying how much each slice needs a given modification to the network, and what priority does that slice have and use that information to make slices interact seemingly.
+\end{itemize}
+
+Solely for sake of conciseness, this selection is nowhere near exhaustive. During development of each component of the framework, plenty of more detailed research directions have been identified. So much so, that we intend to continue working in this exciting project beyond this thesis.
+
+
+

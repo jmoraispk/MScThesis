@@ -1,22 +1,21 @@
 \section{Outline}
 \label{sec:outline}
 
-In Chapter 1 we have motivated the relevance of studying radio layer optimisations to improve the performance of an \ac{XR} conference. We also integrated this study in a broader context by mentioning its applicability in management of future services in a virtualised and automatic manner. Also in Chapter 1, we stated the plan to achieve the vision, which consists of extensively modelling all the relevant application, network and propagation aspects in order to enable ample impact analysis. 
+In Chapter 1 we have motivated the relevance of studying radio layer optimisations to improve the performance of an \ac{XR} conference. We also integrated this study in a broader context by mentioning its applicability in management of future services in a virtualised and automatic manner. 
 
 %How are we going to achieve the aim of this work and how to integrate it in the state of the art?
-Chapter 2 is the literature review. There we review the state-of-the-art necessary to achieve the objective of this work. First, we survey XR applications' requirements, packet traffic characteristic and models, and aspects that influence the radio channel, namely human behaviour. Then we look into similar optimisation attempts. 
+Chapter 2 provides a solid background for the main contribution of this research, contained in Chapter 3. Firstly, in Section \ref{sec:sxr_applications} we survey XR applications' requirements, packet traffic characteristic, aspects that influence the radio channel, namely human behaviour, and we look into optimisation attempts to VR applications performance from the physical layer perspective.
 
-Subsequently in Chapter 2 we review the current best techniques and most promising technologies to achieve the demanding requirements. After, it is presented how these techniques play a role in reality by probing the relevant physical layer standards, which is also relevant to make our subsequent modelling more realistic. Having also introduced the radio access equipment, we survey radio channel simulators and find one that fits all our requirements. Lastly, contributions are listed.
+Subsequently, Section \ref{sec:key_tech} we review current radio layer techniques and most promising technologies to achieve the demanding requirements. After, Section \ref{sec:5gphy} presents how these techniques play a role in reality by examination of the relevant 5G physical layer standards and introducing radio access equipment, e.g. antenna systems.. In Section \ref{sec:radio_channel} we survey radio channel simulators and find one that fits all our requirements. Lastly, the contributions we make to the state-of-the-art are listed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % We take the efforts to achieve it.
-Chapter 3 is the methodology chapter. In this chapter we present all modelling steps and assumptions. As we intend to simulate the physical layer across an XR conference, firstly we model the use-case. We start by addressing room sizes and how users are seated, and then we continue to model the antennas, user behaviour, and traffic. Then we probe how the propagation environment looks like considering the application layer assumptions and using the selected channel generator.
+Chapter 3 presents the Methodology. Here we disclose all modelling steps and assumptions. First we model the XR conference use case. We do so in Section \ref{sec:sxr_meeting_modelling} by addressing room sizes and how users are seated. Then model the antennas, user behaviour, and traffic. Section \ref{sec:propagation_environment} we use the selected channel generator to assess how the propagation environment changes in light of application use case assumptions, such as user position and behaviour.
 
-Next in Chapter 3, we present all functions executed by the network equipment to enable data transmission. We start off by stating how channel state information is acquired, how to create a grid of beams and select the best beam. Then user scheduling is addressed, consisting of how channel quality and instantaneous throughput estimation is done. Finally, we present a flexible and general framework to assess the quality of the transmission, we compute errors and we save the relevant metrics to assure good decisions also in the next transmission interval.
+Next, in Section \ref{sec:access} we present all functions executed by the network equipment to enable data transmission. We start off by stating how channel state information is acquired, how to create a grid of beams and select the best beam. Then user scheduling is addressed, consisting of how channel quality and instantaneous throughput estimation is done. Finally, we present a flexible and general framework to assess the quality of the transmission, we compute errors and we save the relevant metrics to assure good decisions also in the next transmission interval.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % We present the results of our efforts.
-Chapter 4 concerns current results. Although in its infancy, this study allows conclusions regarding the relations between parameters. We present the simulation scenarios and list the values of parameters defined in Chapter 3. Then we analyse a single and multiple user meeting. And we conclude on the relevance of the results.
+In Chapter 4 we present results of an initial simulation study. To start, we clearly define the simulation in Section \ref{sec:scenarios} in view of the parameters introduced in Chapter 3. Then we investigate and compare a single and multiple user scenario, respectively, in Sections \ref{sec:single-user} and \ref{sec:multi-user}. We also discuss the results and take conclusions throughout.
 
-Chapter 5 we conclude and reiterate the most important results. Furthermore we suggest directions for future work. 
+Chapter 5 we conclude, reiterate the most important results and suggest directions for future work.

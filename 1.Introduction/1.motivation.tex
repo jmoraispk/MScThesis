@@ -1,36 +1,32 @@
 \section{Motivation}
 \label{sec:intro}
 
-Information and Communication Technologies (ICT) have seen considerable advances in the last decades, and they have empowered many new applications. Today, with the emergence of the new \ac{5G} of mobile communications, everything seems to be at the edge of change.
+Information and Communication Technologies (ICT) have seen significant advances in the last decades, and they have empowered many new applications. Today, with the emergence of the new \ac{5G} of mobile communications, everything seems to be at the edge of change.
 
-The number of devices connected to \ac{IP} networks will be more than three times the global population by 2023 \cite{cisco}. Cellular speeds will triple in the same period. The growth in connectivity is paramount and gives no indication of slowing down.
+The objective of \ac{5G} is to meet service requirements from various economic sectors, e.g. Automotive, Media \& Entertainment, Health and Industry and Energy. To achieve such feat, three main generic services are defined: \ac{eMBB} concerns with supplying extreme data-rates, \ac{mMTC} aims to connect the highest number of devices, usually with low data-rates, and \ac{URLLC} guarantees essential \ac{QoS}, like millisecond latencies and 99.999\% reliabilities, for mission-critical applications. Figure \ref{fig:piramid} illustrates how some applications relate to these generic services.
 
-The objective of \ac{5G} is to meet traffic demands across several economic sectors, e.g. Automotive, Media \& Entertainment, Health and Industry and Energy. To achieve such feat, three main generic services are defined: \ac{eMBB} concerns with supplying extreme data-rates, \ac{mMTC} aims to connect the highest number of devices, usually with low data-rates, allowing wide coverage areas, and \ac{URLLC} guarantees essential \ac{QoS}, like millisecond latencies and 99.999\% reliabilities, for mission-critical applications. Figure \ref{fig:piramid} illustrates how some applications relate to these generic services.
+\image{Intro/003-piramid.png}{Usage Scenarios of \acs{5G}. \cite{img3}}{fig:piramid}{.4}
 
-%REFFFFF
-\image{Intro/003-piramid.png}{Usage Scenarios of \acs{5G}. Source \cite{img3}}{fig:piramid}{.4}
-
-The service specific characteristics can place it closer to \ac{eMBB} (e.g. Virtual/Augmented Reality (VR/AR) entertainment), closer to \ac{mMTC} (e.g. the many sensors and actuators distributed in a Smart City) or closer to \ac{URLLC} (e.g. remote VR-based surgery). 
-
-% citations:  \cite{5gbook1} and \cite{5gbook2} provide an excellent selection of thought-provoking examples of use cases.
-
-To support said services, \ac{5G} must meet rather demanding requirements. The requirements of vertical markets are what has been driving 5G development. Figure \ref{fig:spider} shows a comparison between the requirements of last generation of mobile communications and 5G's requirement.
+The service specific characteristics place it closer to \ac{eMBB} (e.g. Virtual/Augmented Reality (VR/AR) entertainment), closer to \ac{mMTC} (e.g. the many sensors and actuators distributed in a Smart City) or closer to \ac{URLLC} (e.g. remote VR-based surgery). Indeed, it this vast requirement heterogeneity across services and markets that has been driving 5G development \cite{5g_2020}, far surpassing previous generations. Figure \ref{fig:spider} shows a comparison between the requirements of last generation of mobile communications and 5G's requirement.
 
 \image{Intro/002-IMT-advanced-spider-chart.png}{Spider diagram comparing \acs{4G} and \acs{5G} requirements. Source \cite{img2}}{fig:spider}{.3}
 
-The network has to be extremely well-planned and organised to meet these challenging requirements. Particularly, the role played by the \ac{RAN} is crucial in achieving this feat. As such, the efficient management of radio resources has been the main challenge a network operator had to face. Such radio resource management comprises a suite of mechanisms, including admission control, scheduling, beamforming and adaptive modulation and coding. Said mechanisms operate on different timescales and need to be suitably configured to fit spatio-temporal changes in traffic, user mobility, propagation environment and service mix.
+To meet these challenging requirements, it is not just a matter of proper network planning and management. 5G brings many new advancements and technologies to make such requirements attainable, e.g. high-frequency spectrum, constant beamforming-based operation, moving intelligence to the network edge and \ac{NR} access technologies (5GNR). In particular, the role played by the \ac{RAN} is crucial in achieving this feat. As such, the efficient management of radio resources has been a pivotal challenge network operators have to face. Such radio resource management comprises a suite of mechanisms, including admission control, scheduling, beam management and adaptive modulation and coding. Said mechanisms operate on different timescales and need to be suitably configured to fit spatio-temporal changes in traffic, user mobility, propagation environment and service mix.
 
-This task is of utmost complexity. In fact, the software complexity of \ac{RAN} in a \ac{BS} exceeds that of Boeing 787 aircraft \cite{5facts_ericsson}. Naturally, with evergrowing demands traditional mechanisms start to lack the required performance. Especially given the recent wide range of applicability, Machine Learning techniques promise to be capable of management strategies that achieve optimal resource adaptation to a given context. Yet another perspective that supports the choice of \ac{AI} and \ac{ML} methodologies is the correlation of performance and available data. As opposed to traditional methodologies that struggle with increased amounts of data, \ac{ML} tools like neural networks perform better with more data.
+This task is of utmost complexity. In fact, the software complexity of \ac{RAN} in a \ac{BS} exceeds that of Boeing 787 aircraft \cite{5facts_ericsson}. Naturally, with evergrowing demands traditional mechanisms start to lack the required performance. Especially given the recent wide range of applicability, \ac{AI} and \ac{ML} techniques promise to be capable of network management strategies that achieve optimal resource adaptation to a given context \cite{7792374}. As opposed to traditional methodologies that struggle with increased amounts of data, \ac{ML} tools like neural networks perform better with more data.
+
+Moreover, how can one physical network adapt to multiple types of services with fundamentally different requirements?
+There are countless configurations across the network that can be optimised to the fulfilment of a given service, but what mix of configurations represents the best trade-off for a given mix of services? And such configurations need to be dynamically managed to cope with instantaneous network and propagation conditions by balancing and allocating resources accordingly. 
+
+The answer is Network Slicing. \ac{5G}'s network architecture enables the multiplexing of virtualised and independent logical networks (called slices) on the same physical network infrastructure. Therefore, application-specific programs running concurrently can automatically tune parameters and configurations across the network in order to best service the user.
+
+Networks slicing is, from the conceptual/architectural point of view, a well-investigated topic \cite{slicing_survey}. However, (resource) management for network slices, in order to realize the required service level in a resource-/cost-efficient way, is still an open research challenge, in particular for the radio access network.
+
+In this thesis, we focus on enhancing the radio access for an emerging and incredibly demanding application that would not only benefit but certainly require such optimisations to have its requirements fulfilled. The application in question is social \ac{XR} conferences. It consists of virtual or augmented reality meetings where people can see and interact with each other virtually. It requires the reliable transmission of photo-realistic images of the body of each participant to all other participants hence necessitating very high throughput. It also needs very low latency to enable seamless human interaction and realistic sense of togetherness.
+
+Optimising a cutting-edge application with tremendously high requirements at such a large scale promises not to be an easy task. Nonetheless, it is a task that operators require in order to confidently guarantee provision of a service at a given quality.
 
 
-How to have one physical network that can balance and cleverly allocate its resources to adapt to multiple types of applications with fundamentally different requirements? The answer is Network Slicing. \ac{5G}'s network architecture enables the multiplexing of virtualised and independent logical networks on the same physical network infrastructure. Essentially, this means there can be application-specific programs (called slices) that automatically tune parameters and configurations across the network in order to best service the user.
 
-But, how should these programs look like? Which parameters should they change? And how should they change them? Needless to say, we do not have the answers to these questions. But we do know a good way of attacking the problem. First, to create solutions that are specific to an application, that will constitute our slice. Then to develop rules for slice management when there are conflicts of interests, which should happen frequently given the limited nature of resources. This way is possible to use the network to optimally provide a service, or close to optimally when there are conflicts, given a current scenario and available resources.
-
-We focus on an emerging and incredibly demanding application that would not only benefit from but certainly require such optimisations to have its requirements fulfilled. The application in question is social \ac{XR} conferences. It consists of virtual or augmented reality meetings where people can see and interact with each other virtually. It requires the reliable transmission of the body of each participant to all other participants hence necessitating very high throughput. It also needs very low latency to enable seamless human interaction and realistic sense of togetherness.
-
-Optimising a cutting-edge application with tremendously high requirements at such a large scale promises not to be an easy task. Nonetheless, is the work that operators need to confidently and convincingly guarantee ableness to provide a service with quality.
-
-
-
+%The number of devices connected to \ac{IP} networks will be more than three times the global population by 2023 \cite{cisco}. Cellular speeds will triple in the same period. The growth in connectivity is paramount and gives no indication of slowing down.
 

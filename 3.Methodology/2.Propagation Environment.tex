@@ -1,34 +1,30 @@
 \section{Propagation Environment}
 \label{sec:propagation_environment}
 
-Channel generation for emulating the propagation environment is a fundamental step when assessing performance over a wireless channel. In this section we state the procedure for computation of the channel coefficients. 
+Channel modelling for simulating the propagation environment is a fundamental step when assessing performance over a radio channel. In this section we state the procedure for computation of the channel coefficients. 
 
 To generate a realistic propagation environment we use Quadriga as our channel generator. More specifically, the conference takes place in an indoor office environment and Quadriga implements a LoS office described by 3GPP in \cite{3gpp_antennas}. 
 
-The channel traces consist of impulse responses for each pair of antennas between transmitter and receiver. Each coefficient is the expected received power taking into account the path loss, the antenna patterns, the LoS polarisation and the antenna orientations, as well as environment-specific fading. Noise is not considered and needs to be added à posteriori, as done in Equation \ref{eq:channel}.
+The channel traces consist of complex impulse responses for each pair of antennas between transmitter and receiver. Each coefficient corresponds to the electric field amplitude reduction and phase difference between antenna elements, taking into account the path loss, the antenna patterns, the LoS polarisation and the antenna orientations, as well as environment-specific fading. Noise is not considered and needs to be added a posteriori, as done in Equation \ref{eq:channel}.
 
-In Figure \ref{fig:prop} we show how channel gain varies across time for a user in a meeting, for two different frequencies with an antenna with the same number of elements. The channel is sampled every $250 \ \mu s$, which the slot duration for numerology 2, supported at both frequencies. Also represented are the zones where we deliberately caused a head-turning orientation change, i.e. who is speaking changed, and the user turned its head to the new speaker. Additionally, a LoS human blockage is introduced.
+In Figure \ref{fig:prop} we show how channel gain varies across time for a user in a meeting, for two different frequencies with an antenna array with the same number of elements. Strictly speaking, Quadriga does not support time-evolution, but it supports space-evolution. As such, we make space evolve consistently, by proving new positions every $250 \ \mu s$, which the slot duration for numerology two, for both frequencies. This is equivalent to sampling a channel evolving in time. Also represented are the zones where we deliberately caused a head-turning orientation change, i.e. who is speaking changed, and the user turned its head to the new speaker. Additionally, a LoS human blockage is introduced.
 
 
 A few aspects are noticeable:
 
 \begin{itemize}
-    \item There is a difference of 15 to 20 dB of average channel quality between 3.5 and 26 GHz, which check out with the increased free-space attenuation by increasing frequency;
-    \item The higher frequency channel oscillates more which also makes sense due to its smaller wavelength;
-    \item We can clearly recognize similarities in both the frequencies, namely with orientation change zone and the blocked zone in comfortably identifiable;
-    \item The drop in power due to the blockage is significantly bigger in 26 GHz than in 3.5 GHz. This can be justified due to mmWaves having an higher percentage of the total received power in the LoS component, therefore if the LoS is blocked with a simplified blocker that takes 20 dB off of the receiver power \cite{20db_attenuation};
+    \item There is a difference of 15 to 20 dB of average channel quality between 3.5 and 26 GHz, which checks out with the increased free-space attenuation by increasing frequency;
+    \item The channel gain at higher frequency oscillates more. This makes sense due to its smaller wavelength, as introduced in Section \ref{sec:key_tech};
+    \item The drop in power due to the blockage is greater in 26 GHz than in 3.5 GHz. This can be explained by mmWaves having an higher percentage of the total received power in the LoS component, therefore if the LoS is blocked with a blocker that takes 20 dB off channel gain \cite{20db_attenuation}, the drop is more noticeable in cases where the LoS carries relatively more power, i.e. higher frequencies;
+    \item The rise in channel gain after the blocker passes is smaller than the gain drop at the start of the blocked zone. This is due to variability in percentage of power in the LoS. Although we remove the 20 dB attenuation from the LoS, the percentage of power in the LoS is smaller than previously, therefore the change in channel gain is less noticeable.
 \end{itemize}
 
 
-\imagecapcontrol{Methodology/Propagation/both_freq2.png}{Radio channel gain variation across time, for 3.5 and 26 GHz. }{fig:prop}{.55}{-0mm}
+\imagecapcontrol{Methodology/Propagation/Final Freq2.png}{Radio channel gain variation across time, for 3.5 and 26 GHz. }{fig:prop}{.7}{-0mm}
 
-One less obvious aspect that required investigation beyond this figure is the vertical head tilts influence more than horizontal. Antenna positions are the cause such disparity - we used a square array pointing in the direction the user is looking, therefore a down tilt will originates higher relative variation and horizontal rotations. This agree with the plot: from 0 to almost 2 seconds there is a rotation with a significant vertical component and the channel oscillates considerably, and for the last 2 seconds there are mainly horizontal rotations and the channel stays closer to constant.
+Moreover, from correlating channel variability with head rotation we conclude that tilting the head vertically influences more than rotating the head in the horizontal plane. Antenna positions are the cause of such disparity - we used a square array pointing in the direction the user is looking, therefore up or down tilts result in higher variation relative to the position of the BS. This agrees with the plot: from 0 to  1.5 seconds there is a rotation with a significant vertical component and the channel gain oscillates considerably, and for the last second there are mainly horizontal rotations and the channel stays closer to constant.
 
-Furthermore, additional testing evidences that variation in orientation plays a more preponderant role than variation in position. This can be justified by the spatial consistency, i.e. similar propagation characteristics for similar positions. In essence, the changes in position are small and they just cause an equally small change in the channel, while orientation, even in such small quantities, it may completely misalign the main lobes of the radiation patterns resultant from beamforming. 
-
-
-As seen, the description of channel generation is simple, but the implementation process can be more complicated due to the sheer amount of data required (Terabytes) and computation time (days). To perform many simulations, a complex parallelisation framework was created. We explore this engineering problem in Appendix \ref{ap:d}.
+Furthermore, changes in head orientation have a greater effect on channel gain than changes in head position. It is partly due to spatial consistency, i.e. similar propagation characteristics for similar positions. In essence, consecutive positions are similar enough and correlated that they cause only a small change in the channel, while orientation, even in small quantities, may completely misalign the main lobes of the radiation patterns from beamforming, henceforth leading to more salient changes.
 
 
-
-
+Although the description is simple, the implementation process of such model is complex due to the sheer amount of data required (Terabytes) and computation time (days). We explore this engineering problem in Appendix \ref{ap:implementation}, where we look at the channel generation process from the implementation point-of-view and we introduce a parallelisation framework to reduce the required time.
