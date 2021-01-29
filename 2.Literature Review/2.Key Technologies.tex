@@ -14,8 +14,9 @@ Regarding the first term, increasing the available bandwidth leads to performanc
 
 % Cite wikipedia: https://en.wikipedia.org/wiki/Fourier_transform
 
-\imagecapcontrol{Literature Review/rect_fin.png}{Rectangular pulse in time and equivalente }{fig:rect_pulse}{.45}{-5mm}
+\imagecapcontrol{Literature Review/rect_fin.png}{Rectangular pulse in time and equivalente. \cite{fourier_ikamusume}}{fig:rect_pulse}{.3}{-1mm}
 
+\vspace{.5cm}
 The second reason has to do with how resources are distributed to allow user multiplexing and multiple access. Current systems use several orthogonality techniques, like time orthogonality and frequency orthogonality. The latter means that the larger the bandwidth, the more data can be sent simultaneously, or more users can be server simultaneously, or both, therefore resulting in higher aggregated throughputs.
 
 \subsection*{More Spectrum}
@@ -87,7 +88,7 @@ Regarding the increasing the independent data streams over the air, more commonl
 
 When one or more data streams are sent to a single user, as in Figure \ref{fig:multilayer}, we call it SU-MIMO (Single-User MIMO) operation, and when different streams target different users, having one or more streams per user, we call it MU-MIMO (Multi-User MIMO) mode of operation. However, the system requires information about the channel, it needs to know the multipath information to decide which paths to exploit for transmission. Therefore, let us inspect how the channel is represented and how information about it can be acquired.
 
-\imagecapcontrol{Literature Review/multilayer_transmission.png}{Example of single-user multilayer transmission. \cite{multilayer_fig}}{fig:multilayer}{.55}{-0mm}
+\imagecapcontrol{Literature Review/multilayer_transmission.png}{Example of single-user multilayer transmission. \cite{multilayer_fig}}{fig:multilayer}{.3}{-0mm}
 
 
 \subsection*{MIMO Channel}
@@ -182,12 +183,12 @@ With respect to flexibility, in the analog case, the same signal is fed to each 
 The hybrid option provides a trade-off between the previous two. It has more TRX chains than analog, so it can send more simultaneous signals, but it looses in steering capabilities. Moreover, it requires connecting each RF chain to each antenna element with phase shifters in between, thus involving numerous connections and numerous phase shifters. In not fully-connected variants, hybrid beamforming looses even further beam steering flexibility, ultimately degenerating to the analog case.
 
 
-In essence, the more TRX chains the antenna has, the more flexible and expensive it is. In industry, a 64T64R refers to the number of TX and RF chains, namely 64 of each. An array with 128 elements but only 64 \acsp{TRX}, has an hybrid architecture with two-element sub-arrays, i.e. two antenna elements connected to each TRX. Subarraying flexibility is analysed further in Section \ref{sec:modelling_antennas}. This is how beamforming flexibility is quantified in terms of hardware. Let us address software possibilities now.
+In essence, the more TRX chains the antenna has, the more flexible and expensive it is. In industry, a 64T64R refers to the number of TX and RF chains, namely 64 of each. An array with 128 elements but only 64 \acsp{TRX}, has an hybrid architecture with two-element sub-arrays, i.e. two antenna elements connected to each TRX. Subarraying is analysed further in Section \ref{sec:modelling_antennas}. This is how beamforming flexibility is quantified in terms of hardware. Let us address software possibilities now.
 
 
 \subsection*{Types of Beamforming} \label{sec:types_of_beamforming}
 
-Beamforming is not a new technique \cite{6591907} and has had applications in many fields such as radar, sonar, seismology, radio astronomy, acoustics and biomedicine. In today's mobile communications, it plays a crucial role. Expectedly, not all processing techniques are useful in all fields. So let us distinguish the two different types of beamforming and survey the most useful techniques used in wireless communications.
+Beamforming is not a new technique \cite{6591907} and has had applications in many fields such as radar, sonar, seismology, radio astronomy, acoustics and biomedicine. In today's mobile communications, it plays a crucial role. Expectedly, not all processing techniques are useful in all fields. So we distinguish the two different types of beamforming and survey the most useful techniques used in wireless communications.
 
 The two types of beamforming used in wireless communications have several equivalent denominations but the difference is simple:
 \begin{itemize}
@@ -197,12 +198,15 @@ The two types of beamforming used in wireless communications have several equiva
 
 Take the following example to solidify the difference. Assuming the only propagation path from transmitter to receiver is the \ac{LoS}, with feedback-based beamforming reference signals are sent (e.g. in three directions, -25\tdeg in elevation and 33\tdeg, 34\tdeg and 35\tdeg in azimuth) and awaits feedback on which beam suits the \ac{UE} best, while with free-format beamforming the best direction to beamform (e.g. -24.5443\tdeg elevation and 34.1222\tdeg azimuth) is extracted from the channel matrix derived from reference signals coming from each of UE's antennas.
 
-Conventional beam-steering \cite{balanis_antennas} is a direction-based technique for feedback-based beamforming. With multipath propagation, since the beam is steered to one direction only, it is expected to perform less optimally due to focusing all energy in a single path \cite{6292865}. %Although in \ac{LoS} scenarios it performs close to optimally, it fails to take advantage of scenarios with many propagation paths . %Ayach \cite{6292865} proves that this simple technique achieves more than 90\% of the maximum rate with optimal beamforming even in unrealistically unfavourable multipath-rich environments. The actual loss in gain is about 4\% with a realistic number of paths for indoor environments \cite{8891356}. Therefore, it should not impact our results significantly.
+Conventional beam-steering \cite{balanis_antennas} is a direction-based technique for feedback-based beamforming. With multipath propagation, since the beam is steered to one direction only, it is expected to perform less optimally due to focusing all energy in a single path \cite{6292865}. 
+
+
+%Although in \ac{LoS} scenarios it performs close to optimally, it fails to take advantage of scenarios with many propagation paths . %Ayach \cite{6292865} proves that this simple technique achieves more than 90\% of the maximum rate with optimal beamforming even in unrealistically unfavourable multipath-rich environments. The actual loss in gain is about 4\% with a realistic number of paths for indoor environments \cite{8891356}. Therefore, it should not impact our results significantly.
 %Other more sophisticated techniques could be used \cite{beam_steering_techniques}, not necessarily from the same type of beamforming.
 
 In Appendix \ref{sec:beam_steering} we make an integral derivation of the complex weights to be applied to each antenna element in order to conventionally steer the signal to a certain direction. Nonetheless, it is worth surveying implicit beamforming techniques since they can be employed alongside explicit beamforming, and is motivated in the canonical massive MIMO formulation.
 
-The most common implicit beamforming technique is \ac{MR} \cite{795811}. When \ac{MR} beamformer is applied to transmission it is called \ac{MRT}, and \ac{MRC} when applied at the reception. Equation \ref{eq:mr} shows this computation of \ac{MR} by calculating the Hermitian (conjugate transpose) of the channel vector and normalising such that the weights vector has unitary norm. Normalisation serves to prevent power scaling in the mathematics as we do not want to modify the total transmitted/received power with the beamforming.
+The most common implicit beamforming technique is \ac{MR} \cite{795811}. When \ac{MR} beamformer is applied to transmission it is called \ac{MRT}, and \ac{MRC} when applied at the reception. Equation \ref{eq:mr} shows this computation of \ac{MR} by calculating the Hermitian (conjugate transpose) of the channel vector and normalising such that the weights vector has unitary norm. Normalisation serves to prevent power scaling in the mathematics as we do not want to modify the total transmitted/received power with beamforming.
 
 \begin{equation} \label{eq:mr}
     \bm{w}^\text{MR} = \frac{\bm{h}^\text{H}}{|\bm{h}|}

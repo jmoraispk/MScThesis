@@ -56,7 +56,7 @@ The coordination of \ac{UL} and \ac{DL} transmissions is dependent on the slot s
 
 Moreover, each slot can have numerous different formats where each symbol is either used for UL, DL or in a \ac{F} manner. \ac{DL}/\ac{UL} slots are used for carrying \ac{DL}/\ac{UL} or \ac{F} symbols. Figure \ref{fig:slot_format} represents two of the least creative but most used options, however practically any combination of DL, UL and F symbols is available in the standards \cite{3gpp_slot_periodicity}. 
 
-\imagecapcontrol{Literature Review/slot_format2.png}{Slot format.}{fig:slot_format}{.45}{-0mm}
+\imagecapcontrol{Literature Review/slot_format2.png}{Slot format.}{fig:slot_format}{.28}{-0mm}
 
 On the bottom of Figure \ref{fig:slot_format} is a format that can be used for self-contained slots, where the F symbol is used as a guard interval. Self-contained slots are meant to enable a quick ACK/NACK feedback in low-latency communications, or for massive MIMO UL pilots \cite{qualcomm_innovative_five}. The guard symbols between UL and DL are needed for synchronisation and can their numbers can be smaller for shorter distances. In indoor applications, it is sufficient to use a single guard symbol \cite{rel15_self_contained_slot_qualcomm}.
 
@@ -150,7 +150,7 @@ Then, \ac{OFDM} symbols are generated and mapped from the logical antenna ports 
 
 Figure \ref{fig:codewords_to_ant} summarises the chain of events from codewords to layers to actual transmission in physical antennas. Although both Figure \ref{fig:tb_to_codewords} and \ref{fig:codewords_to_ant} have transmitter-side block diagrams and descriptions, the receive side is the same, only reversed.
 
-\imagecapcontrol{Literature Review/codewords.png}{Block diagram at the transmitter: from codewords to physical antennas.}{fig:codewords_to_ant}{.46}{-5mm}
+\imagecapcontrol{Literature Review/codewords.png}{Block diagram at the transmitter: from codewords to physical antennas.}{fig:codewords_to_ant}{.37}{-2mm}
 
 
 There can be a maximum of two codewords per user. The maximum number of transmitted layers also has a limit at eight layers per user when the user is served alone (SU-MIMO) and two layers per user when more than one user is served simultaneously (MU-MIMO) \cite{3gpp-codebooks}.
@@ -175,7 +175,7 @@ There are two ways of performing beam alignment in \ac{5G}, based on different \
 
 
 \begin{itemize}
-    \item \ac{CSI-RS} - downlink \ac{RS}. Each RS is sent in UE-specific time-frequency resources and beamformed in a specific direction, as shown in Figure \ref{fig:csirs}. Upon reception, the UE reports the IDs (and optionally the powers) of up to four CSI-RSs, the best received RSs. For that report, the UE transmits with the optimal beam to received the best CSI-RS, unless it had been previously instructed by the BS to use another beam. 
+    \item \ac{CSI-RS} - downlink \ac{RS}. Each RS is sent in UE-specific time-frequency resources and beamformed in a specific direction, as shown in Figure \ref{fig:csirs}. Upon reception, the UE reports the IDs, and optionally the powers, of up to the four best received CSI-RSs, in a feedback quantity called \ac{CRI}. To send the report, the UE transmits with the optimal beam to received the best CSI-RS, unless it had been previously instructed by the BS to use another beam. Alternatively, the UE can feedback a \ac{PMI} suggesting a beam from the GoB based on the measurements performed on the received CSI-RSs;
     \item \ac{SRS} - uplink \ac{RS}. Each RS also uses well-defined \acsp{RE}, but contrary to the \acs{CSI-RS}, each antenna sends one, see Figure \ref{fig:srs}. Upon reception, the BS derives a beam to transmit to the UE, which then either derives the best beam for reception and uses it for transmission too, or uses the beam instructed by the BS \cite{DAHLMAN2018};
 \end{itemize}
 

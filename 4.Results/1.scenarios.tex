@@ -27,49 +27,49 @@ Some final considerations and clarifications regarding the choice of parameters:
     \item We use $P_{t,max}^{BS} = 0.1 $ Watt \cite{etsi_wifi_tx_power}, which is the same value used in Wi-Fi access points in the 2.4 GHz band, thus it is a safe and conservative approach.
 \end{itemize}
 
-
-
 \begin{table}[h]
     \centering
     \caption{Application layer parameters.}
     \label{tab:app_param}
     \begin{tabular}{|c|c|c|c|c|c|}
-        \hline
-        Variable    & Value         & Variable   & Value       & Variable            & Value   \\ \hline
-        $N_{phy}$ & 1 or 4 & $d_{u}$    & 0.05 m  & $N_{ant}^{UE}$ & \begin{tabular}[c]{@{}c@{}}3.5 GHz:  2x2\\ 26 GHz: 8x8\end{tabular}       \\ \hline
-        $N_{vir}$ & 7 or 4 & $\sigma_x$ & 0.667 m & $N_{ant}^{BS}$ & \begin{tabular}[c]{@{}c@{}}3.5 GHz:  4 x 4\\ 26 GHz: 16 x 16\end{tabular} \\ \hline
-        $N_{cam}$   & 0             & $\sigma_y$ & 0.667 m     & $\overline{R}_{DL}$ & 80 Mbps \\ \hline
-        $S_{room}$  & {[}6,6,3{]} m & $\sigma_z$ & 0.223 m     & $S_{GoP}$           & 6       \\ \hline
-        $h_{user}$  & 1.4 m         & $\beta_x$  & $\pi/9$ rad & $r_{P/I}$           & 0.2     \\ \hline
-        $h_{table}$ & 1 m           & $\beta_y$  & $\pi/6$ rad & $R_F$               & 30      \\ \hline
-        $d_u$       & 0.6 m         & $\beta_z$  & $\pi/9$ rad & $\delta$            & 3       \\ \hline
-        $d_s$       & 0.3 m         & $r_t$      & 1 m         & $\gamma$            & 0.5      \\ \hline
-        $d_{o}$     & 0.15 m        & $r_u$      & 1.2 m       & $o$                 & 0        \\ \hline
+    \hline
+    Variable    & Value       & Variable     & Value         & Variable  & Value   \\ \hline
+    $N_{phy}$   & 1 or 4      & $S_{packet}$ & 1500 B        & $r_{t}$   & 1 m     \\ \hline
+    $N_{vir}$   & 7 or 4      & $\delta$     & 3             & $r_{u}$   & 1.2 m   \\ \hline
+    $N_{cam}$   & 0           & $\sigma_{x}$ & 0.667 m       & $R_{DL}$  & 80 Mbps \\ \hline
+    $S_{room}$  & [6, 6, 3] m & $\sigma_{y}$ & 0.667 m       & $S_{GoP}$ & 6       \\ \hline
+    $h_{user}$  & 1.4 m       & $\sigma_{z}$ & 0.223 m       & $r_{P/I}$ & 0.2     \\ \hline
+    $h_{table}$ & 1 m         & $\beta_{x}$  & $\pi/9$ rad   & $R_{F}$   & 30      \\ \hline
+    $d_{o}$     & 0.15 m      & $\beta_{y}$  & $\pi / 6$ rad & $\gamma$  & 0.5     \\ \hline
+    $d_{u}$     & 0.6 m       & $\beta_{z}$  & $\pi/9$ rad   & $o$       & 0       \\ \hline
     \end{tabular}
 \end{table}
-
 
 \begin{table}[h]
     \centering
     \caption{Radio layer parameters.}
     \label{tab:radio_param}
     \begin{tabular}{|c|c|c|c|c|c|}
-        \hline
-        Variable      & Value         & Variable          & Value & Variable   & Value \\ \hline
-        $T_{sim}$     & 1 s           & $P_{t,max}^{BS}$  & 0.1 W & $NF_{UE}$  & 8 dB  \\ \hline
-        $\mathcal{F}$ & {3.5, 26} GHz & $N_{slots}^{CSI}$ & 1     & T          & 290 K \\ \hline
-        $\mu$         & 2             & $N_{slots}^{SCH}$ & 1     & $a_\phi$   & -60º  \\ \hline
-        B             & 40 MHz        & $N_{CSI}$         & 1     & $a_\theta$ & -60º  \\ \hline
-        $N_{PBR}$     & 50            & $\kappa$          & 1     & $b_\phi$   & 60º   \\ \hline
-        $N_{BS}$      & 1             & $BLER_0$          & 0.1   & $b_\theta$ & 60º   \\ \hline
-        $s_{TDD}$    & 0 & $\gamma_{OLLA}$ & 0.1  & $r_\phi$   & \begin{tabular}[c]{@{}c@{}}3.5 GHz: 30º \\ 26GHz: 4º\end{tabular} \\ \hline
-        $\tau_{ACK}$ & 0 & $t_w$           & 8000 & $r_\theta$ & \begin{tabular}[c]{@{}c@{}}3.5 GHz: 30º\\ 26GHz: 4º\end{tabular}  \\ \hline
-        $\tau_{CSI}$  & 4             & $N_{TB}$          & 5     & $\eta$     & 0     \\ \hline
+    \hline
+    Variable      & Value                        & Variable          & Value & Variable                        & Value               \\ \hline
+    $T_{sim}$     & 1 s                          & $\tau_{ACK}$         & 0     & $t_{w}$                         & 8000                \\ \hline
+    $\mathcal{F}$ & $\left\{3.5, 26\right\}$ GHz & $\tau_{CSI}$         & 4     & $N_{TB}$                        & 5                   \\ \hline
+    $\mu$         & 2                            & $P_{t,max}^{BS}$  & 0.1 W & $NF_{UE}$                       & 8 dB                \\ \hline
+    $B$           & 40 MHz                       & $N_{slots}^{CSI}$ & 1     & T                               & 290 K               \\ \hline
+    $N_{PBR}$     & 50                           & $N_{slots}^{SCH}$ & 1     & $\left[a_\phi, b_\phi\right]$ & [-60\tdeg, 60\tdeg] \\ \hline
+    $N_{BS}$      & 1                            & $N_{CSI}$         & 1     & $\left[a_\theta, b_\theta\right]$ & [-60\tdeg, 60\tdeg] \\ \hline
+    $N_{ant}^{UE}$ &
+      \begin{tabular}[c]{@{}c@{}}3.5 GHz: 2x2\\ 26 GHz: 8x8\end{tabular} &
+      $\kappa$ &
+      1 &
+      $r_\phi$ &
+      \begin{tabular}[c]{@{}c@{}}3.5 GHz: 30\tdeg\\ 26 GHz: 4\tdeg\end{tabular} \\ \hline
+    $N_{ant}^{BS}$ &
+      \begin{tabular}[c]{@{}c@{}}3.5 GHz: 4x4\\ 26 GHz: 16x16\end{tabular} &
+      $BLER_{0}$ &
+      0.1 &
+      $r_\theta$ &
+      \begin{tabular}[c]{@{}c@{}}3.5 GHz: 30\tdeg\\ 26 GHz: 4\tdeg\end{tabular} \\ \hline
+    $s_{TDD}$     & 0                            & $\gamma_{OLLA}$   & 0.1   & $\eta$                          & 0                   \\ \hline
     \end{tabular}
 \end{table}
-
-
-
-
-
- 
