@@ -5,13 +5,13 @@ In this section, we detail the functions executed by the network equipment to en
 
 Firstly, we opt for a \ac{GoB}-based beamforming approach. With the growing number of antennas at the receivers, full channel knowledge is practically unobtainable, and we need to resort to more overhead-efficient approaches. 
 
-Secondly, we address the considerations regarding multi-layer transmission. To reiterate, the difference between single-layer and multi-layer operation is the number of independent streams transmitted per \ac{UE}. And to transmit independent streams or layers, there must be some orthogonality mechanism that renders such layers independent. The orthogonality domain we are concern with is orthogonality in space. However, by opting \ac{GoB}-based beamforming although we save in overhead, we loose considerably in transmission flexibility. Free-format beamforming would allow us to send independent layers in the same direction, only focusing different antennas at the reception. But using a \ac{GoB} we do not have enough beams to do that, instead we have to resort to completely different propagation paths, with paths beyond the first not being the \ac{LoS}. This would not yield insignificant improvements. 
+Secondly, we address the considerations regarding multi-layer transmission. To reiterate, the difference between single-layer and multi-layer operation is the number of independent streams transmitted per \ac{UE}. And to transmit independent streams or layers, there must be some orthogonality mechanism that renders such layers independent. The orthogonality domain we are concerned with is orthogonality in space. However, by opting \ac{GoB}-based beamforming although we save in overhead, we loose considerably in transmission flexibility. Free-format beamforming would allow us to send independent layers in the same direction, only focusing different antennas at the reception. But using a \ac{GoB} we do not have enough beams to do that, instead we have to resort to completely different propagation paths, with paths beyond the first not being the \ac{LoS}. This would not yield insignificant improvements. 
 
 Another option would be to resort to polarisation orthogonality. Instead of using all antenna elements to perform a transmission, we may use the antennas oriented in a given direction to send one layer and the elements oriented perpendicularly to send another. Note that the same beam in the GoB can be used for the different polarisations when they are to be sent over the same path. However, the moments in time where inter-polarisation interference is small, e.g. less than 20 dB, are rare. In other words, often antennas with a given orientation at the receiver get signal from both polarisations at the transmitter. Thus, it would require considerably more complicated interference estimations algorithms to do multi-layer transmissions polarisation-based. This is why we opt for single-layer transmission using all antennas both in the \ac{TX} and in the \ac{RX}. Nevertheless, the vast majority of modelling in this section is agnostic to the number of layers.
 
 Thirdly, although in Section \ref{sec:sxr_meeting_modelling} we modelled the location of all \acsp{UE} in the system and application traffic for \acs{UL} and \acs{DL}, for conciseness in this section we describe the model for \acs{DL} transmission procedure and thus we do not consider cameras. In the \acs{DL}, he number of UEs $N_{ue}$ equal to the number of physical users $N_{phy}$. Moreover, we consider a single-BS with a one or more antenna panels.
 
-In essence, we need to list all procedures that can happen in a \acs{TTI}. Some may not happen every \acs{TTI} and we need to state in what circumstances they do happen. See in Figure \ref{fig:flowchart_sls} a flowchart of the main steps required to simulate a (\acs{DL}) \acs{TTI}.
+In essence, we need to list all procedures that can happen in a \acs{TTI}. Some may not happen every \acs{TTI} and we need to state in what circumstances they do happen. Figure \ref{fig:flowchart_sls} shows a flowchart of the main steps required to simulate a (\acs{DL}) \acs{TTI}.
 
 \image{Methodology/Radio Access/flowchart.png}{Flowchart for of simulation steps for each TTI.}{fig:flowchart_sls}{.48}
 
@@ -50,7 +50,7 @@ To create a GoB we need to know which directions to steer the beam. The beam-ste
     F_I(a, b, r) = \left\{a + i \times r \  \forall \ i \in \mathbb{N}_0: i \times r \leq b-a \right\}
 \end{equation}
 
-This way, we define in the azimuthal angular domain as $\mathcal{A}_\phi = F_I(a_\phi, b_\phi, r_\phi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. For instance, if the antenna is positioned in the centre of the room, on the ceiling, pointing downwards, then the most logical approach is a symmetric approach because in that position the coverage of the room would be uniform since we consider our room with equal length and width(for room and user behaviour modelling, see Section \ref{sec:sxr_meeting_modelling}). More concretely, the GoB should cover all positions the UEs may potentially be. Thus, given the position and movement of the users in relation to the size of the room described in the example of Section \ref{sec:ue_placement}, choosing the lower limits to $a_\phi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\phi = b_\theta = 60\text{\textdegree}$ covers all possible UE positions.
+This way, we define in the azimuthal angular domain as $\mathcal{A}_\phi = F_I(a_\phi, b_\phi, r_\phi)$ and the elevation angular domain as $\mathcal{A}_\theta = F_I(a_\theta, b_\theta, r_\theta)$. For instance, if the antenna is positioned in the centre of the room, on the ceiling, pointing downwards, then the most logical approach is a symmetric approach because in that position the coverage of the room would be uniform since we consider our room with equal length and width - room and user behaviour is modelled in Section \ref{sec:sxr_meeting_modelling}. More concretely, the GoB should cover all positions the UEs may potentially be. Thus, given the position and movement of the users in relation to the size of the room described in the example of Section \ref{sec:ue_placement}, choosing the lower limits to $a_\phi = a_\theta = -60\text{\textdegree}$ and the upper limits to $b_\phi = b_\theta = 60\text{\textdegree}$ covers all possible UE positions.
 
 The resolutions should depend on the array size. To create a pseudo-non-interfering GoB, where the maximum of the main lobe of one beam points at the a minimum of an adjacent beam, the resolution should be roughly half the \ac{FNBW}. It is `pseudo-non-interfering' because the \ac{FNBW} varies with the direction at which the beam is steered, which causes the maximums to not align perfectly with the nulls. This effect is unnoticeable in adjacent beams, and gets more noticeable the more far apart beams are from each other. So, this method is a simplistic yet effective approach to minimise the interference between beams, but it does not eliminate this interference. 
 
@@ -61,7 +61,7 @@ Thus, the possible directions are defined as a cartesian product between the azi
 \end{equation}
 
 
-Having the directions, we need the precoder that will construct a beam pointing in that direction. In Equation \eqref{eq:prec_func} we define the $M$ by $N$ beamforming matrix $\bm{W}_{\phi, \theta}$ that contains the relative amplitudes and phases that are applied to the signal of each antenna element of an $M$ by $N$ planar array, obtaining as a result a beam directed to $\phi$ degrees on the horizontal plane and $\theta$ degrees on the vertical plane. Note that such planes depend on the orientation of the array and the angles $\phi$ and $\theta$ are null in the interception of both planes, corresponding to the direction orthogonal to the array plane (see Appendix \ref{sec:beam_steering} for a complete derivation).
+Having the directions, we need the precoder that will construct a beam pointing in that direction. In Equation \eqref{eq:prec_func} we define the $M$ by $N$ beamforming matrix $\bm{W}_{\phi, \theta}$ that contains the relative amplitudes and phases that are applied to the signal of each antenna element of an $M$ by $N$ planar array, obtaining as a result a beam directed to $\phi$ degrees on the horizontal plane and $\theta$ degrees on the vertical plane. Note that such planes depend on the orientation of the array and the angles $\phi$ and $\theta$ are null in the interception of both planes, corresponding to the direction orthogonal to the array plane. Appendix \ref{sec:beam_steering} holds a complete derivation.
 
 
 \begin{align} \label{eq:prec_func}
@@ -115,13 +115,13 @@ The best beam pairs are chosen to maximise the channel gain achieved from perfor
 \end{equation}
 
 
-When $\bm{w}^{UE}$ is a MR beamformer, the channel gain under transmit and receive beamforming is a real number. Therefore, to choose the $\bm{w}$ that achieves the highest gain, we simply have to choose $\bm{w}$ that results in highest norm of its internal product with the channel. This shortcut is represented in Expression \eqref{eq:GoB_choice}. In essence, this means that because we are computing the UE-side beamformer already taking into account the transmit-side beamformer, to maximise the norm of the received signal it is sufficient to choose the appropriately the transmit-side beamformer. 
+When $\bm{w}^{UE}$ is a MR beamformer, the channel gain under transmit and receive beamforming is a real number. Therefore, to choose the $\bm{w}$ that achieves the highest gain, we simply have to choose $\bm{w}$ that results in highest norm of its internal product with the channel. This shortcut is represented in Equation \eqref{eq:GoB_choice}. In essence, this means that because we are computing the UE-side beamformer already taking into account the transmit-side beamformer, to maximise the norm of the received signal it is sufficient to choose the appropriately the transmit-side beamformer. 
 
 \begin{equation} \label{eq:GoB_choice}
     \bm{w}^{BS}_{bu} = \argmax_{\bm{w} \ \in \ \mathcal{W}^{GoB}_b} \left| \bm{w}^{UE}_{bu} \cdot \bm{H}_{bu} \cdot \bm{w} \right| = \argmax_{\bm{w} \ \in \ \mathcal{W}^{GoB}_b} \left| \bm{H}_{bu} \cdot \bm{w}\right|
 \end{equation}
 
-When $N_{CSI} > 1$, instead of the best beamformer, we save the $N_{CSI}$ best GoB beamformers. For sake of practicality, let us assume $N_{CSI} = 1$ for now on. Furthermore, beam pairs computed in this way profit from beam-reciprocity, i.e. the beams used for receiving can be used for transmitting as well. And doing this way, the received power is already present (see Equation \eqref{eq:rx_pow_ue}), thus we only need to update the interference now.
+When $N_{CSI} > 1$, instead of the best beamformer, we save the $N_{CSI}$ best GoB beamformers. For sake of practicality, let us assume $N_{CSI} = 1$ for now on. Furthermore, beam pairs computed in this way profit from beam-reciprocity, i.e. the beams used for receiving can be used for transmitting as well. And doing this way, the received power is already present from Equation \eqref{eq:rx_pow_ue}, thus we only need to update the interference now.
 
 \begin{equation} \label{eq:rx_pow_ue}
     P_{r, bu}^{UE} = P_{t, bu}^{BS} \left| \bm{w}^{UE}_{bu} \cdot \bm{H}_{bu} \cdot \bm{w}^{BS}_{bu} \right|^2 
@@ -152,7 +152,7 @@ We use wideband scheduling, i.e. allocating all available spectrum to every tran
     P_N = k_B T B \times 10^{\frac{NF_r}{10}}
 \end{equation}
 
-To summarise, the expression used for SINR estimation uses information from $\tau_{CSI}$ TTIs ago on the received power $P_s$ and total interference $I$. See Equation \ref{eq:sinr_estimation}
+To summarise, the expression used for SINR estimation uses the received power $P_s$ and total interference $I$ information from $\tau_{CSI}$ TTIs ago. Such information is used as shown in Equation \ref{eq:sinr_estimation} to compute an estimate of the SINR $\hat{SINR_{eff}}$.
 
 \begin{equation} \label{eq:sinr_estimation}
     \hat{SINR_{eff}} = \frac{\hat{P}_s}{\hat{I} + P_N} 
@@ -167,7 +167,7 @@ The SINR is used to choose which CQI should be reported from the BLER curves rep
 \image{SLS/MCS_final_res300.png}{BLER curves for all MCSs. Simulated with Vienna Link-Level Simulator \cite{Vienna5GLLS}.}{fig:blercurves}{.37}
 
 
-The selected MCS is then adjusted with the OLLA parameter as described in Subsection \ref{sec:olla}. The resultant MCS tells us the number of bits in a symbol $N_{bits}^{symb}$, which can be computed from the modulation order M, through $\log_2(M)$. To compute the bits per PRB we assume initially that all REs in a PBR are used for data, i.e. $N_{symb}^{PRB} = 168$, we multiply by $N_{bits}^{symb}$ and take into account the code rate $R_c$. In essence, Equation \eqref{eq:bit rate} computes the bit rate by dividing the number of bits transmitted in a PRB by the duration of that PRB, which corresponds to a slot duration $T_{slot, \mu}$, that depends on the numerology $\mu$.
+The selected MCS is then adjusted with the OLLA parameter as described ahead. The resultant MCS tells us the number of bits in a symbol $N_{bits}^{symb}$, which can be computed from the modulation order M, through $\log_2(M)$. To compute the bits per PRB we assume initially that all REs in a PBR are used for data, i.e. $N_{symb}^{PRB} = 168$, we multiply by $N_{bits}^{symb}$ and take into account the code rate $R_c$. In essence, Equation \eqref{eq:bit rate} computes the bit rate by dividing the number of bits transmitted in a PRB by the duration of that PRB, which corresponds to a slot duration $T_{slot, \mu}$, that depends on the numerology $\mu$.
 
 \begin{equation} \label{eq:bit rate}
     R_b = \frac{N_{bits}^{symb} \times N_{symb}^{PRB} \times R_{c}}{T_{slot, \mu}} 
@@ -239,7 +239,7 @@ The most common and widely used scheduler is the \ac{PF}, presented in Equation 
 
 As seen, PF does not consider latencies. Yet, for our case where each user has the same amount of data to receive (and each camera the same amount of data to transmit), the PF also levels latencies by weighting fairness, not leaving any user waiting for long. However, it may not perform as well as latency-aware alternatives.
 
-Two latency-aware alternatives are \ac{EXP/PF} \cite{exp_algorithm} and \ac{M-LWDF} \cite{scheduler_performance_eval}. The latter is almost as simple as the PF, only weighting the \ac{HOL} latency as well. \ac{EXP/PF} is more complex and considers a maximum delay and increases priorities exponentially as latencies approach the limit. Both use the PF ratio described in Expression \eqref{eq:pf}. \ac{M-LWDF} outperforms \ac{EXP/PF} in practically every scenario, besides when the load is very high \cite{scheduler_performance_eval} \cite{5340336}. Therefore, both \ac{M-LWDF} and \ac{EXP/PF} seem worthwhile alternatives, but we choose the PF for this work.
+Two latency-aware alternatives are \ac{EXP/PF} \cite{exp_algorithm} and \ac{M-LWDF} \cite{scheduler_performance_eval}. The latter is almost as simple as the PF, only weighting the \ac{HOL} latency as well. \ac{EXP/PF} is more complex and considers a maximum delay and increases priorities exponentially as latencies approach the limit. Both use the PF ratio described in Equation \eqref{eq:pf}. \ac{M-LWDF} outperforms \ac{EXP/PF} in practically every scenario, besides when the load is very high \cite{scheduler_performance_eval} \cite{5340336}. Therefore, both \ac{M-LWDF} and \ac{EXP/PF} seem worthwhile alternatives, but we choose the PF for this work.
 
 \subsubsection*{Co-schedule users}
 This step lists the users to be scheduled together until the next update to the schedule. The co-scheduling rule for a single-BS-panel operation is to add one UE layer at a time to the list, by order of \ac{UE} priority (computed in the previous step), if the best beams used for those layers are compatible with the previously added \ac{UE} layers. And we define as compatible beams when the BS-side beam, belonging to the \ac{GoB} is at least $\kappa$ beams apart, with $\kappa \in \mathbb{N}_0$. If $\kappa$ is 0, then all layers are accepted. If $\kappa = 1$, then the beams must be different - adjacent beams have a distance of 1, so are still used together. Beams located diagonally adjacent of the \ac{GoB} are considered to have a distance of 2, hence they may be co-scheduled when $\kappa \leq 2$. Figure \ref{fig:beam-rule} illustrates the beams that cannot be co-scheduled with certain values of $\kappa$, representing in filled blue circles as incompatible beams with respect to the orange one, and empty circles as compatible beams with the central orange beam. More generally, the beam distance is defined by the sum of absolute differences of the beam indices in the grid. Mathematically, the beamformers $\bm{w}_{i,j}$ and $\bm{w}'_{i',j'}$, having $(i,j)$ and $(i', j')$ as the GoB indices, respectively, are compatible if $|i-i'| + |j - j'| \geq \kappa$.
@@ -278,7 +278,7 @@ Here we obtain the outcomes of the realised transmissions. Firstly, we calculate
 
 \subsubsection*{Transport Block Size Calculation}
 
-To obtain the \ac{TBS}, essentially two ways have been modelled. The first is to consider the same number of TBs on every transmission, $N_{TB}$. Therefore the numbers of bits to be transmitted $N_{bits, bul}$ is divided equally over TBs and the size of each TB is the same, see Equation \eqref{eq:tbs1}.
+To obtain the \ac{TBS}, essentially two ways have been modelled. The first is to consider the same number of TBs on every transmission, $N_{TB}$. Therefore the numbers of bits to be transmitted $N_{bits, bul}$ is divided equally over TBs and the size of each TB is the same, as shown in Equation \eqref{eq:tbs1}.
 
 
 \begin{equation} \label{eq:tbs1}
@@ -312,7 +312,7 @@ Let $l$ be the layer that links a set of antennas in BS $b$ to a set of antennas
 
 The powers are scalars, $\bm{w}_{r, l}$ is a $1 \times N_r$ vector, $\bm{w}_{t, l'}$ is $N_t \times 1$ vector and $\bm{H}_{ll'}$ is a $N_r \times N_t$ matrix, where $N_t$ and $N_r$ are the number of antenna elements at the transmitter and receiver antenna arrays, respectively.
 
-Knowing how to calculate this quantity we can compute the powers of all parts of the SINR expression on a PRB basis: the signal $P_s$, the intra-cell interference $P_{IaCI}$, the inter-cell interference $P_{IeCI}$, the inter-layer interference $P_{ILI}$ and the noise $P_N$. Here, the term cell refers to a panel. See in Equation \eqref{eq:simple_SINR} the expression for the SINR of a specific layer $l$ in a given PRB. Subsequently we present equations for each quantity in the SINR expression, along with the rationale behind them. 
+Knowing how to calculate this quantity we can compute the powers of all parts of the SINR expression on a PRB basis: the signal $P_s$, the intra-cell interference $P_{IaCI}$, the inter-cell interference $P_{IeCI}$, the inter-layer interference $P_{ILI}$ and the noise $P_N$. Here, the term cell refers to a panel. Using all these powers in Equation \eqref{eq:simple_SINR} we obtain the SINR of a specific layer $l$ in a given PRB. Subsequently we present equations for each quantity in the SINR expression, along with the rationale behind them. 
 
 
 \begin{equation} \label{eq:simple_SINR}
@@ -321,7 +321,7 @@ Knowing how to calculate this quantity we can compute the powers of all parts of
 
 Moreover, and to reiterate, all quantities mentioned in this section are time (TTI) and frequency (PRB) specific. These SINRs need to be posteriorly aggregated in an effective SINR for each transmission in the given TTI. We choose to omit the $i$ index to simplify notation, as we did with the TTI since this chapter is TTI-specific.
 
-The received signal power $P_s$ is in Equation \eqref{eq:sig_pow}.
+The received signal power $P_s$ is presented in Equation \eqref{eq:sig_pow}.
 
 \begin{equation} \label{eq:sig_pow}
     P_s = P_{r, ll} 
@@ -329,7 +329,7 @@ The received signal power $P_s$ is in Equation \eqref{eq:sig_pow}.
 
 %ILI
 
-In case of multi-layer transmission, other layers scheduled to/from the same UE may interfere among themselves. The power of inter-layer interference $P_{ILI}$ takes into account this interference by summing the interferences caused in layer $l$ by every other layer $l'$ scheduled between BS $b$ and UE $u$. See Equation \eqref{eq:ili}, where $\mathcal{L}_{bu}$ is the set of layers scheduled between BS $b$ and UE $u$.
+In case of multi-layer transmission, other layers scheduled to/from the same UE may interfere among themselves. The power of inter-layer interference $P_{ILI}$ takes into account this interference by summing the interferences caused in layer $l$ by every other layer $l'$ scheduled between BS $b$ and UE $u$. This rational is condensed in Equation \eqref{eq:ili}, where $\mathcal{L}_{bu}$ is the set of layers scheduled between BS $b$ and UE $u$.
 
 \begin{equation} \label{eq:ili}
     P_{ILI} = \sum_{\subalign{l&' \in \hspace{.05cm} \mathcal{L}_{bu} \\ &l' \neq l \\ \hspace{0.25cm} &}} P_{r, ll'} 
@@ -337,21 +337,21 @@ In case of multi-layer transmission, other layers scheduled to/from the same UE 
 
 % IaCI
 
-Interference power contributions from the same cell/BS come from every transmission that takes place to other UEs in the same cell/served by the same BS. See Equation \eqref{eq:iaci}, where $\mathcal{U}_{b}$ is the set of users served by BS $b$.
+Interference power contributions from the same cell/BS come from every transmission that takes place to other UEs in the same cell/served by the same BS. We take into account all those transmission in Equation \eqref{eq:iaci}, where $\mathcal{U}_{b}$ is the set of users served by BS $b$.
 
 \begin{equation} \label{eq:iaci}
     P_{IaLI} = \mathlarger{\sum}_{\subalign{u' &\in \hspace{.05cm} \mathcal{U}_{b} \\ u'& \neq \hspace{.05cm} u}} \hspace{-0.1cm} \sum_{\subalign{l' &\in \hspace{.05cm} \mathcal{L}_{bu'} \\ \hspace{0.40cm} &}} \hspace{-0.1cm} P_{r, ll'} 
 \end{equation}
 
 % IeCI
-Interference contributions from outside the cell come from all non-serving BSs, all UEs and in all layers. We see this Equation \eqref{eq:ieci}, where $\mathcal{B}$ is the set of all BS (or BS panels) in the system.
+Interference contributions from outside the cell come from all non-serving BSs, all UEs and in all layers. Equation \eqref{eq:ieci} represents this relation, where $\mathcal{B}$ is the set of all BS (or BS panels) in the system.
 
 \begin{equation} \label{eq:ieci}
     P_{IeCI} = \mathlarger{\mathlarger{\sum}}_{\substack{b' \in \hspace{.05cm} \mathcal{B} \\ b' \neq b}} \ \mathlarger{\sum}_{\ u' \in \hspace{.05cm} \mathcal{U}_{b'}} \hspace{-0.2cm} \sum_{\subalign{&l' \in \hspace{.05cm} \mathcal{L}_{b'u'} \\ \hspace{0.25cm} &}} \hspace{-0.1cm} P_{r, ll'} 
 \end{equation}
 
 % PN
-The noise power $P_N$ is computed according to Expression \ref{eq:noise}, using the bandwidth of a single PRB, which depends on the numerology as evidenced in Table \ref{tab:num}.
+The noise power $P_N$ is computed according to Equation \ref{eq:noise}, using the bandwidth of a single PRB, which depends on the numerology as evidenced in Table \ref{tab:num}.
 
 This framework is also applicable when several BS are jointly serving one user, or when one user is transmitting to several BS simultaneously, i.e. Distributed-MIMO (D-MIMO). This is true because we simply account for power contributions, abstracting from the content of the spatial streams.
 

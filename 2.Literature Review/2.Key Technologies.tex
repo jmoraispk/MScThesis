@@ -12,11 +12,12 @@ Equation \eqref{eq:basics} summarises in a simple way how to increase throughput
 
 Regarding the first term, increasing the available bandwidth leads to performance gains and there are many examples as to why. Two examples are of particular relevance to show ahead how the increase in spectrum is exploited by the standards. Figure \ref{fig:rect_pulse} shows a rectangular pulse in time and its respective footprint in frequency, a normalized sinc function. As such, we see that shorter pulses in time, i.e. smaller $\tau$, require more bandwidth. Naturally, we want the pulses as short as possible to send as many in as little time, hence increasing the information transfer rate.
 
-% Cite wikipedia: https://en.wikipedia.org/wiki/Fourier_transform
+\vspace{0.5cm}
 
 \imagecapcontrol{Literature Review/rect_fin.png}{Rectangular pulse in time and equivalente. \cite{fourier_ikamusume}}{fig:rect_pulse}{.3}{-1mm}
 
-\vspace{.5cm}
+\vspace{1cm}
+
 The second reason has to do with how resources are distributed to allow user multiplexing and multiple access. Current systems use several orthogonality techniques, like time orthogonality and frequency orthogonality. The latter means that the larger the bandwidth, the more data can be sent simultaneously, or more users can be server simultaneously, or both, therefore resulting in higher aggregated throughputs.
 
 \subsection*{More Spectrum}
@@ -25,7 +26,7 @@ The advancement consists in using higher frequencies. Frequencies between 30 and
 
 %\imagecapcontrol{Literature Review/spectrum.png}{Simple spectrum overview: sub-6 GHz and }{fig:spectrum}{.5}{-0mm} 
 
-One advantage of using the newly available bandwidth to make the transmitted signals shorter in time-domain, besides taking less time to transmit, is shortening the time to interact. We will revisit this concept in the next section when we introduce the concept of numerologies which is how 5G New Radio achieves more agile transmission.
+One advantage of using the newly available bandwidth to make the transmitted signals shorter in time, besides taking less time to transmit, is shortening the time to interact. We will revisit this concept in the next section when we introduce the concept of numerologies which is how 5G New Radio achieves more agile transmission.
 
 However, using higher frequencies also introduces some new propagation challenges \cite{rappaport_potentials_and_challenges, it_will_work}, listed below. Figure \ref{fig:propagation} illustrates some of the propagation terms.
 
@@ -65,14 +66,14 @@ And applying \eqref{eq:gain_eff_area_relation} to \eqref{eq:Friis} we obtain \eq
     P_r =\frac{P_t G_t G_r \lambda^2}{(4\pi d)^2}
 \end{equation}
 
-Fortunately, there is a major advantage of having smaller antennas. Smaller antennas allow us to form antenna arrays with more antenna elements than previously. As such, an tenfold increase in frequency allows a hundredfold increase in number of elements in the same physical area, which traduces to 20 dB extra directional gain per antenna array if all antenna elements are optimally used with one hundredth of the power. Therefore, if we increase the number of antenna elements of the receiver and transmitter and we can use each element optimally, we effectively improve the received power by 20 dB with the same transmit power. 
+Fortunately, there is a major advantage of having smaller antennas. Smaller antennas allow us to form antenna arrays with more antenna elements than previously. As such, a tenfold increase in frequency allows a hundredfold increase in number of elements in the same physical area, which traduces to 20 dB extra directional gain per antenna array if all antenna elements are optimally used with one hundredth of the power. Therefore, if we increase the number of antenna elements of the receiver and transmitter and we can use each element optimally, we effectively improve the received power by 20 dB with the same transmit power. 
 
 The technique of making antenna elements constructively interfere in the directions of interest, and destructively interference in the direction where the signal causes harmful interference to other connections is analysed next.
 
 
 \subsection*{Higher Spectral Efficiency}
 
-The most promising technology to enhance spectral efficiency is massive \ac{MIMO} \cite{8861014}. Massive \ac{MIMO} consists of having at least 10 times more antennas than the number of users intended to be served simultaneously. Statistically under Rayleigh fading assumptions, this leads to a high likelihood of obtaining independent channels to all users simultaneously. Essentially, this enables all users to be served simultaneously in the same time-frequency resources by spatial separating the streams. However, that may not lead to the best \ac{SE} \cite{7294693}, proving the relevance of modelling real scenarios. 
+The most promising technology to enhance spectral efficiency is massive \ac{MIMO} \cite{8861014}. Massive \ac{MIMO} consists of having at least 10 times more antennas than the number of users intended to be served simultaneously \cite{7402270}. Statistically under Rayleigh fading assumptions, this leads to a high likelihood of obtaining independent channels to all users simultaneously. Essentially, this enables all users to be served simultaneously in the same time-frequency resources by spatial separating the streams. However, that may not lead to the best \ac{SE} \cite{7294693}, proving the relevance of modelling real scenarios. 
 
 Since Marzetta's seminal paper on the asymptotic results of increasing the number of antennas in \acp{BS} \cite{5595728}, massive \ac{MIMO} has played a critical role in enhancing the performance of wireless systems. Figure \ref{fig:mamimo} represents how increasing the elements plays a role in spectral efficiency by increasing the number of simultaneously served users.
 
@@ -153,7 +154,7 @@ Since the table considers a linear (one-dimensional) array, the beamwidth measur
 From Table \ref{tab:beamfroming_gain}, Figure \ref{fig:rad_patterns} and literature we take two important conclusions. First, we know the maximum gain of an array by the number of elements, Equation \eqref{eq:gain} summarises the gain progression from the table having as basis the number of elements and the gain of a single element $G_{ele}$. Secondly, we know the shape of the main beam from the antenna geometry - we just need to count the elements along a given direction and consult the corresponding line in the table to know the \ac{HPBW} in the plane that contains that direction and the orthogonal to the array plane.
 
 \begin{equation} \label{eq:gain}
-    G_{total} = G_{ele} + 10 \log10(N) \ [\text{dBi}]
+    G_{total} = G_{ele} + 10 \log_{10}(N) \ [\text{dBi}]
 \end{equation}
 
 More importantly, we know the beamforming gain is directly proportional to the number of antenna elements of an antenna array. Transmissions with enhanced directivity allow more power at the receiver and less power in other directions, decreasing the interference. Reception with beamforming also permits receiving more of the supposed signal and suppress sources of interference. Therefore, beamforming makes transmissions more efficient by increasing the \ac{SINR} thus allowing higher \acp{MCS}.
@@ -163,8 +164,7 @@ More importantly, we know the beamforming gain is directly proportional to the n
 
 Beamforming flexibility, like the number of users served simultaneously and the accuracy of directions to focus power, is directly connected with the antenna architecture. After all, independently of how good the software is, it is always limited by the hardware. Let us analyse what challenges the hardware poses before diving into the signal processing techniques.
 
-With the increase in number of antenna elements, strategies to reduce the cost begin to develop. Figure 
-\ref{fig:bf_architectures} shows three generic TX side architectures, each with a different associated cost and flexibility. The only differences to \acs{RX} side architecture is the presence of an \ac{ADC} instead of a \ac{DAC} and the signal direction, represented by arrows, is reversed.
+With the increase in number of antenna elements, strategies to reduce the cost begin to develop \cite{8744505}. Figure \ref{fig:bf_architectures} shows three generic TX side architectures, each with a different associated cost and flexibility. The only differences to \acs{RX} side architecture is the presence of an \ac{ADC} instead of a \ac{DAC} and the signal direction, represented by arrows, is reversed.
 
 \imagecapcontrol{Literature Review/hybrid bf/all2.png}{Transmit side antenna array architectures.}{fig:bf_architectures}{.29}{-1mm}
 

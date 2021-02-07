@@ -13,7 +13,7 @@ With the exception of the number of physical users present in the meeting room $
 
 The parameter $N_{phy}$ changes from the first section to the second, respectively, from $N_{phy} = 1$ to $N_{phy} = 4$. The parameter $\overline{R}_{DL}$ is always 80 Mbps with the exception of one plot, Figure \ref{fig:su_bitrate_full}, where it is put to 500 Mbps. 
 
-Most parameters have the values from the examples provided when introducing the parameter in the previous Chapter. Some parameters without examples were, e.g. the number of slots between CSI anc scheduling updates, respectively, $N_{slots}^{CSI}$ $N_{slots}^{SCH}$. We attempt to make the case-study as simple as possible, so we both to be unitary. For the same reason, we set the acknowledgement delay $\tau_{ACK}$ to zero. This means the data that has errors in one slot can be sent again in the next. 
+Most parameters have the values from the examples provided when introducing the parameter in the previous Chapter. Some parameters without examples were, e.g. the number of slots between CSI anc scheduling updates, respectively, $N_{slots}^{CSI}$ $N_{slots}^{SCH}$. We attempt to make the case-study as simple as possible, so we make both unitary. For the same reason, we set the acknowledgement delay $\tau_{ACK}$ to zero. This means the data that has errors in one slot can be sent again in the next. 
 
 Like in the modelling, UL is disabled. Therefore, there are no UL slots, resulting in $s_{TDD} = 0$. Furthermore, a heavy slot format is considered, where all symbols are of the same type as the slot, DL in this case. However, we do not take into account signalling and slot-format overheads, i.e. $\eta_{OH} = \eta_{slot} = 1$. Thus, we compute a radio-layer bit rate, not an application-layer throughput. 
 

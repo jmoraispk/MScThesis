@@ -10,7 +10,7 @@ Physical-layer abstraction models are an important building block of system-leve
 
 The effective SINR mapping using MI-ESM is given by:
 
-\begin{equation} \label{eq:miesm}
+\begin{equation} \label{eq:miesm2}
     SINR_{eff} = I_k^{-1} \left( \frac{1}{N} \sum_{i=1}^N I_k\left(SINR_i\right)\right)
 \end{equation}
 
@@ -38,17 +38,17 @@ The quantity $I_k$ is also referred to as the `mutual information' and is common
 communicated in one variable about the other. In the context of MI-ESM, this should be seen as to what extent a received symbol provides information about the transmitted symbol. For high SINR (ideal channel) the mutual information is
 maximum and equal to the number of bits per symbol. For low SINR (no data transfer possible) the mutual information reduces to zero, i.e., the received symbol provides no information about the transmitted symbol. 
 
-Figure \ref{fig:miesm} shows the BICM capacity $I_k$ for the three modulation orders $k$ ($k = 2$ for QPSK, $k = 4$ for 16QAM, $k = 6$ for 64QAM) used in LTE. This figure should be read as follows:
+Figure \ref{fig:miesm4} shows the BICM capacity $I_k$ for the three modulation orders $k$ ($k = 2$ for QPSK, $k = 4$ for 16QAM, $k = 6$ for 64QAM) used in LTE. This figure should be read as follows:
 
 \begin{itemize}
     \item For low SINR (left side of the plot), the mutual information is zero. The received bit sequence per symbol is statistically independent of the transmitted bit sequence, and thus no information is sent over the link.
     \item For high SINR (right side of the plot), the mutual information is equal to the number of bits per symbol - 2 in the case of QPSK, 4 in the case of 16QAM, and 6 in the case of 64QAM. The received bit sequence is identical to the transmitted sequence.
-    \item For intermediate SINR, the mutual information value lies somewhere in between these two extreme values. Since 4QAM applies more bits per symbol than 16QAM (or QPSK), it is more vulnerable to channel distortions. Therefore a higher SINR is required to achieve the maximum mutual information value. 
+    \item For intermediate SINR, the mutual information value lies somewhere in between these two extreme values. Since 64QAM applies more bits per symbol than 16QAM (or QPSK), it is more vulnerable to channel distortions. Therefore a higher SINR is required to achieve the maximum mutual information value. 
 
 \end{itemize}
 
 
-\image{Appendices/MIESM.png}{Mutual Information versus SINR for the three modulations orders in LTE.}{fig:miesm}{.5}
+\image{Appendices/MIESM.png}{Mutual Information versus SINR for the three modulations orders in LTE.}{fig:miesm4}{.5}
 
 Thus, we understand that MI-ESM works as follows:
 

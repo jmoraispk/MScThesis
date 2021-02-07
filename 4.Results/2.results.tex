@@ -9,7 +9,7 @@ From the analysis of the BLER curves, previously seen in Figure \ref{fig:blercur
 
 Note the instantaneous bit rate should resemble the packet arrival rates of Figure \ref{fig:burst}, since when there are no packets, there cannot be transmissions. The thin blue lines happen when there is no bit rate oscillations. The thick blue blocks are quick bit rate oscillations outside of the imposed by the packet arrival mechanism, e.g. right after the 0.2 and 0.4 second instants. 
 
-We can see that these quick instantaneous bit rate oscillations happen between 145 and 190 Mbps, approximately. They occur because the buffer gets empty every tti, and only achieve the bitrate correspondent to the number of packets available to send. Since the available packets each TTI oscillates, the bit rate does too. 
+We can see that these quick instantaneous bit rate oscillations happen between 145 and 190 Mbps, approximately. They occur because the buffer gets empty every TTI, and only achieve the bitrate correspondent to the number of packets available to send. Since the available packets each TTI oscillates, the bit rate does too. 
 
 Additionally, if we perform the computation for the highest achievable bit rate under ideal conditions, i.e. no block errors on the highest \acs{MCS}, with all 50 \acsp{PRB}, we obtain that the system should support 250 Mbit/s. So, to see this number we must guarantee there are enough packets in the buffer. So, we set $\overline{R}_{DL}$ from 80 Mbps to 500 Mbps exclusively to plot the maximum achievable bit rate in Figure \ref{fig:su_bitrate_full}. 
 

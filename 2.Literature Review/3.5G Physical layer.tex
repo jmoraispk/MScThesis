@@ -4,7 +4,7 @@
 
 5G \ac{NR} is a new \ac{RAT} developed by \ac{3GPP} for the fifth generation mobile communications network. In this section we present all the relevant radio access physical layer aspects in order to align our modelling decisions compatibly with the industry standards.
 
-According to Qualcomm \cite{qualcomm_innovative_five}, the biggest 5G-compatible smartphone chips manufacturer,the five wireless inventions that define the global 5G standard are:
+According to Qualcomm \cite{qualcomm_innovative_five}, the biggest 5G-compatible smartphone chips manufacturer, the five wireless inventions that define the global 5G standard are:
 
 \begin{enumerate}
     \item Scalable \acs{OFDM} numerology with variable subcarrier spacing;
@@ -58,7 +58,7 @@ Moreover, each slot can have numerous different formats where each symbol is eit
 
 \imagecapcontrol{Literature Review/slot_format2.png}{Slot format.}{fig:slot_format}{.28}{-0mm}
 
-On the bottom of Figure \ref{fig:slot_format} is a format that can be used for self-contained slots, where the F symbol is used as a guard interval. Self-contained slots are meant to enable a quick ACK/NACK feedback in low-latency communications, or for massive MIMO UL pilots \cite{qualcomm_innovative_five}. The guard symbols between UL and DL are needed for synchronisation and can their numbers can be smaller for shorter distances. In indoor applications, it is sufficient to use a single guard symbol \cite{rel15_self_contained_slot_qualcomm}.
+On the bottom of Figure \ref{fig:slot_format} is a format that can be used for self-contained slots, where the F symbol is used as a guard interval. Self-contained slots are meant to enable a quick ACK/NACK feedback in low-latency communications, or for massive MIMO UL pilots \cite{qualcomm_innovative_five}. The guard symbols between UL and DL are needed for synchronisation and their numbers can be smaller for shorter distances. In indoor applications, it is sufficient to use a single guard symbol \cite{rel15_self_contained_slot_qualcomm}.
 
 In essence, the standards allow DL and UL assignment to change on a symbol level, thus making transmissions more efficient since resource needs can be met more precisely, with less resource waste by excess \cite{air_interface_system_principles}.
 
@@ -142,11 +142,11 @@ The \acp{TB} from the \ac{QoS} flow have a \ac{CRC} added to them. Then they are
 
 \imagecapcontrol{Literature Review/TB_to_codewords.png}{Block diagram of channel coding chain at the transmitter.}{fig:tb_to_codewords}{.46}{-1mm}
 
-A codeword is scrambled before it is before modulated so as to give the data to be transmitted useful properties that facilitate demodulation. After modulation, each codeword is separated into a maximum of four layers. Then each layer is precoded. Frequently, layers are called independent data streams therefore attention to context is required.
+A codeword is scrambled before it is modulated so as to give the data to be transmitted useful properties that facilitate demodulation. After modulation, each codeword is separated into a maximum of four layers. Then each layer is precoded. Frequently, layers are called independent data streams therefore attention to context is required.
 
-Posteriorly, the precoded signals are mapped to the respective \acp{RE}. Namely reference signals needs require this process such that the receiver knows where that reference signal can be found. Each \ac{RE} consists of one subcarrier used for the duration of one \ac{OFDM} symbol. Given a PRB, by definition, is the use of 12 subcarriers for the duration of 14 OFDM symbols, each PRB consists of 168 \acp{RE}.
+Posteriorly, the precoded signals are mapped to the respective \acp{RE}. Reference signals, in particular, require this process so that the receiver knows where that reference signal can be found. Each \ac{RE} consists of one subcarrier used for the duration of one \ac{OFDM} symbol. Given a PRB, by definition, is the use of 12 subcarriers for the duration of 14 OFDM symbols, each PRB consists of 168 \acp{RE}.
 
-Then, \ac{OFDM} symbols are generated and mapped from the logical antenna ports to the physical antenna ports. Such mapping depends on the manufacturer's antenna geometry. We review these considerations in more detail the next section.
+Then, \ac{OFDM} symbols are generated and mapped from the logical antenna ports to the physical antenna ports. Such mapping depends on the manufacturer antenna geometry. We review these considerations in more detail the next section.
 
 Figure \ref{fig:codewords_to_ant} summarises the chain of events from codewords to layers to actual transmission in physical antennas. Although both Figure \ref{fig:tb_to_codewords} and \ref{fig:codewords_to_ant} have transmitter-side block diagrams and descriptions, the receive side is the same, only reversed.
 
@@ -189,7 +189,7 @@ The CSI acquisition is the same for both cases of beam management. It consists o
 
 As seen, beam management and CSI acquisition procedures are not instantaneous nor can be performed in a single time slot. Therefore, there is a delay between CSI measurements and usage. For example, a beam is derived in certain conditions but it is used a few moments later, and the conditions may have changed. 
 
-There is a good reason why CSI-RS is used for acquiring CSI but SRSs are not. The SRSs needs to be transmitted in orthogonal sequences across all UEs such that they do not interfere with one another at the BS. The CSI-RS, on the other hand, only has to be orthogonal across the UEs that could receive that CSI-RS in that RE, and there may be a single UE in that list. Therefore, more CSI-RSs can be sent per UE since they require less orthogonality. More precisely, 32 CSI-RSs can be scheduled for a UE, but only four SRSs can be sent in the uplink by each UE, and the flexibility of using CSI-RSs is greater due to less orthogonality constraints \cite{DAHLMAN2018}. Also, for the case of interference measurements, they can only be measured at the receiving end.
+There is a good reason why CSI-RS is used for acquiring CSI but SRSs are not. SRSs need to be transmitted in orthogonal sequences across all UEs such that they do not interfere with one another at the BS. The CSI-RS, on the other hand, only has to be orthogonal across the UEs that could receive that CSI-RS in that RE, and there may be a single UE in that list. Therefore, more CSI-RSs can be sent per UE since they require less orthogonality. More precisely, 32 CSI-RSs can be scheduled for a UE, but only four SRSs can be sent in the uplink by each UE, and the flexibility of using CSI-RSs is greater due to less orthogonality constraints \cite{DAHLMAN2018}. Also, for the case of interference measurements, they can only be measured at the receiving end.
 
 In essence, massive MIMO works with both types of beamforming and the standards also allow both. The academia has supported SRS-based beamforming, while industry has been waging primarily CSI-RS-based \cite{tddVSfdd_massiveMIMO}, judging also by the 3GPP standards \cite{3gpp-codebooks}. And contrary to the academia traditional massive MIMO formulations of having UEs with a single antenna and focusing all complexity at the BS side, the tendency is the growth of antenna arrays in \acs{UE} as well. An example is the modules of 64 dual-polarised antenna elements for mmWave communications in the latest 5G smartphone chips \cite{qualcomm_64_antenna}. And such high number of antenna elements makes channel sounding impractical, thus rendering reciprocity-based massive MIMO less likely.
 

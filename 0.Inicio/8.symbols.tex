@@ -1,4 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % List of symbols
 \pdfbookmark[1]{List of Symbols}{los}
 
@@ -40,7 +39,7 @@
 
 % \tab is given in the tabto package
 \newcommand\mytab{\tab \hspace{-5cm}}
-
+\newcommand\mynewline{ \par \vspace{-\parskip}}
 % If the box is not visually overfull, ignore the warning
 % it has to do with the huge tab.
 
@@ -50,23 +49,23 @@
 \subsubsection*{Latin alphabet}
 
 % A
-$a_\phi$ \mytab azimuth lower limit for \acs{GoB}\\
-$a_\theta$ \mytab elevation lower limit for \acs{GoB}\\
+$a_\phi$ \mytab azimuth lower limit for \acs{GoB} \mynewline
+$a_\theta$ \mytab elevation lower limit for \acs{GoB} \\
 % B
-$b_\phi$ \mytab azimuth upper limit for \acs{GoB}\\
+$b_\phi$ \mytab azimuth upper limit for \acs{GoB} \\
 $b_\theta$ \mytab elevation lower limit for \acs{GoB} \\
 $B$ \mytab bandwidth \\
 $BLER_0$ \mytab target \acs{BLER} \\
 % C
-$C_t$ \mytab coordinates of centre of the table \\
 $C_m$ \mytab coordinates of centre of mass of the room \\
+$C_t$ \mytab coordinates of centre of the table \\
 % D
 $d_f$ \mytab distance to the front of the user for camera placement \\
 $d_F$ \mytab Fraunhofer distance \\
 $d_s$ \mytab distance to the side of the user for camera placement \\
 $d_{out}$ \mytab distance outwards from the head centre for \acs{HMD} antenna offset\\
 $d_{up}$ \mytab distance upwards from the head centre for \acs{HMD} antenna offset\\
-$D$ \mytab largest dimension of radiator to estimate effective area \\
+$D$ \mytab largest dimension of radiator to estimate effective area \newline
 % E
 $E_b$ \mytab energy per bit \\
 % F
@@ -75,9 +74,11 @@ $E_b$ \mytab energy per bit \\
 $\bm{H}_{bul}$ \mytab channel matrix between BS $b$ and UE $u$ in layer $l$\\
 % I
 $I$ \mytab interference\\
+$I_0$ \mytab antenna element feed current amplitude\\
 % J
 $j$ \mytab imaginary unit $\left(j = \sqrt{-1}\right)$\\
 % K
+$k$ \mytab wave number\\
 $k_B$ \mytab Boltzmann constant\\
 % L for lengths, and latencies -> this will change
 $L_{max}$ \mytab maximum latency for the radio link \\
@@ -86,25 +87,22 @@ $L_{max}$ \mytab maximum latency for the radio link \\
 $N_0$ \mytab noise power spectral density \\
 $N_r$ \mytab number of receive antennas \\
 $N_t$ \mytab number of transmit antennas \\
-$N_{users}$ \mytab number users or participants \\
-$N_{phy}$ \mytab number of physical users \\
-$N_{vir}$ \mytab number of virtual users \\
 $N_{CSI}$ \mytab number of beams with CSI-RS\\
 $N_{bs}$ \mytab number of \acsp{BS} \\
-$N_{ue}$ \mytab number of \acsp{UE} \\
 $N_{cam}$ \mytab number of cameras \\
+$N_{phy}$ \mytab number of physical users \\
+$N_{vir}$ \mytab number of virtual users \\
+$N_{ue}$ \mytab number of \acsp{UE} \\
+$N_{users}$ \mytab number users or participants \\
 $N_x$ \mytab number of antennas along the x-dimension\\
 $N_y$ \mytab number of antennas along the y-dimension\\
+$N_{ant}^{UE}$ \mytab number of antennas on the \acs{UE} side\\
+$N_{ant}^{BS}$ \mytab number of antennas on the \acs{BS} side\\
 $N^{DL}_{slots}$ \mytab number of \acs{DL} slots in a transmission period\\
 $N^{UL}_{slots}$ \mytab number of \acs{UL} slots in a transmission period\\
 $N^{TDD}_{slots}$ \mytab number slots in a transmission period\\
 $N^{CSI}_{slots}$ \mytab number slots between \acs{CSI} updates\\
 $N^{SCH}_{slots}$ \mytab number slots between scheduling updates\\
-$N_{ant}^{UE}$ \mytab number of antennas on the \acs{UE} side\\
-$N_{ant}^{BS}$ \mytab number of antennas on the \acs{BS} side\\
-$NF_{BS}$ \mytab BS noise figure \\
-$NF_{UE}$ \mytab UE noise figure\\
-$NF_{r}$ \mytab noise figure at the receiver\\
 $N_{PRB, bu}$ \mytab number of PRBs allocated for link between BS $b$ and UE $u$ \\
 $N_{PRB, bul}$ \mytab number of PRBs allocated for link between BS $b$ and UE $u$ in layer $l$\\
 $N_{symb}^{PRB}$ \mytab number of symbols per PRB \\
@@ -113,6 +111,9 @@ $N_{info bits}^{symb}$ \mytab number of information bits per symbol \\
 $N_{bits}^{slot}$ \mytab number of bits per slot \\
 $N_{bits}^{PRB}$ \mytab number of bits per PRB \\
 $N_{bits, bul}$ \mytab number of bits to be sent between BS $b$ and UE $u$ in layer $l$\\
+$NF_{BS}$ \mytab BS noise figure \\
+$NF_{UE}$ \mytab UE noise figure\\
+$NF_{r}$ \mytab noise figure at the receiver\\
 % O
 % P (used for powers)
 $p$ \mytab scheduling priority\\
@@ -155,10 +156,10 @@ $s_{TDD}$ \mytab \acs{TDD} split \\
 $SINR_{eff}$ \mytab effective \acs{SINR}, i.e. aggregated over all scheduled PRBs \\
 $SINR_i$ \mytab SINR of the i-th \acs{PRB} \\
 %$S_t$ \mytab power spectral density at transmission\\
+$S_{GoP}$ \mytab size of a \acs{GoP}\\
 $S_I$ \mytab size of I-frame\\
 $S_P$ \mytab size of P-frame\\
 $S_{packet}$ \mytab size of a packet\\
-$S_{GoP}$ \mytab size of a \acs{GoP}\\
 $S_{TB}$ \mytab size of a \acs{TB}\\
 $S_{TB, max}$ \mytab maximum size of a \acs{TB}\\
 % T for periods [s] and Temperatures
@@ -184,7 +185,7 @@ $\bm{w}_{r, bul}$ \mytab receive weights vector between BS panel $b$ and UE $u$,
 \subsubsection*{Greek alphabet}
 
 % Alpha (Α α)
-$\alpha_P$ \mytab power compensation factor for UL power control\\
+%$\alpha_P$ \mytab power compensation factor for UL power control\\
 $\alpha_u$ \mytab angle from the centre of the table to user $u$\\
 % Beta (Β β)
 $\beta_x$ \mytab upper limit on uniform distribution for rotation around x axis \\
@@ -194,7 +195,7 @@ $\beta_z$ \mytab upper limit on uniform distribution for rotation around z axis 
 $\gamma$ \mytab burstiness parameter for application traffic\\
 $\gamma_{OLLA}$ \mytab step size for OLLA parameter ($\Delta_{OLLA}$) update\\
 % Delta (Δ δ)
-$\Delta_{OLLA}$ \mytab outer loop link adaptation step\\
+$\Delta_{OLLA}$ \mytab outer loop link adaptation parameter\\
 % Ε ε
 % Ζ ζ
 % Η η
@@ -225,14 +226,17 @@ $\tau_{ACK}$ \mytab delay before acknowledgement, in number of \acsp{TTI} \\
 % Ψ ψ
 % Ω ω
 
+%\pagebreak
+
 \subsubsection*{Sets:}
 
-$\mathbb{N}$ \mytab natural numbers \\
-$\mathbb{N}_0$ \mytab natural numbers including zero\\
+%$\mathbb{N}$ \mytab natural numbers \\
+%$\mathbb{N}_0$ \mytab natural numbers including zero\\
+%$\mathbb{C}$ \mytab complex numbers \\
 $\mathcal{B}$ \mytab base station panels\\
 $\mathcal{U}_b$ \mytab users served by base station $b$\\ 
 $\mathcal{L}_{bu}$ \mytab layers scheduled between base station $b$ and user equipment $u$\\
-$\mathcal{F}$ \mytab frequencies to simulate\\
+$\mathcal{F}$ \mytab frequencies for simulation\\
 
 
 \subsubsection*{Other nomenclature}

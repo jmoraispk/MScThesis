@@ -1,5 +1,6 @@
 \section{SXR Conference Application}
 \label{sec:sxr_meeting_modelling}
+In this chapter we define all methods and models employed in this work. Namely, a SXR conference, the propagation channel and the radio access network. 
 
 This section contains all modelling initiatives and assumptions for a SXR conference meeting. Firstly, the physical placement of \acp{BS}, users and cameras is presented. Then we address antenna placement, orientation, geometry and architecture. The placement and orientation are particularly important since it defines how user movement will influences channel quality variability. Subsequently the user behaviour is modelled. Lastly, we present our model for the traffic characteristic based in the packet arrival profile of real-time video streaming.
 
@@ -29,7 +30,7 @@ The table is placed at the centre of the room and the precise user position is d
 \label{sec:modelling_antennas}
 Antenna arrays with half-wavelength distance between elements are used. As a reference, consider the antenna is initially placed in the yOz plane, before being translated to its position and rotated to its orientation. We consider antenna elements from the \ac{BS}, from user's \ac{HMD} and from cameras to be single-polarised and part of a cross-polarised element defined by 3GPP. 
 
-Having the antenna in the plane of reference, let us call $N_V$ and $N_H$, respectively, to the number of vertical (parallel to z-axis) cross-polarised antenna elements and the number of horizontal (parallel to y-axis) antenna elements. We also assume all BS panels have the same number and type of elements. And users and cameras also have the same antennas among themselves. 
+Having the antenna in the plane of reference, let us call $N_V$ and $N_H$, respectively, to the number of vertical (parallel to z-axis) and the number of horizontal (parallel to y-axis) cross-polarised antenna elements. We also assume all BS panels have the same number and type of elements. And users and cameras also have the same antennas among themselves. 
 
 The antenna size of a \ac{BS} panel is $N_{V,bs}$ by $N_{H,bs}$. Likewise, a user's antenna size is $N_{V,u}$ by $N_{H,u}$, and a camera's is $N_{V,cam}$ by $N_{H,cam}$. However, the physical proportions of the antenna array should be kept unchanged since one of advantage of higher frequencies is the higher element count. As such, we fix the BS size to e.g. $20 \times 20$ cm, and change the element count according to frequency. Figure \ref{fig:antennas} shows this for 3.5 GHz and 26 GHz.
 
@@ -40,7 +41,7 @@ We see in Figure \ref{fig:antennas} that while at 3.5 GHz only 16 antenna elemen
 
 With regards to positioning of antennas in the user's \ac{HMD}, the centre of the antenna array coincides with the instantaneous user position. However, the antenna elements have an offset such that variations in head orientation also cause change in the position of each element. These considerations make the antenna elements move with the user's head as if they were on top of glasses.
 
-In detail, we set an offset distance outwards in direction of user orientation $d_{o}$, and an offset distance along the z-axis $d_{u}$, both measured from the centre of the user's head in the respective directions. An example with $d_{o} = 0.15$ and $d_{u} = 0.05$ is illustrated in \ref{fig:ant_offset}, simulating antennas placed across the top of a minimalistic pair of \ac{AR} glasses. Another interesting placement with potential would be on top of the user's head.
+In detail, we set an offset distance outwards in direction of user orientation $d_{o}$, and an offset distance along the z-axis $d_{u}$, both measured from the centre of the user's head in the respective directions. An example with $d_{o} = 0.15$ metres and $d_{u} = 0.05$ metres is illustrated in \ref{fig:ant_offset}, simulating antennas placed across the top of a minimalistic pair of \ac{AR} glasses. Another interesting placement with potential would be on top of the user's head.
 
 \threeimagessidebyside{Methodology/Application/ant_head_1.png}{Random View}{fig:table1}{.2}{Methodology/Application/ant_head_2.png}{Front view}{fig:table2}{.2}{Methodology/Application/ant_head_3.png}{Side View}{fig:table3}{.2}{HMD 6-element uniform linear array placement example for 3.5 GHz.}{fig:ant_offset}{0.35}{0.3}{0.3}
 
@@ -48,7 +49,7 @@ Let us now address orientations. Antenna orientations are vectors that determine
 
 A camera is static, their antenna arrays are simply oriented towards the ceiling, i.e. $O_{cam} = (0,0,1)$, and neither their position nor orientation changes. However, this is not the case with \acp{BS} and \acp{HMD}. 
 
-Concerning \acsp{BS} antennas, Figure \ref{fig:multiple_bs} shows the five positions considered, at a frequency of 600 MHz to facilitate the distinction of individual antenna elements. Each antenna panel is pointed at a the centre of mass of the room $C_m$ - for the case of a 6 by 6 metre room with a ceiling at 3 metres tall $C_m = (3, 3, 1.5)$. In practice, the orientation comes from its position relative to the centre of mass: $O_{bs} = P_{bs} - C_m$.
+Concerning \acsp{BS} antennas, Figure \ref{fig:multiple_bs} shows the five positions considered, at a frequency of 600 MHz to facilitate the distinction of individual antenna elements. Each antenna panel is pointed at a the centre of mass of the room $C_m$ - for the case of a 6 by 6 metre room with a ceiling at 3 metres tall $C_m = (3, 3, 1.5)$. In practice, the BS orientation $O_{bs}$ comes from the difference between the BS position $P_{bs}$ relative and the centre of mass of the room, i.e. $O_{bs} = P_{bs} - C_m$.
 
 \image{Methodology/Application/multiple_BS_side.png}{Position of multiple panels, each with $6 \times 4$ elements, for 600 MHz.}{fig:multiple_bs}{.2}
 
@@ -56,7 +57,7 @@ The orientation of the user's antenna $O_{u}$ is the same as the user's orientat
 
 Finally, all antennas have a fully connected (or digital) architecture, i.e. each antenna element possesses its own radio frequency chain. Despite more expensive, this architecture is required in place of the more cost-efficient hybrid architecture due to radiation pattern symmetries.
 
-Take the example of a panel placed at the centre of the ceiling, like represented in Figure \ref{fig:table1}. From the perspective of that antenna, there users are in symmetric angular directions: if there is a user at relative azimuth and elevation $(\phi, \theta) = (0, 30)$, then there also is one user at $(0, -30)$. Therefore, when beamforming in either of those directions, the other direction should not have a significant lobe, or else there will be interference and the users cannot be co-scheduled. 
+Take the example of a panel placed at the centre of the ceiling, like represented in Figure \ref{fig:table1}. From the perspective of that antenna, the users are in symmetric angular directions: if there is a user at relative azimuth and elevation $(\phi, \theta) = (0, 30)$, then there also is one user at $(0, -30)$. Therefore, when beamforming in either of those directions, the other direction should not have a significant lobe, or else there will be interference and the users cannot be co-scheduled. 
 
 Figure \ref{fig:subarray} shows the radiation patterns obtained from beam-steering an 8 by 8 rectangular array to 30\tdeg azimuth and \tdeg elevation, using subarrays with different sizes. We see that with the digital architecture in \ref{fig:1x1} there are no major lobes in symmetric directions. However, in \ref{fig:2x1} and \ref{fig:2x2} which are hybrid architectures the lobes in symmetric directions are significant. Therefore the need to resort to a digital architecture for \ac{BS} panels. For simplicity we consider digital architectures for all antennas.
 
@@ -90,7 +91,7 @@ Change in orientation is quantified by three rotations around the cartesian axis
 
 The integration of both rotation mechanisms happens naturally. When a new speaker starts speaking, all other users' cone of focus changes to the respective speaker and they rotate from their current orientation in their last cone, to a new orientation belonging to the new cone of focus.
 
-Both head translation and rotation mechanisms are active simultaneously and across time to vary \ac{HMD} antenna positions and orientations. To facilitate the quantification of movement, the movement index $\delta$ is introduced. The speed at which a user moves its head, both translation and head rotation, changes in accordance with the head movement Equations \eqref{eq:head_mv1} and \eqref{eq:head_mv2}. The higher the movement index, the faster users moves their head.
+Both head translation and rotation mechanisms are active simultaneously and across time to vary \ac{HMD} antenna positions and orientations. To facilitate the quantification of movement, the movement index $\delta$ is introduced. The speed at which a user moves its head, both translation and head rotation, changes in accordance with the head movement Equations \eqref{eq:head_mv1} and \eqref{eq:head_mv2}. The higher the movement index, the faster users move their head.
 
 \begin{gather} 
     s = \delta \times 0.1 \quad [m/s] \label{eq:head_mv1} \\
@@ -100,6 +101,8 @@ Both head translation and rotation mechanisms are active simultaneously and acro
 The speed $s$ in \ref{eq:head_mv1} tells us how quickly a user hops between positions. The rotation interval $T_{rot}$ in \ref{eq:head_mv2} is the time the user takes to turn from one orientation to the other. A constant rotation interval means that the head rotation speed changes depending on the angle of rotation, i.e. rotating from one orientation to another takes always the same time, thus smaller changes are slower and vice-versa. We have found this to be more realistic than maintaining always the same speed since it was observed than 180 degree rotations had considerably higher rotation speed than than 30 degree rotations in a normal meeting.
 
 Using Equations \eqref{eq:head_mv1} and \eqref{eq:head_mv2} with integer values of the movement index we obtain values for the head translation speed and head rotation speed, present in Table \ref{tab:head_speeds}.
+
+\vspace{.3cm}
 
 \begin{table}[htp]
     \centering
@@ -119,11 +122,13 @@ Using Equations \eqref{eq:head_mv1} and \eqref{eq:head_mv2} with integer values 
     \end{tabular}
 \end{table}
 
+\vspace{.5cm}
+
 A more visually descriptive way of showing how this movement index affects the position is Figure \ref{fig:speeds}. Further note that the standard deviation of the received power is positively correlated with the movement index.
 
-\image{Methodology/Application/speeds2.png}{Head centre trajectory over 10s for different head translation speeds.}{fig:speeds}{.4}
-
 Although Figure \ref{fig:speeds} is in 2-dimensions, position changes  3D. Moreover, a movement index of 3 appears to be a realistic value for users, as evidenced by an empirical, non-scientific and highly subjective assessment. Cameras have a movement index of 0 because they are static.
+
+\image{Methodology/Application/speeds2.png}{Head centre trajectory over 10s for different head translation speeds.}{fig:speeds}{.4}
 
 In essence, the translation and rotation mechanisms are similar. Both positions and an orientations can be represented by three coordinates, but one is a cartesian coordinate and the other is a set of rotation angles around the coordinate axis, respectively. The speed tells us how quickly to move from a position to the other, and the rotation interval tells us how quickly to change from an orientation to the next. The higher the speed, the more positions a user's head will visit. The lowest the rotation interval, the more orientations inside the cone the user's look will point. However, the head rotation interval plays an additional role in how fast a 'head turn' happens, when the speaker changes. 
 
@@ -133,7 +138,7 @@ In essence, the translation and rotation mechanisms are similar. Both positions 
 
 % consider moving the video-streaming stuff here to the literature review with proper references
 
-The model that determines the size and time of arrival of packets resembles video streaming. We chose video streaming to shape our incoming traffic because nowadays there still is plenty of uncertainty regarding what format for 3D user representations performs the terms of throughput requirements, capture and encoding speeds, ease of stitching multiple streams together, among other. As such, we made a solid, relatively general model based on well-known traffic characteristics of video-streaming. 
+The model that determines the time of arrival of packets resembles video streaming. We chose video streaming to shape our incoming traffic because nowadays there still is plenty of uncertainty regarding what format for 3D user representations performs the best in terms of throughput requirements, capture and encoding speeds, ease of stitching multiple streams together, among other. As such, we made a solid, relatively general model based on well-known traffic characteristics of video-streaming. 
 
 The packet generation process is frame-based. In modern video streaming, not all video frames are equal. There are I-frames (Intra-coded frames), that constitute essentially the complete picture.Then there are frames that considerably smaller: P-frames (previous-dependent), and B frames (bi-dependent, previous and forward dependent). P and B frames use less space because they can use information from adjacent frames to decompress, thus this is information that can be derived and does not need to be transmitted. For simplicity the models uses P-frames only, although the process described in this section only requires minor intuitive modifications to include B-frames as well.
 
@@ -156,7 +161,6 @@ If all frames were I-frames, we could relate $S_I$ with $\overline{R}$ by multip
     S_F = \frac{S_I + (S_{GoP} - 1) S_P}{S_{GoP}}
 \end{equation}
 
-\vspace{1.3cm}
 
 We can write $S_P$ as $ S_I \times r_{P/I}$, thus reaching Equation \eqref{eq:avg_bitrate} which summarises the process of calculating the I-frame size.
 
@@ -166,7 +170,7 @@ We can write $S_P$ as $ S_I \times r_{P/I}$, thus reaching Equation \eqref{eq:av
 
 Since this is kind of application has very demanding latency requirements, small GoP sizes are favoured, because an I-frame is sent more often decreasing the likelihood of image freezing. And due to the small GoP sizes, including B frames would not yield any significant effect.
 
-Subsequently, each frame is turned into packets, assuming a constant packet size $S_{packet}$ of 1500 bytes. And the packets are spread out in time, according with burstiness $\gamma$ and overlap $o$ parameters, such that the traffic characteristic can be adapted to be made realistic for uplink buffers (camera buffers), and the downlink buffers (\ac{BS} buffers). 
+Subsequently, each frame is turned into packets, assuming a constant packet size $S_{packet}$ of 1500 bytes. And the packets are spread out in time, according with burstiness $\gamma$ and overlap $o$ parameters, such that the traffic characteristic can be adapted to be made realistic for uplink and downlink, respectively, camera and BS buffers.
 
 In the uplink we assume all packets from a certain frame are instantaneously available since the actual frame packet-forming process speed would far surpass the uplink dispatching speed. The downlink packets have come from the \acs{MCU} passing through many nodes across the internet. Therefore, due to throughput bottlenecks and queue delays, the packets may arrive more spaced. To mimic this effect we use a burstiness parameter. Figure \ref{fig:burst} shows how the number of packets is spread out in time by changing $\gamma$.
 
