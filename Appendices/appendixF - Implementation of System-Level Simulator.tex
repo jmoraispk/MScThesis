@@ -204,12 +204,12 @@ The only purpose of this section is to illustrate the only drawback of this appr
 Figure \ref{fig:drawback} illustrates a zoomed-in vision of the differences. The left half is slightly lower, the top half is slightly higher, and there's an abrupt transition between the two.
 
 
-\image{Implementation/RadCh/drawback1.png}{DO THIS}{fig:drawback}{.4}
+\image{Implementation/RadCh/drawback1.png}{Discontinuity of time segmented versus time continuous simulations.}{fig:drawback}{.4}
 
 
 In \ref{fig:drawback} each snapshot is a quarter of a millisecond long, so indeed the changes are minuscule and can be ignored. Their severity increases with the time division length, but in realistic simulations there is no noticeable difference between an uninterrupted channel and a channel segmented in time and then stitched. Figure \ref{fig:draw_back_proof} shows 2 seconds of a more realistic simulation. The stitching happens at 1 second mark, showing how imperceptible the transition is in the big picture. As said, all values drift a very small percentage to the ones generated without the parallelisation technique of time division, but we show the drawback only affects repeatability, completely unnoticeably.
 
-\image{Implementation/RadCh/drawback2.png}{DO THIS}{fig:draw_back_proof}{.33}
+\image{Implementation/RadCh/drawback2.png}{Time segmented simulation with stiching at 1 second mark.}{fig:draw_back_proof}{.33}
 
 
 Qualitatively speaking, choosing of different random generator seeds represents a channel considerably different, so much so that the difference it's easily identified visually. Hence, one can safely make the case that the stitched channel is well within the range of possible values for a channel response. And, to the best of our knowledge, this is a bug internal to Quadriga, and it has been reported.
